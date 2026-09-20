@@ -29,7 +29,7 @@ $$y_{ijv}^* = \frac{y_{ijv} - \hat{\alpha}_v - \mathbf{X}_{ij}^T \hat{\boldsymbo
 ---
 
 ## 3. Audited Harmonization Effects on Graph Metrics
-Traced directly to [`results/exp04/comparison_table.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/comparison_table.csv):
+Traced directly to [`results/exp04/comparison_table.csv`](../../results/exp04/comparison_table.csv):
 
 | Metric | Raw Mean $\pm$ Std | ComBat Mean $\pm$ Std | Mean Difference ($\Delta$) | Effect Size |
 | :--- | :--- | :--- | :--- | :--- |
@@ -51,7 +51,7 @@ To verify whether site effects were removed, linear classifiers were trained on 
 1. **Site Prediction** (Predicting which of the 8 scanners collected the data).
 2. **Diagnosis Prediction** (Predicting ADHD vs TDC).
 
-Traced directly to [`results/exp04/site_prediction_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/site_prediction_results.csv) and [`results/exp04/diagnosis_prediction_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/diagnosis_prediction_results.csv):
+Traced directly to [`results/exp04/site_prediction_results.csv`](../../results/exp04/site_prediction_results.csv) and [`results/exp04/diagnosis_prediction_results.csv`](../../results/exp04/diagnosis_prediction_results.csv):
 
 | Prediction Task | Raw Features Accuracy | ComBat Harmonized Accuracy | Delta ($\Delta$) | Interpretation |
 | :--- | :--- | :--- | :--- | :--- |
@@ -70,10 +70,10 @@ Traced directly to [`results/exp04/site_prediction_results.csv`](file:///c:/User
 ---
 
 ## 6. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp04/04_combat_harmonization.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp04/04_combat_harmonization.ipynb)
+- **Canonical Notebook**: [`notebooks/exp04/04_combat_harmonization.ipynb`](../../notebooks/exp04/04_combat_harmonization.ipynb)
 - **Result Artifacts**:
-  - [`results/exp04/comparison_table.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/comparison_table.csv) (raw vs ComBat metric table)
-  - [`results/exp04/site_prediction_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/site_prediction_results.csv) (8-site classification performance)
-  - [`results/exp04/diagnosis_prediction_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/diagnosis_prediction_results.csv) (ADHD vs TDC classification performance)
-  - [`results/exp04/graph_topology_preservation.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/graph_topology_preservation.csv) (correlation preservation metrics)
-  - [`results/exp04/effect_size_before_after.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/effect_size_before_after.csv) (standardized mean differences)
+  - [`results/exp04/comparison_table.csv`](../../results/exp04/comparison_table.csv) (raw vs ComBat metric table)
+  - [`results/exp04/site_prediction_results.csv`](../../results/exp04/site_prediction_results.csv) (8-site classification performance)
+  - [`results/exp04/diagnosis_prediction_results.csv`](../../results/exp04/diagnosis_prediction_results.csv) (ADHD vs TDC classification performance)
+  - [`results/exp04/graph_topology_preservation.csv`](../../results/exp04/graph_topology_preservation.csv) (correlation preservation metrics)
+  - [`results/exp04/effect_size_before_after.csv`](../../results/exp04/effect_size_before_after.csv) (standardized mean differences)

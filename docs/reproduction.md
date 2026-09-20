@@ -2,7 +2,7 @@
 
 ## 1. Verified Software & Hardware Environment
 
-This repository's environment specifications are reconstructed directly from the execution environment metadata recorded in [`configs/exp09/w2b_environment.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/configs/exp09/w2b_environment.json).
+This repository's environment specifications are reconstructed directly from the execution environment metadata recorded in [`configs/exp09/w2b_environment.json`](../configs/exp09/w2b_environment.json).
 
 ### 1.1 Tested Hardware Profile
 - **Accelerator**: NVIDIA A100-SXM4-80GB (VRAM: $81,920\text{ MiB}$)

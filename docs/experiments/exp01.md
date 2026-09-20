@@ -58,8 +58,8 @@ Because consecutive windows share 25 out of 30 time points (83.3% overlap), the 
 ---
 
 ## 6. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp01/01_fc_generation_and_validation.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp01/01_fc_generation_and_validation.ipynb)
+- **Canonical Notebook**: [`notebooks/exp01/01_fc_generation_and_validation.ipynb`](../../notebooks/exp01/01_fc_generation_and_validation.ipynb)
 - **Primary Result Artifacts**:
-  - [`results/exp01/dynamic_temporal_validation.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp01/dynamic_temporal_validation.csv) (lag validation table)
-  - [`results/exp01/static_vs_dynamic_validation.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp01/static_vs_dynamic_validation.csv) (static vs mean dynamic FC comparison)
-  - [`results/exp01/dynamic_manifest.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp01/dynamic_manifest.csv) (window indexing manifest)
+  - [`results/exp01/dynamic_temporal_validation.csv`](../../results/exp01/dynamic_temporal_validation.csv) (lag validation table)
+  - [`results/exp01/static_vs_dynamic_validation.csv`](../../results/exp01/static_vs_dynamic_validation.csv) (static vs mean dynamic FC comparison)
+  - [`results/exp01/dynamic_manifest.csv`](../../results/exp01/dynamic_manifest.csv) (window indexing manifest)

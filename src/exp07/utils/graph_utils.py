@@ -8,9 +8,8 @@
 import numpy as np
 import torch
 from torch_geometric.data import Data
-from tqdm import tqdm
 
-from .config import N_ROIS, DENSITY, NODE_FEATURE_DIM
+from exp07.utils.config import DENSITY, N_ROIS
 
 
 def prepare_graphs(X_features, y_labels, n_rois=N_ROIS, density=DENSITY):
@@ -36,7 +35,6 @@ def prepare_graphs(X_features, y_labels, n_rois=N_ROIS, density=DENSITY):
     graphs = []
 
     for i in range(n_samples):
-        # Handle 1D vector (upper triangle) vs 2D full matrix
         feat = X_features[i]
         if feat.ndim == 1 and feat.shape[0] == triu_dim:
             fc_matrix = np.zeros((n_rois, n_rois), dtype=np.float32)
@@ -80,16 +78,3 @@ def prepare_graphs(X_features, y_labels, n_rois=N_ROIS, density=DENSITY):
         ))
 
     return graphs
-
-
-if __name__ == "__main__":
-    # Smoke test graph preparation
-    num_samples = 5
-    n_upper = N_ROIS * (N_ROIS - 1) // 2
-    mock_X = np.random.randn(num_samples, n_upper).astype(np.float32)
-    mock_y = np.random.randint(0, 2, size=num_samples)
-    graphs = prepare_graphs(mock_X, mock_y)
-    print(f"✅ Prepared {len(graphs)} test graphs")
-    print(f"Sample graph 0: x={graphs[0].x.shape}, edges={graphs[0].edge_index.shape[1]}")
-    assert graphs[0].x.shape == (N_ROIS, NODE_FEATURE_DIM), "Shape mismatch in node features!"
-    print("✅ Graph preparation verified!")

@@ -22,7 +22,7 @@ The primary objectives are:
 ---
 
 ## 3. Pseudo-Labeling Procedures & Audited Results
-Traced directly to [`results/exp06/exp06_verified_results.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp06/exp06_verified_results.json) and executed output in `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb`:
+Traced directly to [`results/exp06/exp06_verified_results.json`](../../results/exp06/exp06_verified_results.json) and executed output in `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb`:
 
 ### 3.1 Procedure I: Iterative Self-Training (Logistic Regression)
 - **Base Classifier**: `LogisticRegression(class_weight='balanced', C=1.0)` with `StandardScaler`.
@@ -55,7 +55,7 @@ Traced directly to [`results/exp06/exp06_verified_results.json`](file:///c:/User
 ---
 
 ## 5. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb)
+- **Canonical Notebook**: [`notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb`](../../notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb)
 - **Result Artifact**:
-  - [`results/exp06/exp06_verified_results.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp06/exp06_verified_results.json)
+  - [`results/exp06/exp06_verified_results.json`](../../results/exp06/exp06_verified_results.json)
 - **Historical Model Artifact**: `mnt/ADHD200/06_semi_supervised/models/self_training_model.pkl` (earlier Random Forest iteration preserved for audit history).

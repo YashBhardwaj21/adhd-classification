@@ -55,7 +55,7 @@ The core experimental questions are:
 ---
 
 ## 5. Audited Quantitative Results
-Traced directly to [`results/exp07/checkpoint_analysis.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp07/checkpoint_analysis.json) and [`results/exp07/report.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp07/report.md) ($N = 33$ test subjects):
+Traced directly to [`results/exp07/checkpoint_analysis.json`](../../results/exp07/checkpoint_analysis.json) and [`results/exp07/report.md`](../../results/exp07/report.md) ($N = 33$ test subjects):
 
 | Model Architecture | Test AUC | Accuracy | Precision | Recall | F1 Score | Confusion Matrix [TDC, ADHD] |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -79,11 +79,11 @@ To ensure reproducibility and standalone execution, the required utility depende
 
 ## 7. Source Code & Result Provenance
 - **Model Scripts**:
-  - [`src/exp07/classical_models/model_classical_gcn.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp07/classical_models/model_classical_gcn.py)
-  - [`src/exp07/classical_models/train_classical_gcn.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp07/classical_models/train_classical_gcn.py)
-  - [`src/exp07/quantum_models/train_qgcnn_vectorized.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp07/quantum_models/train_qgcnn_vectorized.py)
-  - [`src/exp07/quantum_models/quantum_embedding_broadcast.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp07/quantum_models/quantum_embedding_broadcast.py)
-  - [`src/exp07/quantum_models/resume.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp07/quantum_models/resume.py)
+  - [`src/exp07/classical_models/model_classical_gcn.py`](../../src/exp07/classical_models/model_classical_gcn.py)
+  - [`src/exp07/classical_models/train_classical_gcn.py`](../../src/exp07/classical_models/train_classical_gcn.py)
+  - [`src/exp07/quantum_models/train_qgcnn_vectorized.py`](../../src/exp07/quantum_models/train_qgcnn_vectorized.py)
+  - [`src/exp07/quantum_models/quantum_embedding_broadcast.py`](../../src/exp07/quantum_models/quantum_embedding_broadcast.py)
+  - [`src/exp07/quantum_models/resume.py`](../../src/exp07/quantum_models/resume.py)
 - **Result Artifacts**:
-  - [`results/exp07/checkpoint_analysis.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp07/checkpoint_analysis.json)
-  - [`results/exp07/report.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp07/report.md)
+  - [`results/exp07/checkpoint_analysis.json`](../../results/exp07/checkpoint_analysis.json)
+  - [`results/exp07/report.md`](../../results/exp07/report.md)

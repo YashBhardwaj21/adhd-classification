@@ -31,7 +31,7 @@ From the discrete state sequence $\mathbf{s} = [s_1, s_2, \dots, s_T]$ ($s_t \in
 ---
 
 ## 3. Audited Empirical State Profiles & Dynamics
-Traced directly to [`results/exp05/run_dynamic_biomarkers.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/run_dynamic_biomarkers.csv) and [`results/exp05/subject_feature_summary.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/subject_feature_summary.csv):
+Traced directly to [`results/exp05/run_dynamic_biomarkers.csv`](../../results/exp05/run_dynamic_biomarkers.csv) and [`results/exp05/subject_feature_summary.csv`](../../results/exp05/subject_feature_summary.csv):
 
 | Dynamic State | Dominant Topological Characteristics | Fractional Occupancy ($FO$) | Mean Dwell Time ($MDT$) |
 | :--- | :--- | :--- | :--- |
@@ -55,11 +55,11 @@ The state analysis produces three hierarchical levels of results:
 ---
 
 ## 5. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp05/05_dynamic_state_modeling.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp05/05_dynamic_state_modeling.ipynb)
+- **Canonical Notebook**: [`notebooks/exp05/05_dynamic_state_modeling.ipynb`](../../notebooks/exp05/05_dynamic_state_modeling.ipynb)
 - **Result Artifacts**:
-  - [`results/exp05/run_dynamic_biomarkers.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/run_dynamic_biomarkers.csv)
-  - [`results/exp05/run_state_sequences.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/run_state_sequences.csv)
-  - [`results/exp05/run_transition_dynamics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/run_transition_dynamics.csv)
-  - [`results/exp05/subject_dynamic_dataset.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/subject_dynamic_dataset.csv)
-  - [`results/exp05/subject_feature_summary.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/subject_feature_summary.csv)
-  - [`results/exp05/subject_feature_correlation.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/subject_feature_correlation.csv)
+  - [`results/exp05/run_dynamic_biomarkers.csv`](../../results/exp05/run_dynamic_biomarkers.csv)
+  - [`results/exp05/run_state_sequences.csv`](../../results/exp05/run_state_sequences.csv)
+  - [`results/exp05/run_transition_dynamics.csv`](../../results/exp05/run_transition_dynamics.csv)
+  - [`results/exp05/subject_dynamic_dataset.csv`](../../results/exp05/subject_dynamic_dataset.csv)
+  - [`results/exp05/subject_feature_summary.csv`](../../results/exp05/subject_feature_summary.csv)
+  - [`results/exp05/subject_feature_correlation.csv`](../../results/exp05/subject_feature_correlation.csv)

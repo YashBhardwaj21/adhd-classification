@@ -119,15 +119,15 @@ All figures and metrics below trace directly to verified result artifacts in `re
 
 | Exp | Title | Primary Representation | Key Audited Finding | Result Artifact | Documentation |
 | :---: | :--- | :--- | :--- | :--- | :---: |
-| **01** | Dynamic FC Stability | CC200 (190 ROIs, $W=30, S=5$) | Monotonic temporal correlation decay: Lag 1 ($0.8990$) $\to$ Lag 4 ($0.5467$) | [`results/exp01/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp01/) | [exp01.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp01.md) |
-| **02** | Dual-Constraint Graphs | MST + PT ($\rho=0.20$, 3,591 edges) | Verified small-world organization across 31,060 windows ($\sigma = 1.0132 \pm 0.0103$) | [`results/exp02/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/) | [exp02.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp02.md) |
-| **03** | Topological Variance & ANOVA | Windowed network features | Massive scanner batch effects ($F = 4,609.76, p < 10^{-300}$ for efficiency across 8 sites) | [`results/exp03/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/) | [exp03.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp03.md) |
-| **04** | ComBat Harmonization | NeuroCombat empirical Bayes | Site accuracy dropped $58.64\% \to 31.29\%$; diagnosis accuracy dropped $64.53\% \to 59.56\%$ | [`results/exp04/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp04/) | [exp04.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp04.md) |
-| **05** | Dynamic Brain States | $K$-Means clustering ($K=3$) | Segregated state dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | [`results/exp05/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp05/) | [exp05.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp05.md) |
-| **06** | Semi-Supervised Learning | Self-training & Ensembling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484 pseudo-labels | [`results/exp06/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp06/) | [exp06.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp06.md) |
-| **07** | Classical GCN vs Quantum | AAL-116 (116 nodes, 117 feats) | Classical GCN ($0.7293$ AUC) outperforms 6-qubit QGCNN ($0.6429$ AUC) on 33 test subjects | [`results/exp07/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp07/) | [exp07.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp07.md) |
-| **08** | Volumetric & Temporal Baselines | 4D fMRI volumes & Temporal GNN | 3D CNN achieves $76.19\%$ acc ($0.7316$ AUC); NeuroSTORM achieves $59.10\%$ CV acc | [`results/exp08/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp08/) | [exp08.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp08.md) |
-| **09** | Multi-Site LOSO Evaluation | Population GNNs (7 sites, $N=497$) | Out-of-site collapse: GAT ($0.5752$), SAGE ($0.5502$), GCN ($0.5468$), GIN ($0.5437$ AUC) | [`results/exp09/`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/) | [exp09.md](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/experiments/exp09.md) |
+| **01** | Dynamic FC Stability | CC200 (190 ROIs, $W=30, S=5$) | Monotonic temporal correlation decay: Lag 1 ($0.8990$) $\to$ Lag 4 ($0.5467$) | [`results/exp01/`](results/exp01/) | [exp01.md](docs/experiments/exp01.md) |
+| **02** | Dual-Constraint Graphs | MST + PT ($\rho=0.20$, 3,591 edges) | Verified small-world organization across 31,060 windows ($\sigma = 1.0132 \pm 0.0103$) | [`results/exp02/`](results/exp02/) | [exp02.md](docs/experiments/exp02.md) |
+| **03** | Topological Variance & ANOVA | Windowed network features | Massive scanner batch effects ($F = 4,609.76, p < 10^{-300}$ for efficiency across 8 sites) | [`results/exp03/`](results/exp03/) | [exp03.md](docs/experiments/exp03.md) |
+| **04** | ComBat Harmonization | NeuroCombat empirical Bayes | Site accuracy dropped $58.64\% \to 31.29\%$; diagnosis accuracy dropped $64.53\% \to 59.56\%$ | [`results/exp04/`](results/exp04/) | [exp04.md](docs/experiments/exp04.md) |
+| **05** | Dynamic Brain States | $K$-Means clustering ($K=3$) | State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | [`results/exp05/`](results/exp05/) | [exp05.md](docs/experiments/exp05.md) |
+| **06** | Semi-Supervised Learning | Self-training & Ensembling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484 pseudo-labels | [`results/exp06/`](results/exp06/) | [exp06.md](docs/experiments/exp06.md) |
+| **07** | Classical GCN vs Quantum | AAL-116 (116 nodes, 117 feats) | Classical GCN ($0.7293$ AUC) outperforms 6-qubit QGCNN ($0.6429$ AUC) on 33 test subjects | [`results/exp07/`](results/exp07/) | [exp07.md](docs/experiments/exp07.md) |
+| **08** | Volumetric & Temporal Baselines | 4D fMRI volumes & Temporal GNN | 3D CNN achieves $76.19\%$ acc ($0.7316$ AUC); NeuroSTORM achieves $59.10\%$ CV acc | [`results/exp08/`](results/exp08/) | [exp08.md](docs/experiments/exp08.md) |
+| **09** | Multi-Site LOSO Evaluation | Population GNNs (7 sites, $N=497$) | Out-of-site collapse: GAT ($0.5752$), SAGE ($0.5502$), GCN ($0.5468$), GIN ($0.5437$ AUC) | [`results/exp09/`](results/exp09/) | [exp09.md](docs/experiments/exp09.md) |
 
 ---
 
@@ -144,7 +144,7 @@ During extensive source audits, several critical discrepancies between early dra
 7. **Experiment 8 Subject Splitting**: Temporal graph learning was evaluated on strictly disjoint subject-level partitions ($534$ train, $115$ val, $115$ test), disproving prior window-leakage conjectures.
 8. **Experiment 9 Protocol Discrepancy**: The executed notebook used `top_10pct` thresholding with weighted edges and self-loops, rather than the paper's stated unweighted MST + 20% distance mapping.
 
-See [`docs/provenance/paper_vs_code.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/provenance/paper_vs_code.md) for full line-by-line analyses of these discrepancies.
+See [`docs/provenance/paper_vs_code.md`](docs/provenance/paper_vs_code.md) for full line-by-line analyses of these discrepancies.
 
 ---
 
@@ -153,15 +153,16 @@ See [`docs/provenance/paper_vs_code.md`](file:///c:/Users/Yash%20Bhardwaj/Downlo
 ### 5.1 Environment Setup
 ```bash
 # Clone the repository
-git clone https://github.com/ADHD200-Research/ADHD200_Connectomics.git
-cd ADHD200_Connectomics
+git clone https://github.com/YashBhardwaj21/adhd-classification.git
+cd adhd-classification
 
 # Create environment (Python 3.12)
 conda create -n adhd200 python=3.12.13 -y
 conda activate adhd200
 
-# Install dependencies
+# Install dependencies and package in editable mode
 pip install -r environment/track_b/requirements.txt
+pip install -e .
 ```
 
 ### 5.2 Verification & Testing Suite
@@ -186,12 +187,12 @@ python src/exp07/classical_models/run_experiment.py
 python src/exp07/quantum_models/run_experiment.py
 ```
 
-For comprehensive step-by-step reproduction instructions across all 9 experiments, refer to [`docs/reproduction.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/docs/reproduction.md).
+For comprehensive step-by-step reproduction instructions across all 9 experiments, refer to [`docs/reproduction.md`](docs/reproduction.md).
 
 ---
 
 ## 6. Data Availability & Boundaries
-Raw fMRI scans and large intermediate arrays ($>100\text{ MiB}$) are excluded from GitHub staging to comply with repository quotas and consortium agreements. All derived tabular metrics, manifests, and confusion matrices are staged in `results/`. Refer to [`data/README.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/data/README.md) and [`data/provenance/README.md`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/data/provenance/README.md) for data access procedures.
+Raw fMRI scans and large intermediate arrays ($>100\text{ MiB}$) are excluded from GitHub staging to comply with repository quotas and consortium agreements. All derived tabular metrics, manifests, and confusion matrices are staged in `results/`. Refer to [`data/README.md`](data/README.md) and [`data/provenance/README.md`](data/provenance/README.md) for data access procedures.
 
 ---
 
@@ -208,4 +209,4 @@ If you utilize this repository, its methodology, or audited result artifacts, pl
 }
 ```
 
-See [`CITATION.cff`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/CITATION.cff) for machine-readable citation metadata, and [`NOTICE`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/NOTICE) for third-party software licenses (Apache-2.0 NeuroSTORM and BCT).
+See [`CITATION.cff`](CITATION.cff) for machine-readable citation metadata, and [`NOTICE`](NOTICE) for third-party software licenses (Apache-2.0 NeuroSTORM and BCT).

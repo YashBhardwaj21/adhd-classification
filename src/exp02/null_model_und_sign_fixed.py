@@ -1,14 +1,11 @@
 # @due.dcite(BibTeX(RUBINOV2011), description="Undirected signed null model")
 import numpy as np
-
 from bct.utils.miscellaneous_utilities import (
-    get_rng,
     BCTParamError,
+    get_rng,
 )
 
-from bct.algorithms.reference import (
-    randmio_und_signed,
-)
+
 def null_model_und_sign_fixed(W, bin_swaps=5, wei_freq=.1, seed=None):
     rng = get_rng(seed)
     if not np.allclose(W, W.T):

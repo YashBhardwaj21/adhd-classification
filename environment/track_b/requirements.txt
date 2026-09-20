@@ -1,13 +1,17 @@
 # Track B: Pseudo-Labeling, Classical GCN, Quantum QGCNN, 3D CNN, NeuroSTORM
-# Reconstructed directly from configs/exp09/w2b_environment.json and model source files
+# Audited execution environment recorded in configs/exp09/w2b_environment.json:
+# Python 3.12.13, PyTorch 2.5.1+cu121 (CUDA 12.1), PyG 2.8.0, PennyLane 0.44.1, PennyLane-Lightning-GPU 0.44.0
+
+# Note: PyTorch with CUDA 12.1 support requires explicit wheel installation:
+# pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
 torch==2.5.1
 torch-geometric==2.8.0
 pennylane==0.44.1
-pennylane-lightning-gpu==0.44.1
+pennylane-lightning-gpu==0.44.0
 monai==1.5.2
-numpy>=1.26.0,<2.5.0
-pandas>=2.0.0,<2.4.0
-scikit-learn>=1.4.0,<1.9.0
-scipy>=1.11.0,<1.15.0
+numpy==2.4.6
+pandas==2.3.3
+scikit-learn==1.8.0
+scipy==1.17.1
 tqdm>=4.65.0
 jupyter>=1.0.0

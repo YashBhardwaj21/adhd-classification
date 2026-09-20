@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # ============================================================================
 # TRAINING UTILITIES FOR EXPERIMENT 7 (Track B)
-# Provides training loop, validation metrics, and model checkpointing
+# Provides training loop, validation metrics, and model checkpointing.
 # ============================================================================
 
 import time
+from pathlib import Path
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
-from pathlib import Path
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
-from .config import DEVICE
+from exp07.utils.config import DEVICE
 
 _LAST_TIMED_SAVE = time.time()
 
@@ -35,7 +36,7 @@ def train_one_epoch(model, train_loader, optimizer, criterion=None):
     for batch in train_loader:
         batch = batch.to(DEVICE)
         optimizer.zero_grad()
-        
+
         logits = model(batch)
         loss = criterion(logits, batch.y)
         loss.backward()
@@ -97,7 +98,7 @@ def save_checkpoint(model, optimizer, epoch, history, best_auc, checkpoint_path)
     """Save model and optimizer state dictionary to disk."""
     checkpoint_path = Path(checkpoint_path)
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     state = {
         'epoch': epoch,
         'model_state_dict': model.state_dict(),
@@ -109,15 +110,11 @@ def save_checkpoint(model, optimizer, epoch, history, best_auc, checkpoint_path)
     torch.save(state, checkpoint_path)
 
 
-def save_timed_checkpoint(model, optimizer, epoch, history, best_auc, data_dir, interval_seconds=1800):
+def save_timed_checkpoint(model, optimizer, epoch, history, best_auc, checkpoint_dir, interval_seconds=1800):
     """Save a periodic checkpoint if interval_seconds have passed since last save."""
     global _LAST_TIMED_SAVE
     current_time = time.time()
     if current_time - _LAST_TIMED_SAVE >= interval_seconds:
-        timed_path = Path(data_dir) / f"timed_checkpoint_epoch_{epoch}.pth"
+        timed_path = Path(checkpoint_dir) / f"timed_checkpoint_epoch_{epoch}.pth"
         save_checkpoint(model, optimizer, epoch, history, best_auc, timed_path)
         _LAST_TIMED_SAVE = current_time
-
-
-if __name__ == "__main__":
-    print("✅ Training utilities initialized successfully")

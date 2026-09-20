@@ -6,7 +6,7 @@ This directory documents third-party packages, algorithms, and reference models 
 - **Component**: `src/exp08/neurostorm/neurostorm.py`
 - **Origin**: CUHK-AIM-Group ([GitHub](https://github.com/CUHK-AIM-Group/NeuroSTORM))
 - **License**: Apache License 2.0
-- **Notice**: Included in compliance with Section 4(a) of the Apache 2.0 license. See [`NOTICE`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/NOTICE) for complete attribution terms.
+- **Notice**: Included in compliance with Section 4(a) of the Apache 2.0 license. See [`NOTICE`](../NOTICE) for complete attribution terms.
 
 ## 2. Brain Connectivity Toolbox (BCT)
 - **Component**: `src/exp02/null_model_und_sign_fixed.py`, `src/exp02/randmio_und_signed_fast.py`

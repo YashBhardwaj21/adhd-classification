@@ -13,7 +13,7 @@ The primary objectives are:
 ---
 
 ## 2. Cohort & Multi-Site Distribution
-Traced directly to [`results/exp09/w2b_loso_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/w2b_loso_results.csv) and [`results/exp09/graph_preprocessing_summary.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/graph_preprocessing_summary.csv):
+Traced directly to [`results/exp09/w2b_loso_results.csv`](../../results/exp09/w2b_loso_results.csv) and [`results/exp09/graph_preprocessing_summary.csv`](../../results/exp09/graph_preprocessing_summary.csv):
 
 - **Atlas**: Craddock-200 (CC200), $N = 190$ regions of interest.
 - **Total Cohort**: **497 subjects** across 7 independent acquisition sites:
@@ -56,7 +56,7 @@ All models process graphs with $N = 190$ nodes, $D = 190$ node features, and two
 ---
 
 ## 5. Audited Quantitative Results (7-Fold LOSO)
-Traced directly to [`results/exp09/w2b_loso_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/w2b_loso_results.csv):
+Traced directly to [`results/exp09/w2b_loso_results.csv`](../../results/exp09/w2b_loso_results.csv):
 
 ### 5.1 Architecture Summary (Mean across 7 Unseen Test Sites)
 | Architecture | Mean Test AUC | Std AUC | Mean Balanced Accuracy | Mean F1 Score | Best Val AUC (Mean) |
@@ -87,11 +87,11 @@ Traced directly to [`results/exp09/w2b_loso_results.csv`](file:///c:/Users/Yash%
 ---
 
 ## 7. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp09/11_population_graph_learning.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp09/11_population_graph_learning.ipynb)
-- **Environment Metadata**: [`configs/exp09/w2b_environment.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/configs/exp09/w2b_environment.json)
+- **Canonical Notebook**: [`notebooks/exp09/11_population_graph_learning.ipynb`](../../notebooks/exp09/11_population_graph_learning.ipynb)
+- **Environment Metadata**: [`configs/exp09/w2b_environment.json`](../../configs/exp09/w2b_environment.json)
 - **Result Artifacts**:
-  - [`results/exp09/w2b_loso_results.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/w2b_loso_results.csv) (complete 7-fold metric table)
-  - [`results/exp09/exp09_verified_results.json`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/exp09_verified_results.json)
-  - [`results/exp09/graph_preprocessing_summary.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/graph_preprocessing_summary.csv)
-  - [`results/exp09/architecture_summary.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/architecture_summary.csv)
-  - [`results/exp09/training_curves.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp09/training_curves.csv)
+  - [`results/exp09/w2b_loso_results.csv`](../../results/exp09/w2b_loso_results.csv) (complete 7-fold metric table)
+  - [`results/exp09/exp09_verified_results.json`](../../results/exp09/exp09_verified_results.json)
+  - [`results/exp09/graph_preprocessing_summary.csv`](../../results/exp09/graph_preprocessing_summary.csv)
+  - [`results/exp09/architecture_summary.csv`](../../results/exp09/architecture_summary.csv)
+  - [`results/exp09/training_curves.csv`](../../results/exp09/training_curves.csv)

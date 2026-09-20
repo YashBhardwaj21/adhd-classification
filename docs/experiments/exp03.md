@@ -27,7 +27,7 @@ where $k = 8$ sites and $N = 31,060$ dynamic observations.
 ---
 
 ## 3. Audited Empirical Metric Distributions
-Traced directly to [`results/exp03/feature_statistics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/feature_statistics.csv) ($N = 31,060$ windows):
+Traced directly to [`results/exp03/feature_statistics.csv`](../../results/exp03/feature_statistics.csv) ($N = 31,060$ windows):
 
 | Feature | Mean | Std | 25% | Median (50%) | 75% | Min | Max |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -46,7 +46,7 @@ Traced directly to [`results/exp03/feature_statistics.csv`](file:///c:/Users/Yas
 ---
 
 ## 4. Cross-Site ANOVA Statistical Audit
-Traced directly to [`results/exp03/site_anova.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/site_anova.csv):
+Traced directly to [`results/exp03/site_anova.csv`](../../results/exp03/site_anova.csv):
 
 | Feature | $F$-Statistic | Unadjusted $p$-Value | Interpretation |
 | :--- | :--- | :--- | :--- |
@@ -70,8 +70,8 @@ Traced directly to [`results/exp03/site_anova.csv`](file:///c:/Users/Yash%20Bhar
 ---
 
 ## 6. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp03/03_topological_feature_extraction.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp03/03_topological_feature_extraction.ipynb)
+- **Canonical Notebook**: [`notebooks/exp03/03_topological_feature_extraction.ipynb`](../../notebooks/exp03/03_topological_feature_extraction.ipynb)
 - **Result Artifacts**:
-  - [`results/exp03/feature_statistics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/feature_statistics.csv) (empirical distribution parameters)
-  - [`results/exp03/site_anova.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/site_anova.csv) (cross-site ANOVA $F$ and $p$ values)
-  - [`results/exp03/subject_graph_features.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp03/subject_graph_features.csv) (subject-averaged feature table)
+  - [`results/exp03/feature_statistics.csv`](../../results/exp03/feature_statistics.csv) (empirical distribution parameters)
+  - [`results/exp03/site_anova.csv`](../../results/exp03/site_anova.csv) (cross-site ANOVA $F$ and $p$ values)
+  - [`results/exp03/subject_graph_features.csv`](../../results/exp03/subject_graph_features.csv) (subject-averaged feature table)

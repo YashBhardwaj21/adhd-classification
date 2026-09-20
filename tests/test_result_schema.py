@@ -1,9 +1,9 @@
 """Unit tests for result schema validation across CSV and JSON artifacts."""
 
-import pytest
 import json
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -12,9 +12,10 @@ def test_exp01_temporal_validation_schema():
     path = ROOT / "results/exp01/dynamic_temporal_validation.csv"
     assert path.exists()
     df = pd.read_csv(path)
-    expected_cols = {"lag", "time_delta_sec", "similarity_mean", "similarity_std", "frobenius_mean", "frobenius_std"}
+    expected_cols = {"subject_id", "site", "lag", "mean_similarity", "std_similarity", "mean_frobenius", "windows"}
     assert expected_cols.issubset(set(df.columns))
-    assert len(df) == 4
+    assert set(df["lag"].unique()) == {1, 2, 3, 4}
+    assert len(df) > 0
 
 
 def test_exp04_comparison_table_schema():

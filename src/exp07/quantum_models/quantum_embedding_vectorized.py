@@ -1,34 +1,39 @@
-#!/usr/bin/env python
-# ============================================================================
-# TRAIN QGCNN - VECTORIZED VERSION (BROADCASTING)
-# Uses PennyLane broadcasting for 50-100x speedup
-# ============================================================================
+"""
+Legacy standalone variant of Hybrid QGCNN training.
+Primary entrypoint is exp07.quantum_models.train_qgcnn_vectorized.
+"""
 
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import gc
+import json
+import time
 
 import numpy as np
-import gc
-import time
-import json
+import pennylane as qml
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch_geometric.loader import DataLoader
 from torch_geometric.nn import GCNConv, global_mean_pool
-import pennylane as qml
 
-from utils.config import (
-    DEVICE, DATA_DIR, N_QUBITS, N_LAYERS, NODE_FEATURE_DIM,
-    BATCH_SIZE, EPOCHS, LEARNING_RATE, WEIGHT_DECAY, PATIENCE,
-    CHECKPOINT_INTERVAL, print_config
+from exp07.quantum_models.quantum_embedding_broadcast import QuantumEmbeddingGPU_Broadcast
+from exp07.utils.config import (
+    BATCH_SIZE,
+    CHECKPOINT_INTERVAL,
+    DATA_DIR,
+    DEVICE,
+    EPOCHS,
+    LEARNING_RATE,
+    N_LAYERS,
+    N_QUBITS,
+    NODE_FEATURE_DIM,
+    PATIENCE,
+    WEIGHT_DECAY,
+    print_config,
 )
-from utils.data_loader import load_data, split_data
-from utils.graph_utils import prepare_graphs
-from utils.training_utils import train_one_epoch, validate, save_checkpoint
-from quantum_models.quantum_embedding_broadcast import QuantumEmbeddingGPU_Broadcast
+from exp07.utils.data_loader import load_data, split_data
+from exp07.utils.graph_utils import prepare_graphs
+from exp07.utils.training_utils import save_checkpoint, train_one_epoch, validate
 
 
 class HybridQGCNN_Vectorized(nn.Module):

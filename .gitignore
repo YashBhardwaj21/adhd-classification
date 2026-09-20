@@ -112,6 +112,8 @@ data/downloads/
 !data/provenance/**
 
 # --- 7. Deep Learning Model Weights & Checkpoints ---
+checkpoints/
+artifacts/
 *.pt
 *.pth
 *.ckpt
@@ -131,3 +133,5 @@ tmp/
 temp/
 *.tmp
 *.temp
+.tmp_test_paths/
+tests/.tmp_test_paths/

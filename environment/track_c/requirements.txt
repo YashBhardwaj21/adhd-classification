@@ -1,11 +1,15 @@
 # Track C: Leave-One-Site-Out (LOSO) Population Graph Learning
-# Exact pinned versions from configs/exp09/w2b_environment.json
+# Exact pinned versions from configs/exp09/w2b_environment.json:
+# Python 3.12.13, PyTorch 2.5.1+cu121 (CUDA 12.1), PyG 2.8.0, NumPy 2.4.6, Pandas 2.3.3, Scikit-Learn 1.8.0
+
+# Note: PyTorch with CUDA 12.1 support requires explicit wheel installation:
+# pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
 torch==2.5.1
 torch-geometric==2.8.0
 numpy==2.4.6
 pandas==2.3.3
 scikit-learn==1.8.0
-scipy>=1.11.0
+scipy==1.17.1
 matplotlib>=3.8.0
 tqdm>=4.65.0
 jupyter>=1.0.0

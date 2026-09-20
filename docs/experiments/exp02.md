@@ -34,7 +34,7 @@ For an empirical correlation matrix $\mathbf{C} \in \mathbb{R}^{190 \times 190}$
 4. Insert candidate edges into $G$ until $|E| = 3,591$.
 
 ### 3.2 Null Model Randomization
-To compute normalized graph metrics, empirical networks are benchmarked against degree-preserving randomized surrogate networks using the Rubinov & Sporns (2011) algorithm implemented in [`src/exp02/null_model_und_sign_fixed.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/null_model_und_sign_fixed.py):
+To compute normalized graph metrics, empirical networks are benchmarked against degree-preserving randomized surrogate networks using the Rubinov & Sporns (2011) algorithm implemented in [`src/exp02/null_model_und_sign_fixed.py`](../../src/exp02/null_model_und_sign_fixed.py):
 - **Normalized Clustering ($\gamma$)**: $\gamma = C_{\text{real}} / C_{\text{null}}$
 - **Normalized Path Length ($\lambda$)**: $\lambda = L_{\text{real}} / L_{\text{null}}$
 - **Small-World Index ($\sigma$)**: $\sigma = \gamma / \lambda$
@@ -44,7 +44,7 @@ A network is classified as possessing small-world topology if $\gamma > 1$ and $
 ---
 
 ## 4. Audited & Verified Quantitative Results
-Traced directly to [`results/exp02/graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/graph_metrics.csv) across all 31,060 dynamic windows:
+Traced directly to [`results/exp02/graph_metrics.csv`](../../results/exp02/graph_metrics.csv) across all 31,060 dynamic windows:
 
 | Topological Metric | Real Network ($\mu \pm \sigma$) | Null Surrogate ($\mu \pm \sigma$) | Ratio / Index | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -58,23 +58,23 @@ Traced directly to [`results/exp02/graph_metrics.csv`](file:///c:/Users/Yash%20B
 
 ## 5. Implementation Caveats & Provenance Corrections
 > [!WARNING]
-> **Provenance Correction**: An earlier draft reverse-engineering report misattributed `results/exp04/comparison_table.csv` as evidence for Experiment 2. That file represents ComBat harmonization comparison statistics for Experiment 4. The authoritative metrics for Experiment 2 reside exclusively in [`results/exp02/graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/graph_metrics.csv).
+> **Provenance Correction**: An earlier draft reverse-engineering report misattributed `results/exp04/comparison_table.csv` as evidence for Experiment 2. That file represents ComBat harmonization comparison statistics for Experiment 4. The authoritative metrics for Experiment 2 reside exclusively in [`results/exp02/graph_metrics.csv`](../../results/exp02/graph_metrics.csv).
 
 > [!NOTE]
-> **Removal of 0-Byte Script**: The repository previously contained an unpopulated 0-byte script `src/exp02/null_model_und_sign_fast.py`. This dead file has been removed; all null-model calculations are executed by the verified implementation in [`src/exp02/null_model_und_sign_fixed.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/null_model_und_sign_fixed.py).
+> **Removal of 0-Byte Script**: The repository previously contained an unpopulated 0-byte script `src/exp02/null_model_und_sign_fast.py`. This dead file has been removed; all null-model calculations are executed by the verified implementation in [`src/exp02/null_model_und_sign_fixed.py`](../../src/exp02/null_model_und_sign_fixed.py).
 
 ---
 
 ## 6. Source Code & Result Provenance
-- **Canonical Notebook**: [`notebooks/exp02/02_graph_construction_and_null_models.ipynb`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/notebooks/exp02/02_graph_construction_and_null_models.ipynb)
+- **Canonical Notebook**: [`notebooks/exp02/02_graph_construction_and_null_models.ipynb`](../../notebooks/exp02/02_graph_construction_and_null_models.ipynb)
 - **Source Scripts**:
-  - [`src/exp02/config.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/config.py) (graph hyperparams: $N=190, \rho=0.20$)
-  - [`src/exp02/graph_utils.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/graph_utils.py) (PyG conversion utilities)
-  - [`src/exp02/null_model_und_sign_fixed.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/null_model_und_sign_fixed.py) (degree-preserving null models)
-  - [`src/exp02/randmio_und_signed_fast.py`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/src/exp02/randmio_und_signed_fast.py) (randomized edge swapping)
+  - [`src/exp02/config.py`](../../src/exp02/config.py) (graph hyperparams: $N=190, \rho=0.20$)
+  - [`src/exp02/graph_utils.py`](../../src/exp02/graph_utils.py) (PyG conversion utilities)
+  - [`src/exp02/null_model_und_sign_fixed.py`](../../src/exp02/null_model_und_sign_fixed.py) (degree-preserving null models)
+  - [`src/exp02/randmio_und_signed_fast.py`](../../src/exp02/randmio_und_signed_fast.py) (randomized edge swapping)
 - **Result Artifacts**:
-  - [`results/exp02/graph_construction_strategy.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/graph_construction_strategy.csv)
-  - [`results/exp02/graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/graph_metrics.csv)
-  - [`results/exp02/subject_graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/subject_graph_metrics.csv)
-  - [`results/exp02/site_graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/site_graph_metrics.csv)
-  - [`results/exp02/acquisition_graph_metrics.csv`](file:///c:/Users/Yash%20Bhardwaj/Downloads/ADHD200_GitHub_Staging/results/exp02/acquisition_graph_metrics.csv)
+  - [`results/exp02/graph_construction_strategy.csv`](../../results/exp02/graph_construction_strategy.csv)
+  - [`results/exp02/graph_metrics.csv`](../../results/exp02/graph_metrics.csv)
+  - [`results/exp02/subject_graph_metrics.csv`](../../results/exp02/subject_graph_metrics.csv)
+  - [`results/exp02/site_graph_metrics.csv`](../../results/exp02/site_graph_metrics.csv)
+  - [`results/exp02/acquisition_graph_metrics.csv`](../../results/exp02/acquisition_graph_metrics.csv)
