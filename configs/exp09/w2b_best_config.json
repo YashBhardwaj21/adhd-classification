@@ -1,0 +1,12 @@
+{
+  "architecture": "GAT",
+  "hidden_dim": 128,
+  "n_layers": 2,
+  "dropout": 0.5,
+  "pool": "mean",
+  "use_bn": true,
+  "node_features": "connectivity",
+  "threshold": "top_10pct",
+  "mean_auc": 0.5751908960299881,
+  "std_auc": 0.04314677611172698
+}

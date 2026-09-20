@@ -1,0 +1,2 @@
+N_Subjects,N_ROI,Node_Feature_Dim,Threshold,Node_Feature_Type,Mean_Edges,Std_Edges,Mean_Density,Std_Density,ADHD_Ratio,N_Sites
+497,190,190,top_10pct,connectivity,3782,0,0.10002784739626842,2.7755575615628914e-17,0.4346076458752515,7

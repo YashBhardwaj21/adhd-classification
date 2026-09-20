@@ -1,0 +1,51 @@
+{
+  "n_subjects": 497,
+  "n_roi": 190,
+  "n_sites": 7,
+  "sites": [
+    "KKI",
+    "NYU",
+    "NeuroIMAGE",
+    "OHSU",
+    "Peking_1",
+    "Peking_2",
+    "Peking_3"
+  ],
+  "adhd_prevalence": 0.4346076458752515,
+  "pheno_features": [
+    "Age",
+    "Gender",
+    "Handedness"
+  ],
+  "graph_features": [
+    "degree_mean",
+    "degree_std",
+    "degree_p10",
+    "degree_p25",
+    "degree_p50",
+    "degree_p75",
+    "degree_p90",
+    "degree_max",
+    "clustering_mean",
+    "clustering_std",
+    "clustering_p10",
+    "clustering_p25",
+    "clustering_p50",
+    "clustering_p75",
+    "clustering_p90",
+    "clustering_max",
+    "density",
+    "global_efficiency",
+    "local_efficiency",
+    "transitivity",
+    "assortativity",
+    "n_components",
+    "largest_component_ratio"
+  ],
+  "selected_reps": [
+    "ComBat FC",
+    "Raw GraphPheno",
+    "ComBat FCPheno",
+    "ComBat FCGraphPheno"
+  ]
+}

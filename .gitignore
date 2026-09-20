@@ -1,0 +1,133 @@
+# ============================================================================
+# ADHD-200 RESEARCH REPOSITORY .GITIGNORE
+# Configured for Python, PyTorch/PyG, Jupyter, and Neuroimaging Data Exclusions
+# ============================================================================
+
+# --- 1. Python Build & Bytecode Artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.dll
+
+# Packaging & distribution
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- 2. Testing, Coverage & Linting ---
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# --- 3. Virtual Environments ---
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+conda-env/
+
+# --- 4. Jupyter Notebook Checkpoints & Cache ---
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+.jupyter/
+
+# --- 5. Operating System & Editor Metadata ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+[Nn]on[Tt]racked/
+
+# Editors & IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
+
+# --- 6. Neuroimaging & High-Dimensional Biomedical Data ---
+# Raw NIfTI neuroimaging scans
+*.nii
+*.nii.gz
+
+# Medical imaging DICOM files
+*.dcm
+*.dicom
+
+# Large tabular & columnar array stores (>100 MiB)
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.mat
+
+# Serialized Python binaries & array dumps
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+
+# Local raw / intermediate data staging directories
+data/raw/
+data/processed/
+data/cache/
+data/downloads/
+
+# Whitelist data documentation and provenance ledgers
+!data/README.md
+!data/provenance/
+!data/provenance/**
+
+# --- 7. Deep Learning Model Weights & Checkpoints ---
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# --- 8. Experiment Tracking & Logging ---
+wandb/
+runs/
+lightning_logs/
+*.log
+
+# --- 9. Temporary & Scratch Files ---
+scratch/
+tmp/
+temp/
+*.tmp
+*.temp

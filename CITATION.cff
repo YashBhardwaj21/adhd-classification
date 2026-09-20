@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this codebase, experimental results, or methodology in your research, please cite it using the metadata below."
+title: "Dynamic Functional Connectomics and Graph Neural Networks for ADHD Classification"
+abstract: "Authoritative research artifact and source-of-truth code repository evaluating dynamic resting-state functional connectivity, multi-site ComBat harmonization, classical and quantum graph convolutional networks, spatio-temporal baselines, and leave-one-site-out population graph learning across the ADHD-200 consortium."
+version: "1.0.0"
+date-released: "2026-09-20"
+license: "MIT"
+repository-code: "https://github.com/ADHD200-Research/ADHD200_Connectomics"
+keywords:
+  - "neuroimaging"
+  - "functional connectivity"
+  - "resting-state fMRI"
+  - "graph neural networks"
+  - "quantum machine learning"
+  - "ADHD-200"
+  - "harmonization"
+  - "reproducibility"
+authors:
+  - family-names: "Bhardwaj"
+    given-names: "Yash"
+    affiliation: "ADHD-200 Connectomics Consortium & Research Team"
+preferred-citation:
+  type: article
+  title: "Evaluating Dynamic Connectome Topologies and Graph Neural Architectures in Multi-Site Psychiatric Neuroimaging"
+  authors:
+    - family-names: "Bhardwaj"
+      given-names: "Yash"
+  year: 2026
+  journal: "IEEE Journal of Biomedical and Health Informatics (JBHI)"

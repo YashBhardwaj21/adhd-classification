@@ -1,0 +1,12 @@
+{
+  "threshold": "top_10pct",
+  "node_features": "connectivity",
+  "n_roi": 190,
+  "n_subjects": 497,
+  "n_sites": 7,
+  "weighted_edges": true,
+  "self_loops": true,
+  "adhd_ratio": 0.4346076458752515,
+  "mean_density": 0.10002784739626842,
+  "std_density": 2.7755575615628914e-17
+}

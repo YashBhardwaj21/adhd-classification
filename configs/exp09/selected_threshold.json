@@ -1,0 +1,5 @@
+{
+  "selected_threshold": "top_10pct",
+  "rationale": "Selected from subject-wise threshold optimisation based on graph connectivity, density, small-worldness, and downstream GCN performance.",
+  "method": "hardcoded_from_prior_optimization"
+}

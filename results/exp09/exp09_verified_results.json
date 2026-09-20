@@ -1,0 +1,36 @@
+{
+  "experiment": "Experiment 9 - Independent LOSO Population Graph Learning",
+  "source_notebook": "notebooks/exp09/11_population_graph_learning.ipynb",
+  "executed_protocol": {
+    "subjects": 497,
+    "sites": 7,
+    "nodes": 190,
+    "graph_selection": "top_10pct",
+    "features": "connectivity features",
+    "edge_weights": true,
+    "self_loops": true,
+    "mean_density": 0.10003,
+    "adhd_ratio": 0.4346
+  },
+  "executed_gnn_results": {
+    "GCN_mean_auc": 0.5468,
+    "GAT_mean_auc": 0.5752,
+    "SAGE_mean_auc": 0.5502,
+    "GIN_mean_auc": 0.5437
+  },
+  "protocol_discrepancy": {
+    "paper_description": [
+      "MST + 20% graph construction",
+      "inverse-distance mapping d = 1/|r|",
+      "497 subjects across 7 sites"
+    ],
+    "executed_configuration": [
+      "top_10pct graph selection",
+      "connectivity features",
+      "weighted edges with self-loops",
+      "497 subjects across 7 sites"
+    ],
+    "status": "Verified code/results, but paper-method versus executed-configuration mismatch is unresolved."
+  },
+  "note": "The repository staging preserves the executed artifacts and documents the discrepancy; no source files were modified, moved, or deleted."
+}

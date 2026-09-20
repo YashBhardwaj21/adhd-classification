@@ -1,0 +1,37 @@
+{
+  "experiment": "Experiment 8 - Volumetric and Temporal Baselines",
+  "provenance": "Values were matched to executed notebook outputs during source audit.",
+  "models": {
+    "Lightweight_3D_CNN": {
+      "test_accuracy": 0.7619,
+      "test_auroc": 0.7316,
+      "source": "notebooks/exp08/neuro.ipynb"
+    },
+    "NeuroSTORM": {
+      "single_split_accuracy": 0.6825,
+      "single_split_auroc": 0.68,
+      "five_fold_accuracy_mean": 0.591,
+      "five_fold_auroc_mean": 0.588,
+      "source": "notebooks/exp08/true_neuro.ipynb"
+    },
+    "Temporal_Graph": {
+      "test_accuracy": 0.5443,
+      "test_auroc": 0.5534,
+      "confusion_matrix": [
+        [
+          1661,
+          1242
+        ],
+        [
+          839,
+          825
+        ]
+      ],
+      "source": "notebooks/exp08/09_temporal_graph_learning.ipynb"
+    }
+  },
+  "excluded": [
+    "NeuroSTORM pretrained checkpoints (*.pth, *.ckpt)",
+    "updated_transformer.ipynb (not part of the paper-reported Experiment 8 results)"
+  ]
+}

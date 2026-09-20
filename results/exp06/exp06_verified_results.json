@@ -1,0 +1,46 @@
+{
+  "experiment": "Experiment 6 - Semi-Supervised Pseudo-Labeling",
+  "source_notebook": "notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb",
+  "cohort": {
+    "clean_labeled": 391,
+    "train": 273,
+    "validation": 59,
+    "test": 59,
+    "unlabeled": 564
+  },
+  "procedure_I": {
+    "method": "Self-training",
+    "classifier": "class-weighted Logistic Regression",
+    "pipeline": [
+      "SimpleImputer(mean)",
+      "StandardScaler",
+      "LogisticRegression(class_weight='balanced')"
+    ],
+    "threshold": 0.75,
+    "k_best": 10,
+    "max_iter": 10,
+    "pseudo_labels": 552,
+    "validation_accuracy": 0.5593,
+    "test_accuracy": 0.6441,
+    "provenance": "Stored execution output in part1.ipynb"
+  },
+  "procedure_II": {
+    "method": "Weighted four-classifier ensemble",
+    "classifiers": [
+      "Random Forest",
+      "Gradient Boosting",
+      "Logistic Regression",
+      "Calibrated SVM"
+    ],
+    "selected_subjects": 484,
+    "clean_validation_accuracy": 0.6709,
+    "pseudo_label_augmented_validation_accuracy": 0.7215,
+    "provenance": "Stored execution output in part1.ipynb"
+  },
+  "independent_supervised_benchmarks": {
+    "hard_voting_test_accuracy": 0.7119,
+    "soft_voting_test_accuracy": 0.678,
+    "test_subjects": 59
+  },
+  "important_note": "The repository contains an earlier Random-Forest self-training model at mnt/ADHD200/06_semi_supervised/models/self_training_model.pkl. It is not the Logistic-Regression 552-label model reported as Procedure I in the latest paper draft."
+}
