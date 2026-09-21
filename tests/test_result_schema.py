@@ -63,3 +63,15 @@ def test_exp09_loso_results_schema():
     assert len(df) == 28  # 4 architectures x 7 folds
     assert set(df["Architecture"].unique()) == {"GCN", "GAT", "SAGE", "GIN"}
     assert len(df["Test_Site"].unique()) == 7
+
+
+def test_results_manifest_schema():
+    path = ROOT / "results/manifest.csv"
+    assert path.exists()
+    df = pd.read_csv(path)
+    expected_cols = {"experiment", "artifact", "source", "status", "dataset", "n_subjects", "seed", "notes"}
+    assert expected_cols.issubset(set(df.columns))
+    assert len(df) >= 9
+    experiments = set(df["experiment"].unique())
+    for exp_num in range(1, 10):
+        assert f"exp0{exp_num}" in experiments, f"Missing exp0{exp_num} in manifest"

@@ -1,42 +1,30 @@
-# ADHD Classification: Classical vs Quantum GCNN
+# Experiment 7 Results: Classical GCN vs Quantum QGCNN
 
-## 1. Dataset Summary
+This report summarizes the evaluated test-set metrics for Experiment 7 (Track B) recorded in [`checkpoint_analysis.json`](checkpoint_analysis.json).
 
-| Type | Count | Healthy | ADHD |
-|------|-------|---------|------|
-| Clean Labels | 162 | 93 | 69 |
-| Pseudo Labels | 713 | 535 | 178 |
-| Test Set | 33 | - | - |
+## Cohort and Test Set Scope
 
-## 2. Model Performance
+The held-out test evaluation was performed on 33 clean-labelled subjects partitioned from the 162 clean-labelled subject cohort:
+- Total clean cohort: 162 subjects (103 train, 26 validation, 33 held-out test)
+- Pseudo-labelled cohort: 713 subjects (allocated strictly to training)
+- Held-out test set: 33 subjects (19 TDC / healthy, 14 ADHD)
 
-| Model | AUC | Accuracy | Precision | Recall | F1 |
-|-------|-----|----------|-----------|--------|----|
-| Classical GCN | 0.7293 | 0.6970 | 0.6941 | 0.6970 | 0.6929 |
-| Quantum GCNN (6 qubits) | 0.6429 | 0.6061 | 0.6204 | 0.6061 | 0.6082 |
+## Test Set Performance
 
-## 3. Key Findings
+| Model | AUC | Accuracy | Precision | Recall | F1 Score |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Classical GCN** | 0.7293 | 0.6970 | 0.6941 | 0.6970 | 0.6929 |
+| **Quantum QGCNN** (6 qubits) | 0.6429 | 0.6061 | 0.6204 | 0.6061 | 0.6082 |
 
-- **Classical GCN outperforms quantum** by 0.0865 AUC
-- Classical: AUC = 0.7293
-- Quantum: AUC = 0.6429
-- Performance gap is moderate
+> [!NOTE]
+> **Metric Convention**: Precision, recall, and F1 score metrics reported above reproduce the weighted-average convention recorded in the result artifact (`checkpoint_analysis.json`). Differences between this weighted convention and manuscript-reported class-level metrics are documented in [`docs/provenance.md`](../../docs/provenance.md).
 
-## 4. Generated Plots
+## Evaluated Architectures
 
-| Plot | Description |
-|------|-------------|
-| `roc_curves.png` | ROC curves for both models |
-| `confusion_matrices.png` | Confusion matrices |
-| `comparison_bars.png` | Performance comparison |
-| `label_distribution.png` | Clean vs pseudo labels |
-| `label_comparison.png` | Label distribution comparison |
-| `summary_table.png` | Results summary table |
-| `previous_runs.png` | Previous runs history |
+- **Classical GCN**: 3 GCNConv layers (117 $\to$ 32 $\to$ 32 $\to$ 16 $\to$ 2) with BatchNorm1d, Dropout(0.30), and global mean pooling (5,522 trainable parameters).
+- **Hybrid Quantum QGCNN**: Classical projection (117 $\to$ 12), 6-qubit variational circuit (1 trainable layer with sequential $R_X, R_Y, R_Z$ rotations, ring CNOT entanglement, 6 Pauli-$Z$ expectation measurements), followed by 3 GCNConv layers (6 $\to$ 16 $\to$ 16 $\to$ 16 $\to$ 2) and global mean pooling (2,188 trainable parameters).
+- **Graph Construction**: AAL-116 parcellation (116 nodes), top 15% absolute FC edge selection, signed correlation weights, 117 node features (116 FC correlations + 1 normalized degree).
 
-## 5. Conclusion
+## Interpretation
 
-Based on the results:
-
-- **Classical GCN is recommended** for this task
-- Quantum GCNN needs more training or architectural changes
+Under the evaluated configuration, the two models produced different test-set performance on the 33 held-out test subjects. The experiment evaluates the specific parameterizations tested and does not establish a general advantage for either architecture across all possible hyperparameter configurations.

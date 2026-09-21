@@ -1,0 +1,19 @@
+experiment,artifact,source,status,dataset,n_subjects,seed,notes
+exp01,dynamic_temporal_validation.csv,results/exp01/dynamic_temporal_validation.csv,reported,CC200,534,42,dFC temporal correlation decay across lag 1 to 4
+exp01,static_vs_dynamic_validation.csv,results/exp01/static_vs_dynamic_validation.csv,reported,CC200,534,42,Static vs dynamic FC Frobenius norm distance comparison
+exp02,graph_metrics.csv,results/exp02/graph_metrics.csv,reported,CC200,534,42,Topological graph metrics across 31060 sliding windows
+exp02,subject_graph_metrics.csv,results/exp02/subject_graph_metrics.csv,reported,CC200,534,42,Subject-averaged topological graph metrics
+exp03,feature_statistics.csv,results/exp03/feature_statistics.csv,reported,CC200,534,42,Summary statistics of dynamic topological features
+exp03,site_anova.csv,results/exp03/site_anova.csv,reported,CC200,534,42,Cross-site scanner variation ANOVA F-tests
+exp04,comparison_table.csv,results/exp04/comparison_table.csv,reported,CC200,534,42,Empirical Bayes ComBat harmonization comparison table
+exp04,site_prediction_results.csv,results/exp04/site_prediction_results.csv,reported,CC200,534,42,Scanner site identification before and after ComBat
+exp04,diagnosis_prediction_results.csv,results/exp04/diagnosis_prediction_results.csv,reported,CC200,534,42,Diagnostic classification before and after ComBat
+exp05,run_dynamic_biomarkers.csv,results/exp05/run_dynamic_biomarkers.csv,reported,CC200,534,42,Dynamic brain micro-state dwell times and fractional occupancy (K=3)
+exp05,run_state_sequences.csv,results/exp05/run_state_sequences.csv,reported,CC200,534,42,Sliding-window micro-state sequence transitions
+exp06,exp06_verified_results.json,results/exp06/exp06_verified_results.json,reported,AAL-116,955,42,Semi-supervised self-training pseudo-labelling counts
+exp07,checkpoint_analysis.json,results/exp07/checkpoint_analysis.json,reported,AAL-116,33,42,Held-out test evaluation: Classical GCN vs Quantum QGCNN
+exp07,report.md,results/exp07/report.md,reported,AAL-116,33,42,Test evaluation performance table and metric conventions
+exp08,exp08_verified_results.json,results/exp08/exp08_verified_results.json,reported,ADHD-200,764,42,3D CNN, NeuroSTORM, and temporal GNN benchmark metrics
+exp09,w2b_loso_results.csv,results/exp09/w2b_loso_results.csv,reported,CC200,497,42,7-fold Leave-One-Site-Out population graph metrics across 4 GNNs
+exp09,graph_preprocessing_summary.csv,results/exp09/graph_preprocessing_summary.csv,reported,CC200,497,42,Subject graph preprocessing summary statistics (top 10% weighted)
+exp09,exp09_verified_results.json,results/exp09/exp09_verified_results.json,reported,CC200,497,42,Aggregate LOSO cross-validation metric summaries

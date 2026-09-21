@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # ============================================================================
-# GRAPH UTILITIES - Convert FC features to PyTorch Geometric graphs
+# GRAPH UTILITIES - Convert CC200 FC features to PyTorch Geometric graphs
+# Experiment 02: CC200 Atlas (190 ROIs, density 0.20)
+# Note: For topological analysis, notebooks/exp02/02_graph_construction_and_validation.ipynb
+# implements mst_graph (MST + Proportional Thresholding to 3,591 edges).
 # ============================================================================
 
 import numpy as np

@@ -3,6 +3,12 @@
 # QUANTUM EMBEDDING - VECTORIZED USING PENNYLANE BROADCASTING
 # Canonical implementation variant for Experiment 7
 # Processes all 116 nodes in a graph with a single broadcasted quantum circuit call
+# Historical circuit gates:
+#   - 6 qubits
+#   - Angle encoding: RY + RZ
+#   - 1 trainable layer: RX + RY + RZ rotations
+#   - Entanglement: ring CNOT
+#   - Measurement: 6 Pauli-Z expectation values
 # ============================================================================
 
 import numpy as np
@@ -32,7 +38,7 @@ class QuantumEmbeddingGPU_Broadcast(nn.Module):
         self.n_layers = n_layers
         self.dev = dev
 
-        # Classical projection
+        # Classical projection: (num_nodes, input_dim) -> (num_nodes, 2 * n_qubits)
         self.classical_proj = nn.Linear(input_dim, 2 * n_qubits)
 
         # Learnable quantum weights
@@ -58,20 +64,15 @@ class QuantumEmbeddingGPU_Broadcast(nn.Module):
                 qml.RY(inputs[..., 2 * q], wires=q)
                 qml.RZ(inputs[..., 2 * q + 1], wires=q)
 
-            # Variational layers
+            # Variational layers: single-qubit rotations followed by ring CNOT
             for l in range(self.n_layers):
-                # Entanglement ring
+                for q in range(self.n_qubits):
+                    qml.RX(weights[l, q, 0], wires=q)
+                    qml.RY(weights[l, q, 1], wires=q)
+                    qml.RZ(weights[l, q, 2], wires=q)
+
                 for q in range(self.n_qubits):
                     qml.CNOT(wires=[q, (q + 1) % self.n_qubits])
-
-                # Parameterized single-qubit rotations
-                for q in range(self.n_qubits):
-                    qml.Rot(
-                        weights[l, q, 0],
-                        weights[l, q, 1],
-                        weights[l, q, 2],
-                        wires=q,
-                    )
 
             # Measure expectation values for all qubits
             return [qml.expval(qml.PauliZ(q)) for q in range(self.n_qubits)]
@@ -81,10 +82,10 @@ class QuantumEmbeddingGPU_Broadcast(nn.Module):
     def forward(self, x):
         """
         Forward pass for a batch of nodes.
-        
+
         Args:
             x: Node features tensor of shape (num_nodes, input_dim)
-            
+
         Returns:
             Quantum embeddings tensor of shape (num_nodes, n_qubits)
         """

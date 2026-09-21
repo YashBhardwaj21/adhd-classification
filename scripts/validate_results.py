@@ -2,7 +2,7 @@
 # ============================================================================
 # RESULTS VALIDATION SCRIPT
 # Asserts numerical consistency across results/ artifacts against the
-# audited ground-truth values recorded in docs/provenance/source_of_truth.md
+# ground-truth values recorded in docs/provenance.md
 # ============================================================================
 
 import json
@@ -151,7 +151,17 @@ def main():
         validate_exp08()
         validate_exp09()
         print("\n" + "=" * 60)
-        print("ALL RESULT ARTIFACTS STRICTLY MATCH AUDITED NUMBERS!")
+        print("SUMMARY OF VALIDATED ARTIFACTS:")
+        print("  - Exp 01: dFC temporal correlation decay (0.8990 -> 0.5467) & Frobenius distances")
+        print("  - Exp 02: CC200 graph construction parameters (MST+PT, density 0.20)")
+        print("  - Exp 04: ComBat harmonization mean metrics (clustering 0.3333 -> 0.3314)")
+        print("  - Exp 05: Micro-state cluster metrics (K=3, State 0 dwell time 6.24 windows)")
+        print("  - Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484)")
+        print("  - Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33)")
+        print("  - Exp 08: Deep learning baseline accuracies (3D CNN: 76.19%, NeuroSTORM: 59.10%)")
+        print("  - Exp 09: LOSO 7-fold mean AUCs (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437, N=497)")
+        print("=" * 60)
+        print("All configured result checks passed.")
         sys.exit(0)
     except Exception as e:
         print(f"\n[VALIDATION ERROR] {e}")

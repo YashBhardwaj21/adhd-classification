@@ -55,19 +55,11 @@ KEY_RESULT_ARTIFACTS = [
 ]
 
 DOCUMENTATION_FILES = [
-    "docs/provenance/source_of_truth.md",
-    "docs/provenance/paper_vs_code.md",
-    "docs/provenance/reproducibility_status.md",
     "docs/reproduction.md",
-    "docs/experiments/exp01.md",
-    "docs/experiments/exp02.md",
-    "docs/experiments/exp03.md",
-    "docs/experiments/exp04.md",
-    "docs/experiments/exp05.md",
-    "docs/experiments/exp06.md",
-    "docs/experiments/exp07.md",
-    "docs/experiments/exp08.md",
-    "docs/experiments/exp09.md",
+    "docs/experiment_notes.md",
+    "docs/provenance.md",
+    "data/README.md",
+    "data/provenance.md",
 ]
 
 
@@ -153,7 +145,7 @@ def main():
     total_errors = err_nb + err_art + err_zero + err_doc
     print("\n" + "=" * 60)
     if total_errors == 0:
-        print("ALL AUDIT CHECKS PASSED: Repository is complete and well-formed!")
+        print("Repository structure checks passed.")
         sys.exit(0)
     else:
         print(f"AUDIT FAILED WITH {total_errors} ISSUES. Review details above.")

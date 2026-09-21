@@ -5,11 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "adhd200-connectomics"
 version = "1.0.0"
-description = "Authoritative research codebase for dynamic functional connectomics, ComBat harmonization, classical and quantum GNNs, and multi-site LOSO evaluation on ADHD-200."
+description = "Research code for dynamic functional connectomics, ComBat harmonization, classical and quantum GNNs, and multi-site LOSO evaluation on ADHD-200."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
+    { name = "Shantanu Khare" },
+    { name = "Bhavana Deepthi" },
     { name = "Yash Bhardwaj" }
 ]
 keywords = [

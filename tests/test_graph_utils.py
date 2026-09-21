@@ -26,7 +26,7 @@ def test_exp07_graph_shapes():
     test_X = rng.standard_normal((n_samples, n_upper), dtype=np.float32)
     test_y = np.array([0, 1, 0, 1])
 
-    graphs = prepare_exp07_graphs(test_X, test_y, n_rois=N_ROIS, density=0.20)
+    graphs = prepare_exp07_graphs(test_X, test_y, n_rois=N_ROIS, density=0.15)
     assert len(graphs) == n_samples
 
     for i, g in enumerate(graphs):
@@ -40,14 +40,14 @@ def test_exp07_graph_shapes():
 
 def test_exp07_data_split_disjointness():
     """Verify that split_data maintains a 33-subject test set strictly disjoint from training when data is present."""
-    data_file = data_root() / "exp07" / "aal116_fc_features.npz"
+    data_file = data_root() / "exp07" / "X_combined_full.npy"
     if not data_file.exists():
-        pytest.skip(f"Authentic dataset file {data_file} not present; skipping data-dependent split test.")
+        pytest.skip(f"Historical dataset file {data_file} not present; skipping data-dependent split test.")
 
     from exp07.utils.data_loader import load_data, split_data
 
-    X, X_clean, y, subjects = load_data()
-    splits = split_data(X, y, subjects, test_size=33)
+    X, y, subjects = load_data()
+    splits = split_data(X, y, subjects, n_test_clean=33)
 
     assert len(splits["X_test"]) == 33
     assert len(splits["y_test"]) == 33

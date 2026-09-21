@@ -1,106 +1,107 @@
 # Reproduction Guide & Execution Environment
 
-## 1. Verified Software & Hardware Environment
-
-This repository's environment specifications are reconstructed directly from the execution environment metadata recorded in [`configs/exp09/w2b_environment.json`](../configs/exp09/w2b_environment.json).
-
-### 1.1 Tested Hardware Profile
-- **Accelerator**: NVIDIA A100-SXM4-80GB (VRAM: $81,920\text{ MiB}$)
-- **Host Architecture**: Linux x86_64 / Windows 11 Compatibility
-- **Host Memory**: $64\text{ GB} - 128\text{ GB}$ RAM recommended
-- **CUDA Capability**: 8.0+ (Ampere / Hopper architecture recommended for TensorFloat-32)
-
-### 1.2 Audited Software Dependencies
-| Package | Audited Version | Purpose |
-| :--- | :--- | :--- |
-| **Python** | `3.12.13` | Base runtime environment |
-| **PyTorch** | `2.5.1+cu121` | Deep learning backend with CUDA 12.1 runtime |
-| **torch-geometric (PyG)** | `2.8.0` | Graph neural network architectures (GCN, GAT, SAGE, GIN) |
-| **PennyLane** | `0.44.1` | Quantum circuit simulations & parameter broadcasts |
-| **PennyLane-Lightning-GPU**| `0.44.1` | High-performance state-vector GPU quantum backend |
-| **NumPy** | `2.4.6` | Numerical vectorization & matrix operations |
-| **Pandas** | `2.3.3` | Tabular data analysis and manifest management |
-| **Scikit-Learn** | `1.8.0` | Classical baselines, clustering, evaluation metrics |
-| **MONAI** | `1.5.2` | Medical imaging volumetric data pipelines |
-| **bctpy** | `0.5.2` | Brain Connectivity Toolbox algorithms |
-| **neuroCombat** | `0.2.1` | Empirical Bayes multi-site scanner harmonization |
+This guide describes the software environment, hardware requirements, and reproduction procedures for the experiments in this repository.
 
 ---
 
-## 2. Environment Setup Instructions
+## 1. Reproduction Status by Experiment
 
-### 2.1 Conda Environment Creation
+Experiments in this study fall into two distinct reproducibility categories based on data availability:
+
+### Category 1: Rerunnable from Repository + Obtainable External ADHD-200 Data
+The following experiments can be executed using the code in this repository once the public ADHD-200 preprocessed data are downloaded:
+- **Track A (Connectomic Dynamics & Harmonization)**:
+  - Exp 01: Dynamic functional connectivity generation and stability
+  - Exp 02: CC200 graph construction and signed null models
+  - Exp 03: Topological feature extraction and cross-site ANOVA
+  - Exp 04: ComBat scanner harmonization and classification trade-offs
+  - Exp 05: Dynamic micro-state clustering and Markov transitions
+- **Track B (Semi-Supervised & Baseline Deep Learning)**:
+  - Exp 06: Semi-supervised pseudo-labelling
+  - Exp 08: Lightweight 3D CNN, NeuroSTORM, and temporal GNN baselines
+- **Track C (Population Graph Learning & Generalization)**:
+  - Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph learning
+
+### Category 2: Reported Results Retained; Original Execution Inputs Unavailable
+- **Exp 07 (Classical GCN vs Quantum QGCNN)**:
+  The reported results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are archived in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) and trained model weights exceed repository quotas and are unavailable. Consequently, Experiment 07 cannot be rerun end-to-end from this repository without external restoration of those arrays. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
+
+---
+
+## 2. Environment Specifications
+
+### 2.1 Recorded Historical Environment (A100 Execution)
+Reconstructed from `configs/exp09/w2b_environment.json`:
+- **Hardware**: NVIDIA A100-SXM4-80GB GPU, x86_64 Host
+- **Python**: `3.12.13`
+- **PyTorch**: `2.5.1+cu121` (CUDA 12.1 runtime)
+- **PyTorch Geometric**: `2.8.0`
+- **PennyLane**: `0.44.1`
+- **PennyLane-Lightning-GPU**: `0.44.0`
+- **NumPy**: `2.4.6`, **Pandas**: `2.3.3`, **Scikit-Learn**: `1.8.0`
+
+### 2.2 Suggested Installation
+
 ```bash
 # 1. Create dedicated Python 3.12 virtual environment
 conda create -n adhd200 python=3.12.13 -y
 conda activate adhd200
 
-# 2. Install PyTorch with CUDA 12.1 support
+# 2. Install PyTorch with CUDA 12.1 runtime
 pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
 
-# 3. Install PyTorch Geometric and optional dependencies
+# 3. Install PyTorch Geometric
 pip install torch-geometric==2.8.0
 
-# 4. Install Quantum simulation packages
-pip install pennylane==0.44.1 pennylane-lightning-gpu==0.44.1
+# 4. Install Track B dependencies (PennyLane, MONAI, scientific stack)
+pip install -r environment/track_b/requirements.txt
 
-# 5. Install scientific computing, neuroimaging, and evaluation libraries
-pip install numpy==2.4.6 pandas==2.3.3 scikit-learn==1.8.0 monai==1.5.2 bctpy neuroCombat tqdm scipy
-```
-
-### 2.2 Verifying PyTorch and GPU Acceleration
-```python
-import torch
-print(f"PyTorch Version: {torch.__version__}")
-print(f"CUDA Available:  {torch.cuda.is_available()}")
-if torch.cuda.is_available():
-    print(f"Device Name:     {torch.cuda.get_device_name(0)}")
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
+# 5. Install local package in editable mode
+pip install -e .
 ```
 
 ---
 
-## 3. End-to-End Execution Sequence
+## 3. Step-by-Step Execution Sequence
 
-The repository is structured into three independent experimental tracks. Execute notebooks or scripts in the prescribed sequence:
+Execute the canonical notebooks in sequence (paths verified against the repository tree):
 
-### Track A: Connectomic Dynamics & Multi-Site Harmonization (CC200 Atlas)
-1. **Dynamic FC Generation**:
+### Track A: Connectomic Dynamics & Harmonization (CC200 Atlas)
+
+1. **Exp 01 — Dynamic FC Generation & Temporal Stability**:
    ```bash
    jupyter nbconvert --execute notebooks/exp01/01_fc_generation_and_validation.ipynb --to notebook
    ```
-2. **Dual-Constraint Graph Construction & Null Models**:
+
+2. **Exp 02 — Graph Construction & Topological Metrics**:
    ```bash
-   jupyter nbconvert --execute notebooks/exp02/02_graph_construction_and_null_models.ipynb --to notebook
-   ```
-3. **Topological Feature Extraction & ANOVA**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp03/03_topological_feature_extraction.ipynb --to notebook
-   ```
-4. **ComBat Harmonization**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp04/04_combat_harmonization.ipynb --to notebook
-   ```
-5. **Dynamic Brain State Clustering**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp05/05_dynamic_state_modeling.ipynb --to notebook
+   jupyter nbconvert --execute notebooks/exp02/02_graph_construction_and_validation.ipynb --to notebook
+   jupyter nbconvert --execute notebooks/exp02/03_graph_metrics_and_null_models.ipynb --to notebook
    ```
 
-### Track B: Semi-Supervised Learning & Deep Architectures (AAL-116 Atlas)
-1. **Semi-Supervised Pseudo-Labeling**:
+3. **Exp 03 — Topological Feature Extraction & Cross-Site ANOVA**:
+   ```bash
+   jupyter nbconvert --execute notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb --to notebook
+   ```
+
+4. **Exp 04 — ComBat Harmonization & Classification Trade-offs**:
+   ```bash
+   jupyter nbconvert --execute notebooks/exp04/w2c_athena_2.ipynb --to notebook
+   ```
+
+5. **Exp 05 — Dynamic Brain State Modeling**:
+   ```bash
+   jupyter nbconvert --execute notebooks/exp05/dynamic_transformer.ipynb --to notebook
+   ```
+
+### Track B: Semi-Supervised Learning & Baselines
+
+6. **Exp 06 — Semi-Supervised Pseudo-Labeling**:
    ```bash
    jupyter nbconvert --execute notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb --to notebook
    ```
-2. **Classical GCN Training**:
-   ```bash
-   python src/exp07/classical_models/run_experiment.py
-   ```
-3. **Quantum GCNN Training (Requires GPU)**:
-   ```bash
-   python src/exp07/quantum_models/run_experiment.py
-   ```
-4. **Volumetric & Temporal Baselines**:
+
+7. **Exp 08 — Volumetric & Temporal Baselines**:
    ```bash
    jupyter nbconvert --execute notebooks/exp08/neuro.ipynb --to notebook
    jupyter nbconvert --execute notebooks/exp08/true_neuro.ipynb --to notebook
@@ -108,23 +109,25 @@ The repository is structured into three independent experimental tracks. Execute
    ```
 
 ### Track C: Population Graph Learning & Generalization (CC200 Atlas)
-1. **Leave-One-Site-Out Cross-Validation (GCN, GAT, SAGE, GIN)**:
+
+8. **Exp 09 — Leave-One-Site-Out (LOSO) Cross-Validation**:
    ```bash
    jupyter nbconvert --execute notebooks/exp09/11_population_graph_learning.ipynb --to notebook
    ```
 
 ---
 
-## 4. Verification & Validation Utilities
+## 4. Verification & Testing
 
-Run repository verification scripts to assert code and artifact integrity:
+Verify repository structural integrity and numerical consistency:
+
 ```bash
-# 1. Audit repository structure and staged artifacts
+# 1. Check directory structure, notebook validity, and non-empty artifacts
 python scripts/audit_repo.py
 
-# 2. Validate numerical consistency against source-of-truth ledgers
+# 2. Check numerical consistency against retained result tables
 python scripts/validate_results.py
 
-# 3. Run automated unit tests
+# 3. Run automated unit test suite
 pytest tests/
 ```

@@ -149,8 +149,8 @@ def run_experiment(
     print(f"Quantum device: {dev}")
 
     print("\nLoading data...")
-    X_full, _, y, subjects = load_data(data_dir=data_dir)
-    data = split_data(X_full, y, subjects, seed=seed)
+    X, y, subjects = load_data(data_dir=data_dir)
+    data = split_data(X, y, subjects, random_state=seed)
 
     print("\nBuilding graphs...")
     train_graphs = prepare_graphs(data["X_train"], data["y_train"])

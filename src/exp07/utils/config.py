@@ -3,45 +3,62 @@
 # EXPERIMENT 7 CONFIGURATION
 # Track B: Graph Convolutional Networks (Classical GCN vs Quantum QGCNN)
 # Atlas: AAL-116 parcellation (116 regions of interest)
+# Loads verified historical parameters from configs/exp07/reported_run.json
 # ============================================================================
 
+import json
+from pathlib import Path
 import torch
 
-from common.paths import checkpoints_root, data_root, results_root
+from common.paths import checkpoints_root, data_root, project_root, results_root
 
 # Compute device
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Directories (resolved dynamically without directory creation on import)
+# Directories
 DATA_DIR = data_root() / "exp07"
 RESULTS_DIR = results_root() / "exp07"
 CHECKPOINTS_DIR = checkpoints_root() / "exp07"
 
-# Audited Architecture & Parcellation parameters
-N_ROIS = 116             # AAL-116 anatomical atlas regions
-NODE_FEATURE_DIM = 117   # 116 connectivity weights + 1 normalized degree feature
-N_QUBITS = 6             # 6-qubit quantum variational circuit
-N_LAYERS = 2             # 2 strongly entangling variational layers
-HIDDEN_DIM = 32          # Classical GCN hidden dimension
-DENSITY = 0.20           # Proportional thresholding density
+# Load reported run configuration if available
+CONFIG_FILE = project_root() / "configs" / "exp07" / "reported_run.json"
+_reported_config = {}
+if CONFIG_FILE.exists():
+    try:
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            _reported_config = json.load(f)
+    except Exception:
+        _reported_config = {}
 
-# Audited Training hyperparameters
-BATCH_SIZE = 16
-EPOCHS = 100
-LEARNING_RATE = 1e-3
-WEIGHT_DECAY = 1e-4
-PATIENCE = 15
-CHECKPOINT_INTERVAL = 10
+_graph_cfg = _reported_config.get("graph", {})
+_training_cfg = _reported_config.get("training", {})
+_quantum_cfg = _reported_config.get("quantum", {})
+
+# Verified Architecture & Parcellation parameters
+N_ROIS = int(_graph_cfg.get("n_rois", 116))
+NODE_FEATURE_DIM = N_ROIS + 1  # 116 FC correlations + 1 normalized degree = 117
+N_QUBITS = int(_quantum_cfg.get("n_qubits", 6))
+N_LAYERS = int(_quantum_cfg.get("n_layers", 1))
+HIDDEN_DIM = 32
+DENSITY = float(_graph_cfg.get("density", 0.15))
+
+# Verified Training hyperparameters
+BATCH_SIZE = int(_training_cfg.get("batch_size", 8))
+EPOCHS = int(_training_cfg.get("epochs", 20))
+LEARNING_RATE = float(_training_cfg.get("learning_rate", 1e-3))
+WEIGHT_DECAY = float(_training_cfg.get("weight_decay", 1e-5))
+PATIENCE = int(_training_cfg.get("patience", 10))
+CHECKPOINT_INTERVAL = int(_training_cfg.get("checkpoint_interval", 1))
 
 # Deterministic random seed
-SEED = 42
+SEED = int(_training_cfg.get("seed", 42))
 RANDOM_SEED = SEED
 
 
 def print_config():
     """Print configuration summary to stdout."""
     print("=" * 60)
-    print("EXPERIMENT 7 CONFIGURATION (Track B)")
+    print("EXPERIMENT 7 CONFIGURATION (Track B - Verified Historical)")
     print("=" * 60)
     print(f"Device:              {DEVICE}")
     print(f"Data Directory:      {DATA_DIR}")
@@ -49,6 +66,7 @@ def print_config():
     print(f"Checkpoints Dir:     {CHECKPOINTS_DIR}")
     print(f"Atlas / ROIs:        AAL-116 ({N_ROIS} nodes)")
     print(f"Node Feature Dim:    {NODE_FEATURE_DIM} (116 FC + 1 degree)")
+    print(f"Density:             {DENSITY}")
     print(f"Quantum Qubits:      {N_QUBITS}")
     print(f"Quantum Layers:      {N_LAYERS}")
     print(f"Batch Size:          {BATCH_SIZE}")

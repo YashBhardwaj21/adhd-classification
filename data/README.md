@@ -1,76 +1,55 @@
-# ADHD-200 Data Governance & Directory Layout
+# Data Availability & Requirements
 
-## 1. Data Availability & Policies
+Raw ADHD-200 neuroimaging data are not redistributed in this repository.
 
-Raw ADHD-200 neuroimaging data (functional BOLD fMRI scans, anatomical T1 scans, and derived ROI time series) are governed by consortium data use agreements and exceed GitHub storage limits. Consequently, raw imaging scans and large intermediate binary arrays are not tracked in this Git repository.
-
-All lightweight derived tabular metrics, execution manifests, cross-validation results, and summary figures are tracked in [`results/`](../results/) and executed [`notebooks/`](../notebooks/).
+To reproduce the experiments, obtain the ADHD-200 data from the original consortium distribution and organize inputs as described below.
 
 ---
 
-## 2. Directory Layout for External Data
+## 1. Required Data by Experiment
 
-When executing notebooks or training scripts on a local workstation or HPC cluster, organize external data according to the structure below or point the corresponding environment variables to your data directory:
+- **Experiments 01–05 (Connectomics & Harmonization)**:
+  - Parcellated resting-state BOLD fMRI ROI time series on the Craddock-200 (CC200) atlas (Athena preprocessing pipeline).
+  - Phenotypic metadata table with diagnostic status (`ADHD` vs `TDC`), acquisition site, age, and sex.
 
-```text
-data/
-├── RawDataBIDS/                      # Raw BOLD fMRI in BIDS format (Exp 08)
-│   ├── sub-0010001/
-│   │   └── func/
-│   │       └── sub-0010001_task-rest_bold.nii.gz
-│   └── ...
-├── 02_timeseries/                    # Parcellated ROI timeseries (CC200 / AAL116)
-│   ├── 0010001_roi_timeseries.npy
-│   └── ...
-├── 03_fc_matrices/                   # Static and dynamic FC matrices (Exp 01, 02)
-│   ├── static/
-│   │   └── static_manifest.csv
-│   ├── dynamic/
-│   │   └── dynamic_manifest.csv
-│   ├── X_fc.npy
-│   ├── X_fc_clean.npy
-│   └── X_fc_norm.npy
-├── exp07/                            # AAL-116 connectomes for Classical & Quantum GCN (Exp 07)
-│   ├── aal116_fc_features.npz
-│   └── aal116_labels.csv
-└── neurostorm_data/                  # Preprocessed 4D volume sequences (Exp 08)
-    └── ...
-```
+- **Experiment 06 (Semi-Supervised Learning)**:
+  - Static functional connectivity correlation matrices on the AAL-116 atlas for 955 subjects (391 clean-labelled, 564 unlabelled).
+
+- **Experiment 07 (Classical GCN vs Quantum QGCNN)**:
+  - Historical execution inputs (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) across 875 subjects (162 clean-labelled, 713 pseudo-labelled).
+  - *Status*: These original combined arrays exceed distribution quotas and are **not** stored in this repository. The reported test results (N=33) are archived in `results/exp07/`. See [`docs/provenance.md`](../docs/provenance.md).
+
+- **Experiment 08 (Volumetric 3D CNN, NeuroSTORM & Temporal GNN)**:
+  - Preprocessed 4D functional BOLD volume sequences ($T=25, 99 \times 117 \times 95$) for volumetric CNN evaluation.
+  - Windowed CC200 graph sequences across disjoint subject splits for temporal GNN.
+
+- **Experiment 09 (Leave-One-Site-Out Population Graphs)**:
+  - Static CC200 functional connectivity matrices (190 ROIs) and phenotypic metadata across 497 subjects from 7 scanner sites.
 
 ---
 
-## 3. Environment Variable Configuration
+## 2. Expected Input Formats
 
-All data paths throughout the codebase and notebooks can be configured dynamically without editing source files:
-
-| Variable | Default Fallback | Purpose / Experiment Scope |
-| :--- | :--- | :--- |
-| `ADHD200_DATA_DIR` | `data` | Root directory for datasets and manifests |
-| `ADHD200_FC_ROOT` | `data/03_fc_matrices` | Static and dynamic FC matrices (Exp 01, 02) |
-| `ADHD200_RESULTS_DIR` | `results` | Output root for generated tables and figures |
-| `ADHD200_CHECKPOINTS_DIR` | `checkpoints` | Storage location for model weights |
-| `ADHD200_PROJECT_ROOT` | `.` | Repository root path |
-
-Example configuration in bash:
-```bash
-export ADHD200_DATA_DIR="/path/to/my/adhd_data"
-export ADHD200_FC_ROOT="/path/to/my/adhd_data/03_fc_matrices"
-export ADHD200_RESULTS_DIR="results"
-```
-
-Example in PowerShell:
-```powershell
-$env:ADHD200_DATA_DIR = "D:\data\adhd200"
-$env:ADHD200_FC_ROOT = "D:\data\adhd200\03_fc_matrices"
-```
+- **Time Series**: NumPy arrays (`.npy`) or tabular files (`.csv`) of shape `(T, N_ROIS)`.
+- **Connectivity Matrices**: Symmetric correlation matrices of shape `(N_ROIS, N_ROIS)` or upper-triangular vectors of shape `(N_ROIS * (N_ROIS - 1) / 2,)`.
+- **Phenotypic Manifests**: CSV tables containing columns `subject_id`, `diagnosis`, `site`, `age`, and `gender`.
 
 ---
 
-## 4. Obtaining the ADHD-200 Consortium Dataset
+## 3. Not Included in this Repository
 
-To download the original ADHD-200 dataset:
+- Raw 4D BOLD fMRI NIfTI files ($>120\text{ GB}$)
+- Large intermediate sliding-window correlation arrays ($>100\text{ MiB}$)
+- Model checkpoints from prior training runs
+- Experiment 07 historical combined arrays (`X_combined_full.npy`, etc.)
+
+See [`data/provenance.md`](provenance.md) for full exclusion details.
+
+---
+
+## 4. Obtaining the ADHD-200 Dataset
+
+The preprocessed ADHD-200 connectomes are openly available to the research community:
 1. Visit the [ADHD-200 Consortium Preprocessed Connectomes Project (NITRC)](https://www.nitrc.org/projects/fcon_1000/).
-2. Request access and download the Athena or NIAK preprocessed pipelines.
-3. For phenotypic information and site descriptions, consult the official ADHD-200 release documentation.
-
-For detailed instructions on running each experiment once data is mounted, refer to [`docs/reproduction.md`](../docs/reproduction.md).
+2. Access the Athena preprocessed pipelines.
+3. For phenotypic data and site descriptions, consult the official ADHD-200 documentation.

@@ -1,15 +1,15 @@
 # THIRD-PARTY SOFTWARE NOTICES AND ATTRIBUTIONS
 
-This repository incorporates third-party open-source software and open datasets under the following licenses and terms:
+This repository incorporates third-party open-source software and open datasets under the following terms:
 
 ---
 
 ## 1. NeuroSTORM Architecture (`src/exp08/neurostorm/neurostorm.py`)
 - **Upstream Repository**: https://github.com/CUHK-AIM-Group/NeuroSTORM
 - **Copyright**: (c) 2023 CUHK-AIM-Group
-- **License**: Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
+- **License**: Apache License, Version 2.0; you may not use this file except in compliance with the License:
   http://www.apache.org/licenses/LICENSE-2.0
-- **Modifications**: Integrated into the ADHD-200 multimodal benchmarking suite with custom dataloading interfaces for BOLD fMRI sequences.
+- **Modifications**: Adapted for BOLD fMRI 4D volume sequence inputs within the Experiment 08 benchmarking suite.
 
 ---
 
@@ -17,9 +17,10 @@ This repository incorporates third-party open-source software and open datasets 
 - **Component Files**:
   - `src/exp02/null_model_und_sign_fixed.py`
   - `src/exp02/randmio_und_signed_fast.py`
+- **Origin**: Rubinov & Sporns (2011), bctpy implementation
+- **License**: GNU General Public License v3.0 (GPL-3.0)
 - **Reference**:
   Rubinov, M., & Sporns, O. (2011). Weight-conserving characterization of complex brain networks: measure development and application to normal and brain-damaged subjects. NeuroImage, 56(4), 2068-2079.
-- **License**: GNU General Public License v3 or later / BSD compatible research license (bctpy implementation).
 
 ---
 

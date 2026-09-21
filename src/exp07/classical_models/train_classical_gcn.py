@@ -75,8 +75,8 @@ def run_experiment(
 
     # Load real data (fails loudly if absent)
     print("\nLoading data...")
-    X_full, _, y, subjects = load_data(data_dir=data_dir)
-    data = split_data(X_full, y, subjects, random_state=seed)
+    X, y, subjects = load_data(data_dir=data_dir)
+    data = split_data(X, y, subjects, random_state=seed)
 
     # Build graphs
     print("\nBuilding graphs...")

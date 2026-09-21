@@ -29,7 +29,7 @@ def main():
         "--data-dir",
         type=Path,
         default=None,
-        help="Directory containing authentic aal116_fc_features.npz and aal116_labels.csv.",
+        help="Directory containing historical X_combined_full.npy, y_combined.npy, subjects_combined.npy.",
     )
     parser.add_argument(
         "--results-dir",

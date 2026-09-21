@@ -108,8 +108,7 @@ data/downloads/
 
 # Whitelist data documentation and provenance ledgers
 !data/README.md
-!data/provenance/
-!data/provenance/**
+!data/provenance.md
 
 # --- 7. Deep Learning Model Weights & Checkpoints ---
 checkpoints/
