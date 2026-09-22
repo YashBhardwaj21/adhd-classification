@@ -17,7 +17,7 @@ This document provides a factual record of discrepancies between manuscript desc
 | **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.6\% \to 31.3\%$, but diagnostic accuracy also drops $64.5\% \to 59.6\%$ | Documented |
 | **Exp 05** | Dynamic micro-state clustering | $K=3$ selected by silhouette analysis; State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
 | **Exp 06** | Semi-supervised pseudo-labelling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484; independent cohort from Exp 07 | Documented |
-| **Exp 07** | Density 0.20, weighted node strength, 2 quantum layers | Executed config used density $0.15$, 1 quantum layer, normalized degree feature; inputs unavailable | Documented / Archived |
+| **Exp 07** | Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 117 node features (116 FC + unweighted normalized degree), stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train) | Documented / Archived |
 | **Exp 08** | Lightweight 3D CNN on structural T1 scans | CNN evaluated on functional 4D BOLD volume sequences ($T=25, 99 \times 117 \times 95$), not T1 scans | Documented |
 | **Exp 09** | Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` thresholding with weighted edges and self-loops | Documented |
 
@@ -37,21 +37,74 @@ This document provides a factual record of discrepancies between manuscript desc
 - **Scope of $F$-Statistics**: The large $F$-statistics reported ($F > 4,000, p < 10^{-300}$ for global efficiency and path length) quantify variance attributable to acquisition site (scanner differences across 8 participating clinics), **not** diagnostic variance between ADHD and typically developing controls (TDC).
 
 ### Experiment 04: ComBat Harmonization
-- **Clinical Variance Attenuation**: Empirical Bayes ComBat successfully reduced scanner identification accuracy ($58.64\% \to 31.29\%$), but diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$. This reflects that diagnostic status was non-uniformly distributed across collection sites, leading ComBat to adjust partially for site-associated clinical variance.
+- **Clinical Variance Attenuation**: Empirical Bayes ComBat reduced scanner identification accuracy from $58.64\%$ to $31.29\%$, while diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$. This reflects that diagnostic status was non-uniformly distributed across collection sites, leading ComBat to adjust partially for site-associated clinical variance.
 
-### Experiment 05: Micro-State Clustering
+### Experiment 05: Data-Driven Dynamic Connectivity States
 - **Cluster Number**: Analysis evaluated $K \in \{2, 3, 4, 5, 6\}$; $K=3$ was selected as the optimal partition by silhouette coefficient. State 0 exhibited the longest mean dwell time ($6.24$ windows) and highest occupancy ($49.05\%$).
 
 ### Experiment 06: Semi-Supervised Pseudo-Labeling
 - **Cohort Decoupling**: Experiment 06 operated on a cohort of 955 subjects (391 clean-labelled and 564 unlabelled). Two procedural variants were executed: Procedure I generated 552 pseudo-labels, and Procedure II generated 484 pseudo-labels. This partition is historically decoupled from the 162 clean + 713 pseudo cohort utilized in Experiment 07.
 
-### Experiment 07: Classical GCN vs Quantum QGCNN
-- **Density Correction**: Early project notes referenced a graph density of $0.20$. Historical configuration records verify that the reported experiment was executed with `DENSITY = 0.15` (strongest 15% absolute FC edges, signed weights, no MST).
-- **Architecture Parameters**: The reported quantum model used 1 variational layer (`n_layers: 1`), 6 qubits (`n_qubits: 6`), batch size 8 (`batch_size: 8`), and weight decay $10^{-5}$ (`weight_decay: 0.00001`), as recorded in `configs/exp07/reported_run.json`.
-- **Node Feature Construction**: The historical executed code constructed the 117th node feature as a normalized thresholded-edge degree (`np.sum(edge_mask, axis=1) / (n_rois - 1)`), whereas early draft text described a weighted node strength. The historical implementation is preserved in `src/exp07/utils/graph_utils.py` without rewriting it to match the paper description.
-- **Quantum Circuit Gate Ordering**: The variational layer uses parameterized single-qubit rotations `qml.RX`, `qml.RY`, `qml.RZ` followed by ring `qml.CNOT` entanglement, rather than generic `qml.Rot` abstractions.
-- **Metric Conventions**: Precision ($0.6941$ Classical, $0.6204$ Quantum), recall ($0.6970$ Classical, $0.6061$ Quantum), and F1 ($0.6929$ Classical, $0.6082$ Quantum) reported in `results/exp07/checkpoint_analysis.json` represent the weighted-average convention across classes.
-- **Execution & Reproduction Status**: The original large combined arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) and trained checkpoint weights exceed public repository limits and are unavailable here. The reported test evaluation is archived; the experiment cannot currently be rerun end-to-end from scratch.
+### Experiment 07: Classical GCN and Quantum GCNN Evaluation
+
+- **Required Provenance Statement**:
+  "Experiment 7 evaluates Classical GCN and Quantum GCNN models on AAL-116 functional-connectivity graphs. The historical graph construction uses 116 ROIs and a 15% nominal density threshold based on the percentile of upper-triangle absolute FC values. Signed FC values are retained as edge attributes, while node features consist of the 116 signed FC values for each ROI plus normalized graph degree. The stored edge attributes are not passed as edge weights to the historical GCNConv layers."
+
+- **Cohort Provenance**:
+  - "Experiment 7 used a separately prepared cohort consisting of 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects."
+  - "`part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects."
+  - "The historical Experiment 7 cohort contains 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects."
+  - Pseudo-label distribution (713 subjects): healthy = 535, ADHD = 178.
+  - "The clean cohort was split using stratified train/test and train/validation splits with random_state=42, resulting in 103 training, 26 validation, and 33 test subjects."
+  - Total training cohort: 103 clean + 713 pseudo = 816 training subjects.
+  - Held-out test cohort: 33 clean subjects (clean labeled subjects only).
+  - Reproducibility: "Random state 42 was used for the clean train/validation/test split. Full deterministic training reproducibility was not established from the historical trainer code." ("Random state 42 was verified for the clean data split. Full deterministic training reproducibility was not established from the historical checkpoint-producing trainer code.")
+
+- **Input Representation & Graph Construction**:
+  - Atlas: AAL-116 (116 ROIs, 6670 unique FC features: $116 \times 115 / 2 = 6670$).
+  - Full vs Reduced Features: The full 6670-dimensional features (`X_combined_full.npy`) were used for graph reconstruction. The 2000-dimensional reduced representation (`X_combined_reduced.npy`) was not used for Exp 07 graph reconstruction.
+  - Nominal density parameter: $\text{DENSITY} = 0.15$.
+  - Thresholding definition: Computed on upper-triangle absolute FC values:
+    `abs_fc = np.abs(fc_matrix)`
+    `upper_vals = abs_fc[triu_idx]`
+    `threshold = np.percentile(upper_vals, 100 * (1 - density))` (85th percentile).
+  - Edge selection: `edge_mask = abs_fc >= threshold` (`>=` comparison; percentile ties can yield slightly more edges than the nominal 15%).
+  - Edge attributes: `edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)` retains original signed FC values.
+  - Message-passing behavior: "edge_attr is stored in the graph data object but is not passed as edge weights to the historical GCNConv message-passing layers."
+  - Node features: 117-dimensional: 116 signed FC row values + 1 normalized degree (`degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois; node_features = np.hstack([fc_matrix, degree])`). The degree feature is based on unweighted thresholded adjacency, not weighted node strength. No final z-score/StandardScaler was applied to the 117-dimensional node feature matrix.
+
+- **Model Architectures & Hyperparameters**:
+  - Classical GCN: $117 \to 32 \to 32 \to 16 \to 2$ with BatchNorm1d, ReLU, Dropout($p=0.30$), and global mean pooling (5,522 parameters).
+  - Quantum QGCNN: Classical projection ($117 \to 12$), 6-qubit quantum variational circuit ($N_{\text{qubits}}=6, N_{\text{layers}}=1$; $R_Y, R_Z$ angle encoding; 1 trainable layer with parameterized $R_X, R_Y, R_Z$ rotations and ring CNOT entanglement; 6 Pauli-$Z$ expectations), followed by 3 GCN layers ($6 \to 16 \to 16 \to 16 \to 2$) and global mean pooling (2,188 parameters).
+  - Hyperparameters: `SEED=42`, `N_QUBITS=6`, `N_LAYERS=1`, `BATCH_SIZE=8`, `LEARNING_RATE=1e-3`, `WEIGHT_DECAY=1e-5`, `DENSITY=0.15`, `EPOCHS=20`, `PATIENCE=10`, `CHECKPOINT_INTERVAL=1`.
+
+- **Checkpoints & Independent Verified Results**:
+  - Historical checkpoint-producing code wrote:
+    - Classical: `classical_checkpoint_epoch_{epoch}.pth`, `classical_best_model.pth`
+    - Quantum: `quantum_checkpoint_epoch_{epoch}.pth`, `quantum_best_model.pth`
+  - Historical checkpoint analysis evaluated `classical_best_model.pth` and `quantum_best_model.pth` on the 33 held-out test subjects.
+  - **Classical GCN Test Results** (33 clean test samples):
+    - AUC: 0.7293233082706767
+    - Accuracy: 0.696969696969697
+    - Weighted Precision: 0.6940836940836941
+    - Weighted Recall: 0.696969696969697
+    - Weighted F1: 0.6928904428904429
+    - Confusion Matrix: `[[15, 4], [6, 8]]`
+  - **Quantum GCNN Test Results** (33 clean test samples):
+    - AUC: 0.6428571428571428
+    - Accuracy: 0.6060606060606061
+    - Weighted Precision: 0.6204322638146168
+    - Weighted Recall: 0.6060606060606061
+    - Weighted F1: 0.6082390727552018
+    - Confusion Matrix: `[[11, 8], [5, 9]]`
+  - Each model's metrics are reported independently without comparative ranking, tiers, or verdicts.
+  - Stored in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`.
+
+- **Paper-vs-Code Discrepancies**:
+  - Text referenced 0.20 density; historical code executed with nominal density 0.15.
+  - Manuscript described weighted node strength; historical code used unweighted normalized degree.
+  - Manuscript implied weighted convolutions; historical code did not pass `edge_attr` to `GCNConv`.
+  - Manuscript described 2 quantum layers; historical code executed with 1 quantum layer.
 
 ### Experiment 08: Deep-Learning Baselines
 - **Input Modality**: The Lightweight 3D CNN was evaluated on 4D functional BOLD volume sequences ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
@@ -102,6 +155,17 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 
 | Bundled Component | File Path | Origin / Upstream | Upstream License | Status in Repository |
 | :--- | :--- | :--- | :--- | :--- |
-| **Brain Connectivity Toolbox** | `src/exp02/null_model_und_sign_fixed.py`, `src/exp02/randmio_und_signed_fast.py` | Rubinov & Sporns (2011) / `bctpy` | GNU GPL v3.0 | Bundled algorithm implementation |
+| **Brain Connectivity Toolbox** | `src/exp02/null_model_und_sign_fixed.py`, `src/exp02/randmio_und_signed_fast.py` | Rubinov & Sporns (2011) / `bctpy` | GNU GPL v3.0 | Bundled algorithm implementation (see `third_party/bctpy.md`) |
 | **NeuroSTORM Transformer** | `src/exp08/neurostorm/neurostorm.py` | CUHK-AIM-Group (derived from MONAI / SwiFT) | Apache License 2.0 | Bundled model implementation |
 | **neuroCombat** | N/A (external package dependency) | Fortin et al. (2018) | MIT | Pip dependency; not bundled |
+
+### Brain Connectivity Toolbox (BCT) Provenance
+
+The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
+
+Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
+
+The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attribution for the undirected signed null model:
+Mikail Rubinov and Olaf Sporns. "Weight-conserving characterization of complex functional brain networks." *NeuroImage*, 2011; 56(4): 2068–2079. DOI: 10.1016/j.neuroimage.2011.03.069.
+
+See [third_party/bctpy.md](../third_party/bctpy.md) for the complete third-party provenance document and GPL-3.0 licensing notices.

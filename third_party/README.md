@@ -18,12 +18,14 @@ This document records third-party packages, algorithms, and bundled code utilize
 - **Included Files**:
   - `src/exp02/null_model_und_sign_fixed.py`
   - `src/exp02/randmio_und_signed_fast.py`
-- **Upstream Project**: `bctpy` (Python port of the Brain Connectivity Toolbox by Roan LaPlante)
+- **Upstream Project**: `bctpy` (Brain Connectivity Toolbox for Python)
 - **Source**: https://github.com/aestrivex/bctpy
-- **License**: GNU General Public License v3.0 (GPL-3.0)
-- **Implementation Status**: Copied directly from `bctpy` utilities for weight-conserving signed matrix randomization.
-- **Licensing Note**: While the general repository code is released under the MIT License, these two files are governed by GPL-3.0 as derived works of `bctpy`.
-- **Publication Reference**: Rubinov, M., & Sporns, O. (2011). "Weight-conserving characterization of complex brain networks: measure development and application to normal and brain-damaged subjects." *NeuroImage*, 56(4), 2068-2079.
+- **License**: GNU General Public License v3.0 (GPL-3.0 / GNU GPLv3+)
+- **Detailed Provenance**: See [third_party/bctpy.md](bctpy.md) for complete details.
+- **Implementation Status**: The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
+- **Upstream Facts & Historical Status**: Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
+- **Publication Reference**: Mikail Rubinov and Olaf Sporns. "Weight-conserving characterization of complex functional brain networks." *NeuroImage*, 2011; 56(4): 2068–2079. DOI: [10.1016/j.neuroimage.2011.03.069](https://doi.org/10.1016/j.neuroimage.2011.03.069).
+- **Licensing Note**: The bundled BCT-derived source files are governed by GPL-3.0 as derived works of `bctpy` and must not be described as MIT-only.
 
 ---
 

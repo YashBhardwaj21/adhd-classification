@@ -49,7 +49,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Limitations & Discrepancies**:
   - `notebooks/exp02/02_graph_construction_and_validation.ipynb` implements the full MST + PT algorithm (`mst_graph`).
   - `src/exp02/graph_utils.py` contains a simplified proportional thresholding utility without the MST initial pass.
-  - See `notebooks/exp02/02_graph_construction_and_validation.ipynb` and `notebooks/exp02/03_graph_metrics_and_null_models.ipynb`.
+  - See `notebooks/exp02/02_graph_construction_and_validation.ipynb`, `notebooks/exp02/03_graph_metrics_and_null_models.ipynb`, and `third_party/bctpy.md` for BCT/bctpy provenance and GPL-3.0 licensing terms.
 
 ---
 
@@ -64,7 +64,7 @@ This document provides a concise reference for the nine experiments comprising t
   - Independent variable: Scanner site (Peking, NYU, KKI, OHSU, NeuroIMAGE, Pittsburgh, WashU, Brown).
   - Alpha threshold: $\alpha = 0.05$ with Bonferroni multiple testing correction.
 - **Reported Output**:
-  - Massive scanner batch effects observed across global network features:
+  - Substantial cross-site scanner variation observed across global network features:
     - Global efficiency across sites: $F = 4,609.76, p < 10^{-300}$.
     - Characteristic path length: $F = 3,674.34, p < 10^{-300}$.
   - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`.
@@ -97,14 +97,14 @@ This document provides a concise reference for the nine experiments comprising t
 
 ---
 
-## Experiment 05: Dynamic Brain Micro-State Clustering
+## Experiment 05: Data-Driven Dynamic Connectivity States
 
 - **Track**: Track A (CC200 Atlas, 190 active ROIs)
 - **Input**: Windowed connectivity vectors across all subjects ($N = 31,060$ window observations).
 - **Protocol**:
   - Dimensionality reduction: subject-exemplar window selection via local variance peaks.
-  - Unsupervised clustering: $K$-Means clustering evaluating $K \in \{2, 3, 4, 5, 6\}$ (optimal $K=3$ selected by silhouette analysis).
-  - State dynamics: Markovian transition probability matrices, mean dwell time (consecutive windows in a state), and fractional occupancy.
+  - Unsupervised clustering: $K$-Means clustering evaluating $K \in \{2, 3, 4, 5, 6\}$ (optimal $K=3$ selected by silhouette analysis) to identify data-driven dynamic connectivity states.
+  - State dynamics: Markovian transition probability matrices, mean dwell time (consecutive windows in a state), and fractional occupancy across dynamic connectivity configurations.
 - **Important Parameters**:
   - Optimal cluster count: $K = 3$.
   - Distance metric: Manhattan / Euclidean distance on upper-triangular FC vectors.
@@ -114,7 +114,7 @@ This document provides a concise reference for the nine experiments comprising t
   - State 2 (hypo-connected state): $3.15$ windows ($22.81\%$ occupancy).
   - Stored in `results/exp05/run_dynamic_biomarkers.csv` and `results/exp05/run_state_sequences.csv`.
 - **Limitations & Discrepancies**:
-  - State dwell times reflect window overlaps ($W=30, S=5$); individual transitions occur at 5-frame resolution.
+  - State dwell times reflect window overlaps ($W=30, S=5$); individual transitions occur at 5-frame resolution. Connectivity configurations represent data-driven recurring states rather than biological invariants.
   - See `notebooks/exp05/dynamic_transformer.ipynb`.
 
 ---
@@ -124,15 +124,15 @@ This document provides a concise reference for the nine experiments comprising t
 - **Track**: Track B (AAL-116 Atlas, 116 ROIs)
 - **Input**: AAL-116 static FC features ($N = 955$ total subjects: 391 clean-labelled, 564 unlabelled).
 - **Protocol**:
-  - Self-training pseudo-labelling using ensemble confidence scoring across classical baselines (SVM, Random Forest, Logistic Regression).
-  - Iterative pseudo-label assignment based on posterior probability thresholds ($p > 0.85$ for confident class assignment).
-  - Two procedural iterations evaluated: Procedure I and Procedure II.
+  - Evaluation of two distinct semi-supervised pseudo-labeling procedures on unlabelled scans:
+    - **Procedure I (Logistic-Regression Self-Training)**: Single-model iterative self-training using Logistic Regression with posterior confidence filtering ($p > 0.85$).
+    - **Procedure II (Ensemble Pseudo-Labeling)**: Multi-model consensus ensemble combining Random Forest (RF), Gradient Boosting (GB), Logistic Regression (LR), and Calibrated Support Vector Machine (SVM) classifiers.
 - **Important Parameters**:
   - Atlas: AAL-116 ($116 \times 115 / 2 = 6,670$ upper-triangular FC features).
   - Clean cohort: $391$ subjects; Unlabelled cohort: $564$ subjects.
 - **Reported Output**:
-  - Procedure I assigned 552 pseudo-labels (420 healthy TDC, 132 ADHD).
-  - Procedure II assigned 484 pseudo-labels (368 healthy TDC, 116 ADHD).
+  - **Procedure I**: Assigned 552 pseudo-labels (420 healthy TDC, 132 ADHD).
+  - **Procedure II**: Assigned 484 pseudo-labels (368 healthy TDC, 116 ADHD).
   - Stored in `results/exp06/exp06_verified_results.json`.
 - **Limitations & Discrepancies**:
   - Cohort partitions in Exp 06 (391 clean + 564 unlabelled) are historically independent of Exp 07 (162 clean + 713 pseudo-labelled).
@@ -140,32 +140,65 @@ This document provides a concise reference for the nine experiments comprising t
 
 ---
 
-## Experiment 07: Classical GCN vs Hybrid Quantum QGCNN
+## Experiment 07: Classical GCN and Quantum GCNN Evaluation
 
 - **Track**: Track B (AAL-116 Atlas, 116 ROIs)
-- **Input**: Historical combined FC arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) across 875 total subjects (162 clean, 713 pseudo-labelled).
-- **Protocol**:
-  - Clean cohort partition: 162 clean subjects split into 103 training, 26 validation, and 33 held-out test subjects.
-  - Pseudo-labelled cohort: 713 pseudo-labelled subjects allocated strictly to training.
-  - Graph construction: AAL-116 connectomes, top 15% absolute FC edge selection, signed correlation weights, 117 node features (116 FC correlations + 1 normalized degree).
-  - Classical baseline: 3-layer GCN ($117 \to 32 \to 32 \to 16 \to 2$, 5,522 parameters) with BatchNorm1d, Dropout(0.30), and global mean pooling.
-  - Hybrid Quantum QGCNN: Classical projection ($117 \to 12$), 6-qubit quantum variational circuit ($R_Y, R_Z$ angle encoding; 1 trainable layer with sequential $R_X, R_Y, R_Z$ rotations and ring CNOT; 6 Pauli-$Z$ expectations), followed by 3-layer GCN ($6 \to 16 \to 16 \to 16 \to 2$, 2,188 parameters).
-- **Important Parameters**:
-  - Atlas: AAL-116 ($N=116$, $D=117$ node features).
-  - Graph density: $\rho = 0.15$ (top 15% absolute FC, signed weights).
-  - Quantum qubits: 6, Quantum layers: 1.
-  - Batch size: 8, Epochs: 20, Learning rate: $10^{-3}$, Weight decay: $10^{-5}$, Early stopping patience: 10.
-  - Seed: 42 (split permutation).
-- **Reported Output**:
-  - Held-out test set performance ($N=33$ clean test subjects: 19 TDC, 14 ADHD):
-    - Classical GCN: AUC = 0.7293, Accuracy = 0.6970, Precision = 0.6941, Recall = 0.6970, F1 = 0.6929.
-    - Quantum QGCNN: AUC = 0.6429, Accuracy = 0.6061, Precision = 0.6204, Recall = 0.6061, F1 = 0.6082.
-  - Precision, recall, and F1 scores reflect the weighted-average convention recorded in the result artifact.
+- **Cohort Provenance**:
+  - Experiment 7 used a separately prepared cohort consisting of 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects.
+  - `part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects.
+  - The historical Experiment 7 cohort contains 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects.
+  - Pseudo-label distribution (713 subjects): healthy = 535, ADHD = 178.
+  - The clean cohort was split using stratified train/test and train/validation splits with random_state=42, resulting in 103 training, 26 validation, and 33 test subjects.
+  - Final training set composition: 103 clean + 713 pseudo = 816 training subjects.
+  - Validation set: 26 clean subjects; Test set: 33 clean subjects (clean labeled subjects only).
+- **Input Representation & Graph Construction**:
+  - Atlas: AAL-116 (116 ROIs).
+  - Feature dimension: Full 6670-dimensional upper-triangular FC values ($116 \times 115 / 2 = 6670$) from `X_combined_full.npy` (reconstructing a symmetric $116 \times 116$ signed FC matrix; the 2000-dimensional reduced representation was not used for Exp 07 graph reconstruction).
+  - Density parameter: Nominal $\text{DENSITY} = 0.15$.
+  - Thresholding definition: Computed on upper-triangle absolute FC values:
+    `abs_fc = np.abs(fc_matrix)`
+    `upper_vals = abs_fc[triu_idx]`
+    `threshold = np.percentile(upper_vals, 100 * (1 - density))` (85th percentile).
+  - Edge selection rule: `edge_mask = abs_fc >= threshold` (uses `>=`, not `>`, so percentile ties may produce more edges than the nominal 15%).
+  - Edge attributes: `edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)` retains original signed FC values.
+  - Message passing: edge_attr is stored in the graph data object but is not passed as edge weights to the historical GCNConv message-passing layers.
+  - Node features: 117-dimensional features consisting of 116 signed FC values for each ROI plus 1 normalized degree:
+    `degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois`
+    `node_features = np.hstack([fc_matrix, degree])`.
+    The degree feature is based on unweighted thresholded adjacency, not weighted node strength. No final z-score/StandardScaler was applied to the 117-dimensional node feature matrix.
+- **Model Architectures**:
+  - **Classical GCN**: Input 117 node features; Layer 1: `GCNConv(117, 32)`; Layer 2: `GCNConv(32, 32)`; Layer 3: `GCNConv(32, 16)`; followed by BatchNorm1d, ReLU, Dropout($p=0.30$), global mean pooling, and classifier $16 \to 2$ (5,522 parameters).
+  - **Quantum GCNN / QGCNN**: Classical projection ($117 \to 12$); 6-qubit quantum variational circuit ($N_{\text{qubits}}=6, N_{\text{layers}}=1$; $R_Y + R_Z$ input angle encoding; 1 trainable layer with trainable $R_X, R_Y, R_Z$ rotations and ring/circular CNOT entanglement; 6 Pauli-$Z$ expectation values); followed by 3 graph layers: `GCNConv(6, 16)`, `GCNConv(16, 16)`, `GCNConv(16, 16)` with BatchNorm1d, ReLU, Dropout($p=0.30$), global mean pooling, and binary classifier $16 \to 2$ (2,188 parameters).
+- **Training Hyperparameters**:
+  - `SEED = 42`, `N_QUBITS = 6`, `N_LAYERS = 1`, `BATCH_SIZE = 8`, `LEARNING_RATE = 1e-3`, `WEIGHT_DECAY = 1e-5`, `DENSITY = 0.15`, `EPOCHS = 20`, `PATIENCE = 10`, `CHECKPOINT_INTERVAL = 1`.
+  - Reproducibility: Random state 42 was verified for the clean data split. Full deterministic training reproducibility was not established from the historical checkpoint-producing trainer code.
+- **Checkpoint & Evaluation Provenance**:
+  - Historical checkpoint-producing code wrote:
+    - Classical: `classical_checkpoint_epoch_{epoch}.pth`, `classical_best_model.pth`
+    - Quantum: `quantum_checkpoint_epoch_{epoch}.pth`, `quantum_best_model.pth`
+  - Historical checkpoint analysis evaluated `classical_best_model.pth` and `quantum_best_model.pth` on the 33 held-out test subjects. The reported final Exp07 values come from that checkpoint analysis (`results/exp07/checkpoint_analysis.json`).
+- **Verified Classical GCN Test Results** (33 clean test samples):
+  - AUC: 0.7293233082706767
+  - Accuracy: 0.696969696969697
+  - Weighted Precision: 0.6940836940836941
+  - Weighted Recall: 0.696969696969697
+  - Weighted F1: 0.6928904428904429
+  - Confusion Matrix: `[[15, 4], [6, 8]]`
+- **Verified Quantum GCNN Test Results** (33 clean test samples):
+  - AUC: 0.6428571428571428
+  - Accuracy: 0.6060606060606061
+  - Weighted Precision: 0.6204322638146168
+  - Weighted Recall: 0.6060606060606061
+  - Weighted F1: 0.6082390727552018
+  - Confusion Matrix: `[[11, 8], [5, 9]]`
+- **Documentation & Independent Reporting**:
+  - Each model's metrics are reported independently without model ranking, tiers, or comparison verdicts.
   - Stored in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`.
-- **Limitations & Discrepancies**:
-  - Historical input arrays (`X_combined_*.npy`) and model checkpoints are unavailable in this repository; reported outputs are archived.
-  - The historical code constructed the 117th node feature using normalized thresholded-edge degree, whereas the paper describes weighted node strength.
-  - See `configs/exp07/reported_run.json` and `docs/provenance.md`.
+- **Paper-vs-Code Discrepancies**:
+  - Early text described density as 0.20; historical executed code used nominal density 0.15.
+  - Manuscript described weighted node strength; historical code used unweighted normalized degree.
+  - Manuscript implied weighted message passing; historical code did not pass `edge_attr` as weights to `GCNConv`.
+  - Manuscript described 2 quantum layers; historical code executed with `n_layers = 1`.
 
 ---
 

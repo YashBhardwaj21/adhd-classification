@@ -5,30 +5,57 @@
   "cohort": {
     "clean_subjects": 162,
     "pseudo_labelled_subjects": 713,
+    "total_subjects": 875,
+    "pseudo_label_distribution": {
+      "healthy": 535,
+      "adhd": 178
+    },
     "train_clean": 103,
     "validation_clean": 26,
     "test_clean": 33,
+    "training_cohort_total": 816,
     "pseudo_label_usage": "training_only"
   },
   "graph": {
     "n_rois": 116,
     "fc_input_features": 6670,
     "density": 0.15,
-    "edge_selection": "top 15% by absolute FC",
-    "edge_weights": "signed FC",
+    "thresholding": "percentile on upper-triangle absolute FC values",
+    "edge_selection_rule": "abs_fc >= threshold (nominal 15% density; ties may produce more edges)",
+    "edge_weights": "signed FC (retained as edge_attr; not passed as edge weights to GCNConv layers)",
+    "node_features": "117 (116 signed FC values + normalized degree: np.sum(abs_fc >= threshold, axis=1) / 116)",
     "self_loops": false
   },
   "training": {
     "seed": 42,
+    "split_provenance": "stratified train/test (0.20) and train/val (0.20) with random_state=42",
     "batch_size": 8,
     "learning_rate": 0.001,
     "weight_decay": 0.00001,
     "epochs": 20,
     "patience": 10,
-    "checkpoint_interval": 1
+    "checkpoint_interval": 1,
+    "deterministic_reproducibility": "Random state 42 was used for clean split; full deterministic training reproducibility was not established"
   },
   "quantum": {
     "n_qubits": 6,
-    "n_layers": 1
+    "n_layers": 1,
+    "input_encoding": "RY + RZ angle encoding (after 117 -> 12 classical projection)",
+    "trainable_circuit": "trainable RX, RY, RZ rotations followed by ring CNOT entanglement",
+    "measurements": "six Pauli-Z expectation values"
+  },
+  "checkpoints": {
+    "classical": [
+      "classical_checkpoint_epoch_{epoch}.pth",
+      "classical_best_model.pth"
+    ],
+    "quantum": [
+      "quantum_checkpoint_epoch_{epoch}.pth",
+      "quantum_best_model.pth"
+    ],
+    "evaluated_checkpoints": [
+      "classical_best_model.pth",
+      "quantum_best_model.pth"
+    ]
   }
 }

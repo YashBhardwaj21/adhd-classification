@@ -6,7 +6,7 @@ Code and supporting results for *ADHD Classification from Resting-State fMRI: A 
 
 ## Overview
 
-This repository contains research code, configuration records, lightweight experimental results, and reproduction workflows for a multi-site resting-state fMRI study using the ADHD-200 dataset. The study evaluates dynamic functional connectivity (dFC), dual-constraint topological graph modeling, empirical Bayes (ComBat) scanner harmonization, semi-supervised graph convolutional networks, baseline deep architectures, and Leave-One-Site-Out (LOSO) population graph generalization across clinical acquisition sites.
+This repository contains research code, configuration records, lightweight experimental results, and reproduction workflows for a multi-site resting-state fMRI study using the ADHD-200 dataset. The study evaluates dynamic functional connectivity (dFC), dual-constraint topological graph modeling, empirical Bayes (ComBat) scanner harmonization, semi-supervised pseudo-labeling and graph neural network classification, baseline deep architectures, and Leave-One-Site-Out (LOSO) population graph generalization across clinical acquisition sites.
 
 ---
 

@@ -6,32 +6,35 @@ This guide describes the software environment, hardware requirements, and reprod
 
 ## 1. Reproduction Status by Experiment
 
-Experiments in this study fall into two distinct reproducibility categories based on data availability:
+Experiments in this study fall into three distinct reproducibility categories based on input data availability:
 
-### Category 1: Rerunnable from Repository + Obtainable External ADHD-200 Data
-The following experiments can be executed using the code in this repository once the public ADHD-200 preprocessed data are downloaded:
+### Category A: Rerunnable from Repository + Obtainable External ADHD-200 Data
+The following experiments can be executed using the code in this repository once the public ADHD-200 preprocessed connectome data are downloaded:
 - **Track A (Connectomic Dynamics & Harmonization)**:
   - Exp 01: Dynamic functional connectivity generation and stability
   - Exp 02: CC200 graph construction and signed null models
   - Exp 03: Topological feature extraction and cross-site ANOVA
   - Exp 04: ComBat scanner harmonization and classification trade-offs
-  - Exp 05: Dynamic micro-state clustering and Markov transitions
-- **Track B (Semi-Supervised & Baseline Deep Learning)**:
-  - Exp 06: Semi-supervised pseudo-labelling
-  - Exp 08: Lightweight 3D CNN, NeuroSTORM, and temporal GNN baselines
+  - Exp 05: Data-driven dynamic connectivity states and Markov transitions
 - **Track C (Population Graph Learning & Generalization)**:
   - Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph learning
 
-### Category 2: Reported Results Retained; Original Execution Inputs Unavailable
+### Category B: Requires Reconstruction of Excluded Intermediates
+The following experiments can be reproduced after reconstructing intermediate data structures from raw or preprocessed scans:
+- **Track B (Semi-Supervised & Baseline Deep Learning)**:
+  - Exp 06: Semi-supervised pseudo-labeling (Procedure I & II) generates intermediate pseudo-label assignments from AAL-116 correlation arrays.
+  - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$), which are excluded from the repository.
+
+### Category C: Archived / Not Currently Rerunnable from Repository
 - **Exp 07 (Classical GCN vs Quantum QGCNN)**:
-  The reported results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are archived in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) and trained model weights exceed repository quotas and are unavailable. Consequently, Experiment 07 cannot be rerun end-to-end from this repository without external restoration of those arrays. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
+  The reported results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are archived in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained model weights are not redistributed. Consequently, Experiment 07 cannot be rerun end-to-end from this repository without external restoration of those arrays. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
 
 ---
 
 ## 2. Environment Specifications
 
 ### 2.1 Recorded Historical Environment (A100 Execution)
-Reconstructed from `configs/exp09/w2b_environment.json`:
+Recorded from `configs/exp09/w2b_environment.json`:
 - **Hardware**: NVIDIA A100-SXM4-80GB GPU, x86_64 Host
 - **Python**: `3.12.13`
 - **PyTorch**: `2.5.1+cu121` (CUDA 12.1 runtime)
@@ -40,7 +43,15 @@ Reconstructed from `configs/exp09/w2b_environment.json`:
 - **PennyLane-Lightning-GPU**: `0.44.0`
 - **NumPy**: `2.4.6`, **Pandas**: `2.3.3`, **Scikit-Learn**: `1.8.0`
 
-### 2.2 Suggested Installation
+### 2.2 Track-Specific Environment Rationale
+Dependency requirements are partitioned into three track environments under `environment/` to minimize package conflicts and unnecessary dependencies:
+- **`environment/track_a/requirements.txt`**: Lightweight classical connectomics, graph theory, and statistical modeling (`bctpy`, `neuroCombat`, `scipy`, `pandas`, `scikit-learn`). Does not require GPU or PyTorch.
+- **`environment/track_b/requirements.txt`**: Hybrid quantum-classical and spatio-temporal deep learning stack (`pennylane`, `pennylane-lightning-gpu`, `monai`, `torch`, `torch-geometric`). Requires CUDA-enabled PyTorch.
+- **`environment/track_c/requirements.txt`**: Population-level graph neural network learning (`torch`, `torch-geometric`, `scikit-learn`).
+
+### 2.3 Suggested Installation
+
+`pyproject.toml` provides package-level dependencies for local development (`pip install -e .`), while track-specific requirements files pin exact runtime dependencies:
 
 ```bash
 # 1. Create dedicated Python 3.12 virtual environment
@@ -53,7 +64,7 @@ pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://
 # 3. Install PyTorch Geometric
 pip install torch-geometric==2.8.0
 
-# 4. Install Track B dependencies (PennyLane, MONAI, scientific stack)
+# 4. Install Track-specific dependencies (e.g. Track B for quantum/GNN models)
 pip install -r environment/track_b/requirements.txt
 
 # 5. Install local package in editable mode

@@ -120,9 +120,13 @@ def split_data(
         )
 
     n_total = len(X)
-    actual_clean = min(n_clean, n_total)
-    clean_indices = np.arange(actual_clean)
-    pseudo_indices = np.arange(actual_clean, n_total) if n_total > actual_clean else np.array([], dtype=int)
+    if n_total < n_clean:
+        raise ValueError(
+            f"Input dataset has {n_total} samples, fewer than the required {n_clean} clean subjects."
+        )
+
+    clean_indices = np.arange(n_clean)
+    pseudo_indices = np.arange(n_clean, n_total)
 
     rng = np.random.RandomState(random_state)
     shuffled_clean = rng.permutation(clean_indices)
@@ -145,7 +149,7 @@ def split_data(
         "train_idx": train_idx,
         "val_idx": val_idx,
         "test_idx": test_idx,
-        "n_clean": actual_clean,
+        "n_clean": n_clean,
         "n_pseudo": len(pseudo_indices),
     }
 

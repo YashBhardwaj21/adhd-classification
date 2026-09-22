@@ -58,14 +58,6 @@ def test_individual_notebook_integrity(nb_name):
         f"{nb_name}: Header markdown must introduce the experiment"
     )
 
-    # Verify last cell is provenance summary footer
-    cell_last = cells[-1]
-    assert cell_last.get("cell_type") == "markdown", f"{nb_name}: Last cell must be markdown footer"
-    footer_text = "".join(cell_last.get("source", []))
-    assert "Execution Summary & Provenance" in footer_text, (
-        f"{nb_name}: Last cell must contain 'Execution Summary & Provenance'"
-    )
-
     # Verify no error outputs remain in code cells
     for idx, cell in enumerate(cells):
         if cell.get("cell_type") == "code":

@@ -2,7 +2,7 @@
 
 Raw ADHD-200 neuroimaging data are not redistributed in this repository.
 
-To reproduce the experiments, obtain the ADHD-200 data from the original consortium distribution and organize inputs as described below.
+To reproduce the experiments, obtain the ADHD-200 data from the official distribution and follow the current access and usage terms.
 
 ---
 
@@ -17,7 +17,7 @@ To reproduce the experiments, obtain the ADHD-200 data from the original consort
 
 - **Experiment 07 (Classical GCN vs Quantum QGCNN)**:
   - Historical execution inputs (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`) across 875 subjects (162 clean-labelled, 713 pseudo-labelled).
-  - *Status*: These original combined arrays exceed distribution quotas and are **not** stored in this repository. The reported test results (N=33) are archived in `results/exp07/`. See [`docs/provenance.md`](../docs/provenance.md).
+  - *Status*: These original combined arrays are **not** redistributed in this repository. The reported test results (N=33) are archived in `results/exp07/`. See [`docs/provenance.md`](../docs/provenance.md).
 
 - **Experiment 08 (Volumetric 3D CNN, NeuroSTORM & Temporal GNN)**:
   - Preprocessed 4D functional BOLD volume sequences ($T=25, 99 \times 117 \times 95$) for volumetric CNN evaluation.
@@ -38,8 +38,8 @@ To reproduce the experiments, obtain the ADHD-200 data from the original consort
 
 ## 3. Not Included in this Repository
 
-- Raw 4D BOLD fMRI NIfTI files ($>120\text{ GB}$)
-- Large intermediate sliding-window correlation arrays ($>100\text{ MiB}$)
+- Raw 4D BOLD fMRI NIfTI files
+- Intermediate sliding-window correlation arrays
 - Model checkpoints from prior training runs
 - Experiment 07 historical combined arrays (`X_combined_full.npy`, etc.)
 
@@ -49,7 +49,7 @@ See [`data/provenance.md`](provenance.md) for full exclusion details.
 
 ## 4. Obtaining the ADHD-200 Dataset
 
-The preprocessed ADHD-200 connectomes are openly available to the research community:
+Obtain the ADHD-200 data from the official distribution and follow the current access and usage terms:
 1. Visit the [ADHD-200 Consortium Preprocessed Connectomes Project (NITRC)](https://www.nitrc.org/projects/fcon_1000/).
 2. Access the Athena preprocessed pipelines.
 3. For phenotypic data and site descriptions, consult the official ADHD-200 documentation.

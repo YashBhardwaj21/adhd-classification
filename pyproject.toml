@@ -22,6 +22,9 @@ keywords = [
     "ADHD-200",
     "reproducibility"
 ]
+
+# Package-level core dependencies for editable development (`pip install -e .`).
+# Track-specific execution environments with pinned versions are located under `environment/`.
 dependencies = [
     "numpy>=1.26.0",
     "pandas>=2.0.0",

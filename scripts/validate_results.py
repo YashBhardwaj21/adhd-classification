@@ -98,11 +98,32 @@ def validate_exp07():
     with open(path) as f:
         data = json.load(f)
 
-    assert np.isclose(data["classical"]["auc"], 0.729323, atol=1e-3)
-    assert np.isclose(data["classical"]["accuracy"], 0.696969, atol=1e-3)
-    assert np.isclose(data["quantum"]["auc"], 0.642857, atol=1e-3)
-    assert np.isclose(data["quantum"]["accuracy"], 0.606060, atol=1e-3)
-    print("  [OK] Exp 7 test results verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC)")
+    # 1. Classical GCN metrics
+    c = data["classical"]
+    assert np.isclose(c["auc"], 0.729323, atol=1e-3), f"Classical AUC mismatch: {c['auc']}"
+    assert np.isclose(c["accuracy"], 0.696969, atol=1e-3), f"Classical accuracy mismatch: {c['accuracy']}"
+    assert np.isclose(c["precision"], 0.694083, atol=1e-3), f"Classical precision mismatch: {c['precision']}"
+    assert np.isclose(c["recall"], 0.696969, atol=1e-3), f"Classical recall mismatch: {c['recall']}"
+    assert np.isclose(c["f1"], 0.692890, atol=1e-3), f"Classical F1 mismatch: {c['f1']}"
+    assert c["confusion_matrix"] == [[15, 4], [6, 8]], f"Classical CM mismatch: {c['confusion_matrix']}"
+    assert len(c["y_true"]) == 33, f"Classical test count mismatch: {len(c['y_true'])}"
+
+    # 2. Hybrid Quantum QGCNN metrics
+    q = data["quantum"]
+    assert np.isclose(q["auc"], 0.642857, atol=1e-3), f"Quantum AUC mismatch: {q['auc']}"
+    assert np.isclose(q["accuracy"], 0.606060, atol=1e-3), f"Quantum accuracy mismatch: {q['accuracy']}"
+    assert np.isclose(q["precision"], 0.620432, atol=1e-3), f"Quantum precision mismatch: {q['precision']}"
+    assert np.isclose(q["recall"], 0.606060, atol=1e-3), f"Quantum recall mismatch: {q['recall']}"
+    assert np.isclose(q["f1"], 0.608239, atol=1e-3), f"Quantum F1 mismatch: {q['f1']}"
+    assert q["confusion_matrix"] == [[11, 8], [5, 9]], f"Quantum CM mismatch: {q['confusion_matrix']}"
+    assert len(q["y_true"]) == 33, f"Quantum test count mismatch: {len(q['y_true'])}"
+
+    # 3. Cohort metadata
+    assert data.get("test_samples") == 33, "Test sample count must be 33"
+    assert data.get("clean_labels", {}).get("count") == 162, "Clean cohort count must be 162"
+    assert data.get("pseudo_labels", {}).get("count") == 713, "Pseudo cohort count must be 713"
+
+    print("  [OK] Exp 7 test results verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC, N=33, all metrics valid)")
 
 
 def validate_exp08():

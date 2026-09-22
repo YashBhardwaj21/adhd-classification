@@ -76,6 +76,16 @@ desktop.ini
 *.swo
 *~
 *.bak
+*.orig
+*.rej
+*.patch
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.agents/
+.gemini/
+.claude/
+.cursor/
 
 # --- 6. Neuroimaging & High-Dimensional Biomedical Data ---
 # Raw NIfTI neuroimaging scans
@@ -130,6 +140,7 @@ lightning_logs/
 scratch/
 tmp/
 temp/
+.cache/
 *.tmp
 *.temp
 .tmp_test_paths/

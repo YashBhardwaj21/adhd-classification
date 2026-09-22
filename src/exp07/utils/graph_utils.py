@@ -25,18 +25,20 @@ def prepare_graphs(
 
     Historical protocol specifications:
       - 116 nodes (AAL-116 parcellation)
-      - Proportional thresholding on absolute FC magnitude (density=0.15, top 15%)
+      - Proportional thresholding on absolute FC magnitude (15% nominal density parameter)
+      - Percentile threshold on upper-triangle absolute FC values: threshold = np.percentile(upper_vals, 100 * (1 - density))
+      - Edge selection: edge_mask = abs_fc >= threshold (note: >= comparison; ties may produce more than 15% edges)
       - Signed correlation values retained as edge_attr
-      - 117 node features: 116 full correlation row values + 1 normalized degree
-        (Note: the historical code used normalized thresholded edge count, whereas
-        the paper describes weighted node strength; see docs/provenance.md)
+      - Stored edge_attr is NOT passed as edge weights to the historical GCNConv message-passing layers
+      - 117 node features: 116 signed FC values + 1 normalized degree (np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois)
+        (Note: the historical code used normalized thresholded degree, whereas early paper drafts describe weighted node strength)
       - No MST applied (MST + 20% is specific to Exp 02)
 
     Args:
         X_features: Array of shape (N, 6670) or (N, 116, 116)
         y_labels: Array of binary diagnostic labels of shape (N,)
         n_rois: Number of atlas ROIs (default: 116)
-        density: Proportional threshold density (default: 0.15)
+        density: Nominal proportional threshold density (default: 0.15)
 
     Returns:
         List of torch_geometric.data.Data objects with:
@@ -62,7 +64,7 @@ def prepare_graphs(
         else:
             raise ValueError(f"Unexpected feature shape {feat.shape} for n_rois={n_rois}")
 
-        # Proportional thresholding based on absolute correlation magnitude
+        # Nominal 15% threshold based on percentile of upper-triangle absolute FC
         abs_fc = np.abs(fc_matrix)
         upper_vals = abs_fc[triu_idx]
         if len(upper_vals) > 0 and not np.all(upper_vals == 0):
@@ -73,14 +75,14 @@ def prepare_graphs(
 
         np.fill_diagonal(edge_mask, False)
 
-        # Graph edges
+        # Graph edges (edge_attr stores original signed FC values)
         edge_coords = np.where(edge_mask)
         edge_index = torch.tensor(np.array(edge_coords), dtype=torch.long)
         edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)
 
-        # Historical node features: 116 FC row values + 1 normalized degree = 117
-        degree = (np.sum(edge_mask, axis=1, keepdims=True) / max(n_rois - 1, 1)).astype(np.float32)
-        node_feats = np.concatenate([fc_matrix, degree], axis=1)  # shape: (116, 117)
+        # Historical node features: 116 signed FC row values + 1 normalized degree = 117
+        degree = (np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois).astype(np.float32)
+        node_feats = np.hstack([fc_matrix, degree])  # shape: (116, 117)
         node_feats_tensor = torch.tensor(node_feats, dtype=torch.float32)
 
         # Target label
