@@ -10,7 +10,7 @@ exp04,site_prediction_results.csv,results/exp04/site_prediction_results.csv,deri
 exp04,diagnosis_prediction_results.csv,results/exp04/diagnosis_prediction_results.csv,derived,CC200,534,42,Diagnostic classification before and after ComBat
 exp05,run_dynamic_biomarkers.csv,results/exp05/run_dynamic_biomarkers.csv,derived,CC200,534,42,Dynamic connectivity state dwell times and fractional occupancy (K=3)
 exp05,run_state_sequences.csv,results/exp05/run_state_sequences.csv,derived,CC200,534,42,Sliding-window state sequence transitions
-exp06,exp06_verified_results.json,results/exp06/exp06_verified_results.json,reported,AAL-116,955,42,Semi-supervised self-training pseudo-labelling counts
+exp06,exp06_verified_results.json,results/exp06/exp06_verified_results.json,reported,AAL-116,955,42,"Semi-supervised pseudo-label evaluation: Procedure I self-training and Procedure II ensemble selection"
 exp07,checkpoint_analysis.json,results/exp07/checkpoint_analysis.json,archived,AAL-116,33,42,"Held-out test evaluation: Classical GCN and Quantum QGCNN"
 exp07,report.md,results/exp07/report.md,archived,AAL-116,33,42,Test evaluation performance table and metric conventions
 exp08,exp08_verified_results.json,results/exp08/exp08_verified_results.json,reported,ADHD-200,764,42,"3D CNN, NeuroSTORM, and temporal GNN benchmark metrics"

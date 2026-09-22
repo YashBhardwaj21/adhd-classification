@@ -15,14 +15,12 @@ from exp07.utils.config import DATA_DIR, N_ROIS, RANDOM_SEED
 
 def load_data(
     data_dir: Optional[Path] = None,
-    use_reduced: bool = False,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Load historical Track B dataset arrays.
 
     Args:
         data_dir: Directory containing historical array artifacts. Defaults to DATA_DIR.
-        use_reduced: If True, load X_combined_reduced.npy instead of X_combined_full.npy.
 
     Returns:
         X: Combined FC feature array of shape (875, 6670)
@@ -35,7 +33,7 @@ def load_data(
     """
     target_dir = Path(data_dir) if data_dir is not None else DATA_DIR
 
-    x_filename = "X_combined_reduced.npy" if use_reduced else "X_combined_full.npy"
+    x_filename = "X_combined_full.npy"
     x_path = target_dir / x_filename
     y_path = target_dir / "y_combined.npy"
     sub_path = target_dir / "subjects_combined.npy"
@@ -60,7 +58,7 @@ def load_data(
     subjects = np.load(sub_path)
 
     expected_dim = N_ROIS * (N_ROIS - 1) // 2
-    if not use_reduced and (X.ndim != 2 or X.shape[1] != expected_dim):
+    if X.ndim != 2 or X.shape[1] != expected_dim:
         raise ValueError(
             f"Invalid FC feature matrix shape {X.shape}. "
             f"Expected (N, {expected_dim}) for AAL-116 parcellation."

@@ -43,7 +43,7 @@ conda create -n adhd200 python=3.12.13 -y
 conda activate adhd200
 
 # 2. Install PyTorch with CUDA 12.1 support (for Track B or C)
-pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
 
 # 3. Install PyTorch Geometric and track dependencies (e.g. Track B)
 pip install torch-geometric==2.8.0

@@ -27,7 +27,7 @@ The following experiments can be reproduced after reconstructing intermediate da
 
 ### Category C: Archived / Not Currently Rerunnable from Repository
 - **Exp 07 (Classical GCN vs Quantum QGCNN)**:
-  The reported results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are archived in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained model weights are not redistributed. Consequently, Experiment 07 cannot be rerun end-to-end from this repository without external restoration of those arrays. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
+  Experiment 07 is archived rather than currently rerunnable from the public repository because the historical combined input arrays and trained checkpoints are not redistributed. The source code, historical configuration, and verified evaluation results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are retained in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained checkpoints are absent, so end-to-end reruns are currently unavailable without external restoration of those artifacts. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
 
 ---
 
@@ -51,7 +51,7 @@ Dependency requirements are partitioned into three track environments under `env
 
 ### 2.3 Suggested Installation
 
-`pyproject.toml` provides package-level dependencies for local development (`pip install -e .`), while track-specific requirements files pin exact runtime dependencies:
+`pyproject.toml` provides package-level dependencies for local package installation (`pip install -e .`). Track-specific requirements files document the runtime dependency versions and ranges used for each experimental track. The separately recorded environment metadata provides the observed package versions for the historical execution environment.
 
 ```bash
 # 1. Create dedicated Python 3.12 virtual environment
@@ -59,7 +59,7 @@ conda create -n adhd200 python=3.12.13 -y
 conda activate adhd200
 
 # 2. Install PyTorch with CUDA 12.1 runtime
-pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
 
 # 3. Install PyTorch Geometric
 pip install torch-geometric==2.8.0

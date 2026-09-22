@@ -3,6 +3,9 @@ Our code is based on the following code.
 https://docs.monai.io/en/stable/_modules/monai/networks/nets/swin_unetr.html#SwinUNETR
 https://github.com/Transconnectome/SwiFT/blob/main/project/module/models/swin4d_transformer_ver7.py
 """
+# SPDX-License-Identifier: Apache-2.0
+# Adapted from NeuroSTORM and related Apache-2.0 components.
+# See NOTICE for upstream provenance and attribution.
 
 import itertools
 import os

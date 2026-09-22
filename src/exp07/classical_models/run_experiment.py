@@ -45,7 +45,7 @@ def main():
         "--seed",
         type=int,
         default=SEED,
-        help=f"Deterministic random seed (default: {SEED}).",
+        help=f"Random seed used for dataset splitting and RNG initialization (default: {SEED}).",
     )
 
     args = parser.parse_args()

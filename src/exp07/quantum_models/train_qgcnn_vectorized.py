@@ -24,11 +24,12 @@ import torch.optim as optim
 from torch_geometric.loader import DataLoader
 from torch_geometric.nn import GCNConv, global_mean_pool
 
-from common.paths import checkpoints_root, data_root, results_root
+from common.paths import checkpoints_root, results_root
 from exp07.quantum_models.quantum_embedding_broadcast import QuantumEmbeddingGPU_Broadcast
 from exp07.utils.config import (
     BATCH_SIZE,
     CHECKPOINT_INTERVAL,
+    DATA_DIR,
     DEVICE,
     EPOCHS,
     LEARNING_RATE,
@@ -121,7 +122,7 @@ def run_experiment(
     """
     Execute the hybrid quantum GCNN training protocol.
     """
-    data_dir = Path(data_dir) if data_dir is not None else data_root()
+    data_dir = Path(data_dir) if data_dir is not None else DATA_DIR
     results_dir = Path(results_dir) if results_dir is not None else results_root() / "exp07"
     checkpoints_dir = Path(checkpoints_dir) if checkpoints_dir is not None else checkpoints_root() / "exp07"
 

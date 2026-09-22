@@ -10,7 +10,7 @@ This document lists large data artifacts excluded from this Git repository and e
 | :--- | :--- | :--- |
 | **Raw 4D BOLD fMRI Scans** | All sites | High-volume imaging files governed by ADHD-200 open data distribution; not tracked in Git. |
 | **Craddock-200 Parcellated Time Series** | Track A | High-dimensional intermediate arrays; reconstructed from preprocessed connectomes. |
-| **Exp 07 Combined Arrays** | `X_combined_full.npy`, `y_combined.npy` | Historical training arrays for Exp 07; not redistributed in this repository. |
+| **Exp 07 Combined Arrays** | `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` | Historical training arrays for Exp 07; not redistributed in this repository. |
 | **Model Checkpoints** | Exp 07, NeuroSTORM | Trained model weights from historical runs; not redistributed in this repository. |
 
 ---

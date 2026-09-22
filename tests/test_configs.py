@@ -50,7 +50,16 @@ def test_track_b_reported_run_config():
     assert cfg["training"]["learning_rate"] == 0.001
     assert cfg["training"]["weight_decay"] == 0.00001
 
-    from exp07.utils.config import BATCH_SIZE, DENSITY, LEARNING_RATE, N_LAYERS, N_QUBITS, N_ROIS, NODE_FEATURE_DIM, WEIGHT_DECAY
+    from exp07.utils.config import (
+        BATCH_SIZE,
+        DENSITY,
+        LEARNING_RATE,
+        N_LAYERS,
+        N_QUBITS,
+        N_ROIS,
+        NODE_FEATURE_DIM,
+        WEIGHT_DECAY,
+    )
 
     assert N_ROIS == 116, "Track B uses AAL-116 parcellation"
     assert NODE_FEATURE_DIM == 117, "Node features must be 116 FC + 1 degree"

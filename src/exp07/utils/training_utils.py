@@ -4,15 +4,13 @@
 
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
-
-from exp07.utils.config import DEVICE
 
 _LAST_TIMED_SAVE = time.time()
 
@@ -32,8 +30,9 @@ def train_one_epoch(model, train_loader, optimizer, criterion=None):
     correct = 0
     total = 0
 
+    device = next(model.parameters()).device
     for batch in train_loader:
-        batch = batch.to(DEVICE)
+        batch = batch.to(device)
         optimizer.zero_grad()
 
         logits = model(batch)
@@ -125,9 +124,10 @@ def evaluate_full(model, loader) -> Dict[str, Any]:
     all_preds = []
     all_probs = []
 
+    device = next(model.parameters()).device
     with torch.no_grad():
         for batch in loader:
-            batch = batch.to(DEVICE)
+            batch = batch.to(device)
             logits = model(batch)
             probs = F.softmax(logits, dim=-1)
             preds = logits.argmax(dim=-1)

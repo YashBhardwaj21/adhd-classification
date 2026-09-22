@@ -4,7 +4,7 @@
 # Loads verified historical parameters from configs/exp07/reported_run.json.
 
 import json
-from pathlib import Path
+
 import torch
 
 from common.paths import checkpoints_root, data_root, project_root, results_root
@@ -24,8 +24,10 @@ if CONFIG_FILE.exists():
     try:
         with open(CONFIG_FILE, "r", encoding="utf-8") as f:
             _reported_config = json.load(f)
-    except Exception:
-        _reported_config = {}
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"Invalid Experiment 07 configuration file: {CONFIG_FILE}"
+        ) from exc
 
 _graph_cfg = _reported_config.get("graph", {})
 _training_cfg = _reported_config.get("training", {})
@@ -47,7 +49,7 @@ WEIGHT_DECAY = float(_training_cfg.get("weight_decay", 1e-5))
 PATIENCE = int(_training_cfg.get("patience", 10))
 CHECKPOINT_INTERVAL = int(_training_cfg.get("checkpoint_interval", 1))
 
-# Deterministic random seed
+# Random seed used for dataset splitting and RNG initialization
 SEED = int(_training_cfg.get("seed", 42))
 RANDOM_SEED = SEED
 

@@ -45,7 +45,7 @@ def main():
         "--seed",
         type=int,
         default=RANDOM_SEED,
-        help=f"Deterministic random seed (default: {RANDOM_SEED}).",
+        help=f"Random seed used for dataset splitting and RNG initialization (default: {RANDOM_SEED}).",
     )
     parser.add_argument(
         "--quantum-device",

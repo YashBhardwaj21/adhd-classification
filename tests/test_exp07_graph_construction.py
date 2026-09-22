@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -51,14 +50,14 @@ def test_exp07_graph_construction_dimensions():
         assert not torch.any(g.edge_index[0] == g.edge_index[1]), "Graph must not contain self-loops"
 
 
-def test_exp07_density_proportional_thresholding():
-    """Assert that edge count reflects the verified 15% density threshold."""
+def test_exp07_density_proportional_thresholding_exact():
+    """Assert that edge count reflects the exact verified 15% density threshold on unique values."""
     n_rois = 116
     triu_dim = n_rois * (n_rois - 1) // 2  # 6670
     density = 0.15
 
-    rng = np.random.RandomState(42)
-    X = rng.randn(1, triu_dim).astype(np.float32)
+    # Unique sequential values ensure exact percentile partition without ties
+    X = np.arange(1, triu_dim + 1, dtype=np.float32).reshape(1, -1)
     y = np.array([1])
 
     graphs = prepare_graphs(X, y, n_rois=n_rois, density=density)
@@ -66,9 +65,43 @@ def test_exp07_density_proportional_thresholding():
 
     # In an undirected graph with symmetric edges, undirected count is num_edges / 2
     undirected_edges = g.edge_index.shape[1] // 2
-    expected_undirected = int(np.round(triu_dim * density))
+    expected_undirected = int(np.ceil(triu_dim * density))
 
-    # Allow minor boundary variation due to percentile thresholding
-    assert abs(undirected_edges - expected_undirected) <= 5, (
-        f"Undirected edge count {undirected_edges} deviates from expected ~{expected_undirected} for density {density}"
+    assert undirected_edges == expected_undirected, (
+        f"Undirected edge count {undirected_edges} deviates from exact expected {expected_undirected}"
     )
+
+
+def test_exp07_density_with_ties():
+    """Assert that >= thresholding with tied values can produce more than nominal density."""
+    n_rois = 116
+    triu_dim = n_rois * (n_rois - 1) // 2  # 6670
+    density = 0.15
+
+    # Half ones, half zeros produces tied values at the threshold
+    X = np.zeros((1, triu_dim), dtype=np.float32)
+    X[0, :triu_dim // 2] = 0.5
+    y = np.array([0])
+
+    graphs = prepare_graphs(X, y, n_rois=n_rois, density=density)
+    g = graphs[0]
+
+    undirected_edges = g.edge_index.shape[1] // 2
+    expected_nominal = int(np.ceil(triu_dim * density))
+
+    # Because half the values are tied at 0.5 >= threshold, edge count exceeds nominal 15%
+    assert undirected_edges > expected_nominal
+
+
+def test_exp07_all_zero_input():
+    """Verify that an all-zero FC input produces 0 edges without UnboundLocalError."""
+    X = np.zeros((1, 6670), dtype=np.float32)
+    y = np.array([0])
+
+    graphs = prepare_graphs(X, y, n_rois=116, density=0.15)
+    g = graphs[0]
+
+    assert g.x.shape == (116, 117)
+    assert g.edge_index.shape == (2, 0)
+    assert g.edge_attr.shape == (0,)
+    assert torch.all(g.x[:, -1] == 0)

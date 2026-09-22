@@ -3,7 +3,8 @@
 # Converts AAL-116 FC features to PyG Data objects with 117 node features
 # (116 FC + 1 normalized degree) and 15% nominal density thresholding.
 
-from typing import List, Optional, Union
+from typing import List, Union
+
 import numpy as np
 import torch
 from torch_geometric.data import Data
@@ -68,6 +69,7 @@ def prepare_graphs(
             threshold = np.percentile(upper_vals, 100 * (1 - density))
             edge_mask = abs_fc >= threshold
         else:
+            threshold = np.inf
             edge_mask = np.zeros((n_rois, n_rois), dtype=bool)
 
         np.fill_diagonal(edge_mask, False)
@@ -78,7 +80,7 @@ def prepare_graphs(
         edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)
 
         # Historical node features: 116 signed FC row values + 1 normalized degree = 117
-        degree = (np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois).astype(np.float32)
+        degree = (np.sum(edge_mask, axis=1, keepdims=True) / n_rois).astype(np.float32)
         node_feats = np.hstack([fc_matrix, degree])  # shape: (116, 117)
         node_feats_tensor = torch.tensor(node_feats, dtype=torch.float32)
 

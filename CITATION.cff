@@ -3,7 +3,7 @@ message: "If you use this codebase, experimental results, or methodology in your
 title: "ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization"
 abstract: "Research code and experimental results evaluating dynamic resting-state functional connectivity, multi-site ComBat harmonization, classical and quantum graph convolutional networks, spatio-temporal baselines, and leave-one-site-out population graph learning across the ADHD-200 dataset."
 version: "1.0.0"
-date-released: "2026-09-20"
+# Applies to original project code; bundled third-party components retain their own licenses.
 license: "MIT"
 repository-code: "https://github.com/YashBhardwaj21/adhd-classification"
 keywords:

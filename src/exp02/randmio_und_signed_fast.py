@@ -1,6 +1,7 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 # BCT-derived/adapted implementation.
-# Upstream: Brain Connectivity Toolbox for Python (bctpy)
-# License: GNU General Public License v3.0 or later (GPL-3.0-or-later)
+# Upstream: Brain Connectivity Toolbox for Python (bctpy).
+# Modified/adapted from upstream BCT/bctpy implementation; see git history for dates.
 # See third_party/bctpy.md for provenance and licensing details.
 import numpy as np
 from numba import njit

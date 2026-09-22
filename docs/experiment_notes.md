@@ -146,7 +146,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Cohort Provenance**:
   - Experiment 7 used a separately prepared cohort consisting of 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects.
   - `part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects.
-  - The historical Experiment 7 cohort contains 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects.
+  - The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects.
   - Pseudo-label distribution (713 subjects): healthy = 535, ADHD = 178.
   - The clean cohort was split using stratified train/test and train/validation splits with random_state=42, resulting in 103 training, 26 validation, and 33 test subjects.
   - Final training set composition: 103 clean + 713 pseudo = 816 training subjects.

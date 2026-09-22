@@ -12,13 +12,17 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from exp02.config import DENSITY as EXP02_DENSITY, N_ROIS as EXP02_N_ROIS
+from exp02.config import (
+    DENSITY as EXP02_DENSITY,
+)
+from exp02.config import (
+    N_ROIS as EXP02_N_ROIS,
+)
 from exp02.graph_utils import prepare_graphs as prepare_exp02_graphs
 
 

@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 import pennylane as qml
-import pytest
 import torch
 from torch_geometric.data import Batch, Data
 
@@ -14,7 +13,15 @@ sys.path.insert(0, str(ROOT / "src"))
 from exp07.classical_models.model_classical_gcn import ClassicalGCN
 from exp07.quantum_models.quantum_embedding_broadcast import QuantumEmbeddingGPU_Broadcast
 from exp07.quantum_models.train_qgcnn_vectorized import HybridQGCNN_Vectorized
-from exp07.utils.config import BATCH_SIZE, DENSITY, LEARNING_RATE, N_LAYERS, N_QUBITS, NODE_FEATURE_DIM, WEIGHT_DECAY
+from exp07.utils.config import (
+    BATCH_SIZE,
+    DENSITY,
+    LEARNING_RATE,
+    N_LAYERS,
+    N_QUBITS,
+    NODE_FEATURE_DIM,
+    WEIGHT_DECAY,
+)
 
 
 def count_parameters(model: torch.nn.Module) -> int:
