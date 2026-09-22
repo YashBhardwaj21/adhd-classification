@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# ============================================================================
-# REPOSITORY AUDIT SCRIPT
+# Repository audit script.
 # Validates directory structure, notebook validity, artifact non-emptiness,
-# and flags any 0-byte or corrupted staging files.
-# ============================================================================
+# and checks for 0-byte or corrupted staging files.
+
 
 import json
 import os

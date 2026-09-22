@@ -1,3 +1,7 @@
+# BCT-derived/adapted implementation.
+# Upstream: Brain Connectivity Toolbox for Python (bctpy)
+# License: GNU General Public License v3.0 or later (GPL-3.0-or-later)
+# See third_party/bctpy.md for provenance and licensing details.
 # @due.dcite(BibTeX(RUBINOV2011), description="Undirected signed null model")
 import numpy as np
 from bct.utils.miscellaneous_utilities import (

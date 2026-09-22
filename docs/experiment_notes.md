@@ -49,7 +49,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Limitations & Discrepancies**:
   - `notebooks/exp02/02_graph_construction_and_validation.ipynb` implements the full MST + PT algorithm (`mst_graph`).
   - `src/exp02/graph_utils.py` contains a simplified proportional thresholding utility without the MST initial pass.
-  - See `notebooks/exp02/02_graph_construction_and_validation.ipynb`, `notebooks/exp02/03_graph_metrics_and_null_models.ipynb`, and `third_party/bctpy.md` for BCT/bctpy provenance and GPL-3.0 licensing terms.
+  - See `notebooks/exp02/02_graph_construction_and_validation.ipynb`, `notebooks/exp02/03_graph_metrics_and_null_models.ipynb`, and `third_party/bctpy.md` for BCT/bctpy provenance and GPL-3.0-or-later licensing terms.
 
 ---
 
@@ -165,7 +165,7 @@ This document provides a concise reference for the nine experiments comprising t
   - Node features: 117-dimensional features consisting of 116 signed FC values for each ROI plus 1 normalized degree:
     `degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois`
     `node_features = np.hstack([fc_matrix, degree])`.
-    The degree feature is based on unweighted thresholded adjacency, not weighted node strength. No final z-score/StandardScaler was applied to the 117-dimensional node feature matrix.
+    The degree feature is based on unweighted thresholded adjacency, not weighted node strength. The inspected historical Exp07 graph-construction code does not apply a final z-score/StandardScaler transformation to the 117-dimensional node-feature matrix.
 - **Model Architectures**:
   - **Classical GCN**: Input 117 node features; Layer 1: `GCNConv(117, 32)`; Layer 2: `GCNConv(32, 32)`; Layer 3: `GCNConv(32, 16)`; followed by BatchNorm1d, ReLU, Dropout($p=0.30$), global mean pooling, and classifier $16 \to 2$ (5,522 parameters).
   - **Quantum GCNN / QGCNN**: Classical projection ($117 \to 12$); 6-qubit quantum variational circuit ($N_{\text{qubits}}=6, N_{\text{layers}}=1$; $R_Y + R_Z$ input angle encoding; 1 trainable layer with trainable $R_X, R_Y, R_Z$ rotations and ring/circular CNOT entanglement; 6 Pauli-$Z$ expectation values); followed by 3 graph layers: `GCNConv(6, 16)`, `GCNConv(16, 16)`, `GCNConv(16, 16)` with BatchNorm1d, ReLU, Dropout($p=0.30$), global mean pooling, and binary classifier $16 \to 2$ (2,188 parameters).

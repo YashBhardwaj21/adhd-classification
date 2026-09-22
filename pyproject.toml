@@ -23,8 +23,10 @@ keywords = [
     "reproducibility"
 ]
 
-# Package-level core dependencies for editable development (`pip install -e .`).
-# Track-specific execution environments with pinned versions are located under `environment/`.
+# Package-level core dependencies for local package installation (`pip install -e .`).
+# Note: `pip install -e .` provides base library utilities but is not alone sufficient
+# to execute all experimental tracks. Authoritative track-specific runtime and historical
+# reproduction environments with pinned dependency versions are located under `environment/`.
 dependencies = [
     "numpy>=1.26.0",
     "pandas>=2.0.0",

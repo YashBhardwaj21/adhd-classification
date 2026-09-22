@@ -71,7 +71,7 @@ This document provides a factual record of discrepancies between manuscript desc
   - Edge selection: `edge_mask = abs_fc >= threshold` (`>=` comparison; percentile ties can yield slightly more edges than the nominal 15%).
   - Edge attributes: `edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)` retains original signed FC values.
   - Message-passing behavior: "edge_attr is stored in the graph data object but is not passed as edge weights to the historical GCNConv message-passing layers."
-  - Node features: 117-dimensional: 116 signed FC row values + 1 normalized degree (`degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois; node_features = np.hstack([fc_matrix, degree])`). The degree feature is based on unweighted thresholded adjacency, not weighted node strength. No final z-score/StandardScaler was applied to the 117-dimensional node feature matrix.
+  - Node features: 117-dimensional: 116 signed FC row values + 1 normalized degree (`degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois; node_features = np.hstack([fc_matrix, degree])`). The degree feature is based on unweighted thresholded adjacency, not weighted node strength. The inspected historical Exp07 graph-construction code does not apply a final z-score/StandardScaler transformation to the 117-dimensional node-feature matrix.
 
 - **Model Architectures & Hyperparameters**:
   - Classical GCN: $117 \to 32 \to 32 \to 16 \to 2$ with BatchNorm1d, ReLU, Dropout($p=0.30$), and global mean pooling (5,522 parameters).
@@ -155,8 +155,8 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 
 | Bundled Component | File Path | Origin / Upstream | Upstream License | Status in Repository |
 | :--- | :--- | :--- | :--- | :--- |
-| **Brain Connectivity Toolbox** | `src/exp02/null_model_und_sign_fixed.py`, `src/exp02/randmio_und_signed_fast.py` | Rubinov & Sporns (2011) / `bctpy` | GNU GPL v3.0 | Bundled algorithm implementation (see `third_party/bctpy.md`) |
-| **NeuroSTORM Transformer** | `src/exp08/neurostorm/neurostorm.py` | CUHK-AIM-Group (derived from MONAI / SwiFT) | Apache License 2.0 | Bundled model implementation |
+| **Brain Connectivity Toolbox** | `src/exp02/null_model_und_sign_fixed.py`, `src/exp02/randmio_und_signed_fast.py` | Rubinov & Sporns (2011) / `bctpy` | GNU General Public License v3.0 or later (GPL-3.0-or-later) | Bundled algorithm implementation (see `third_party/bctpy.md`) |
+| **NeuroSTORM Transformer** | `src/exp08/neurostorm/neurostorm.py` | CUHK-AIM-Group (derived from MONAI / SwiFT) | Apache License, Version 2.0 (Apache-2.0) | Bundled model implementation (see `NOTICE`) |
 | **neuroCombat** | N/A (external package dependency) | Fortin et al. (2018) | MIT | Pip dependency; not bundled |
 
 ### Brain Connectivity Toolbox (BCT) Provenance
@@ -168,4 +168,4 @@ Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upst
 The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attribution for the undirected signed null model:
 Mikail Rubinov and Olaf Sporns. "Weight-conserving characterization of complex functional brain networks." *NeuroImage*, 2011; 56(4): 2068–2079. DOI: 10.1016/j.neuroimage.2011.03.069.
 
-See [third_party/bctpy.md](../third_party/bctpy.md) for the complete third-party provenance document and GPL-3.0 licensing notices.
+See [third_party/bctpy.md](../third_party/bctpy.md) for the complete third-party provenance document and GPL-3.0-or-later licensing notices.

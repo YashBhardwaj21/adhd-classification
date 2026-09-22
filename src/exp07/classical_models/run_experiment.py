@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# ============================================================================
-# RUN CLASSICAL GCN EXPERIMENT (Track B Baseline)
-# ============================================================================
+# Run Classical GCN experiment (Track B baseline).
 
 import argparse
 import sys
@@ -52,9 +50,7 @@ def main():
 
     args = parser.parse_args()
 
-    print("\n" + "=" * 60)
-    print("RUNNING CLASSICAL GCN EXPERIMENT (Track B)")
-    print("=" * 60 + "\n")
+    print("\nRunning Classical GCN Experiment (Track B)\n")
 
     try:
         model, history = run_experiment(

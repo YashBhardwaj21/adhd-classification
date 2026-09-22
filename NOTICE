@@ -1,15 +1,16 @@
 # THIRD-PARTY SOFTWARE NOTICES AND ATTRIBUTIONS
 
+Original project code is released under the MIT License. Bundled third-party source components retain their respective upstream licenses as documented in NOTICE and third_party/.
+
 This repository incorporates third-party open-source software and open datasets under the following terms:
 
 ---
 
 ## 1. NeuroSTORM Architecture (`src/exp08/neurostorm/neurostorm.py`)
 - **Upstream Repository**: https://github.com/CUHK-AIM-Group/NeuroSTORM
-- **Copyright**: (c) 2023 CUHK-AIM-Group
-- **License**: Apache License, Version 2.0; you may not use this file except in compliance with the License:
-  http://www.apache.org/licenses/LICENSE-2.0
-- **Modifications**: Adapted for BOLD fMRI 4D volume sequence inputs within the Experiment 08 benchmarking suite.
+- **License**: Apache License, Version 2.0 (Apache-2.0; see `LICENSES/Apache-2.0.txt`)
+- **Derivation & Attribution**:
+  Adapted from upstream NeuroSTORM (`models/neurostorm.py`), incorporating architectural blocks derived from MONAI SwinUNETR (Apache-2.0) and SwiFT (Apache-2.0) with dataloading interfaces for 4D functional fMRI volume sequence inputs within Experiment 08.
 
 ---
 
@@ -18,13 +19,13 @@ This repository incorporates third-party open-source software and open datasets 
   - `src/exp02/null_model_und_sign_fixed.py`
   - `src/exp02/randmio_und_signed_fast.py`
 - **Upstream Repository**: https://github.com/aestrivex/bctpy (`bctpy`, Brain Connectivity Toolbox for Python)
-- **License**: GNU General Public License v3.0 (GPL-3.0 / GNU GPLv3+)
+- **License**: GNU General Public License v3.0 or later (GPL-3.0-or-later; see `LICENSES/GPL-3.0-or-later.txt`)
 - **Provenance & Attribution**:
   The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
   Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
   The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attribution for the undirected signed null model.
 - **Reference**:
-  Rubinov, M., & Sporns, O. (2011). Weight-conserving characterization of complex brain networks: measure development and application to normal and brain-damaged subjects. NeuroImage, 56(4), 2068-2079. DOI: 10.1016/j.neuroimage.2011.03.069.
+  Mikail Rubinov and Olaf Sporns. "Weight-conserving characterization of complex functional brain networks." *NeuroImage*, 2011; 56(4): 2068–2079. DOI: 10.1016/j.neuroimage.2011.03.069.
 - **Detailed Documentation**: See `third_party/bctpy.md`.
 
 ---

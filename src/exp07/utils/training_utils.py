@@ -1,10 +1,6 @@
 #!/usr/bin/env python
-# ============================================================================
-# TRAINING UTILITIES FOR EXPERIMENT 7 (Track B)
+# Training utilities for Experiment 7 (Track B).
 # Training loop, evaluation metrics, and model checkpointing.
-# Evaluation explicitly computes AUC, accuracy, precision, recall, and F1
-# using documented averaging conventions (weighted and macro).
-# ============================================================================
 
 import time
 from pathlib import Path

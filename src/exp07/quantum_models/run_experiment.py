@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# ============================================================================
-# RUN VECTORIZED QUANTUM GCNN EXPERIMENT (Track B Hybrid Model)
-# ============================================================================
+# Run vectorized Quantum GCNN experiment (Track B hybrid model).
 
 import argparse
 import sys
@@ -58,9 +56,7 @@ def main():
 
     args = parser.parse_args()
 
-    print("\n" + "=" * 60)
-    print("RUNNING VECTORIZED QUANTUM GCNN EXPERIMENT (Track B)")
-    print("=" * 60 + "\n")
+    print("\nRunning Vectorized Quantum GCNN Experiment (Track B)\n")
 
     try:
         model, history = run_experiment(

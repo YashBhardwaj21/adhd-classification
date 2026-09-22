@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# ============================================================================
-# RESULTS VALIDATION SCRIPT
-# Asserts numerical consistency across results/ artifacts against the
-# ground-truth values recorded in docs/provenance.md
-# ============================================================================
+# Results validation script.
+# Verifies numerical consistency across results/ artifacts against
+# the ground-truth values recorded in docs/provenance.md.
+
 
 import json
 import sys

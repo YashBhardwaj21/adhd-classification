@@ -22,7 +22,7 @@
     "density": 0.15,
     "thresholding": "percentile on upper-triangle absolute FC values",
     "edge_selection_rule": "abs_fc >= threshold (nominal 15% density; ties may produce more edges)",
-    "edge_weights": "signed FC (retained as edge_attr; not passed as edge weights to GCNConv layers)",
+    "edge_attributes": "signed FC (stored as edge_attr; not passed as edge weights to GCNConv layers)",
     "node_features": "117 (116 signed FC values + normalized degree: np.sum(abs_fc >= threshold, axis=1) / 116)",
     "self_loops": false
   },

@@ -8,9 +8,7 @@ This document details the provenance, upstream source, attribution, and licensin
 
 - **Upstream Project**: Brain Connectivity Toolbox for Python (`bctpy`)
 - **Upstream URL**: https://github.com/aestrivex/bctpy
-- **Upstream License**: GNU General Public License v3.0 (GPL-3.0 / GNU GPLv3+)
-- **Current Upstream Latest Release**: 0.6.1 *(Note: Current upstream repository fact only; see historical version status below)*
-- **Current Upstream Latest Release Commit**: `1b40e28` *(Note: Current upstream repository fact only; see historical commit status below)*
+- **Upstream License**: GNU General Public License v3.0 or later (GPL-3.0-or-later)
 
 ---
 
@@ -64,10 +62,10 @@ The historical `RUBINOV2011` citation corresponds to:
 - **Exact Historical Version Status**: not recorded during original execution
 - **Exact Historical Commit Status**: not recorded during original execution
 
-*(Note: While upstream bctpy currently stands at release 0.6.1 and commit `1b40e28`, historical records in the execution environment `/lp-dev/23BRS1236` did not record the specific version or git commit tag used during historical execution.)*
+*(Note: The historical records in the original execution environment did not record the specific version or git commit tag used during historical execution.)*
 
 ---
 
 ## 6. Licensing Notice
 
-The bundled BCT-derived source files (`src/exp02/null_model_und_sign_fixed.py` and `src/exp02/randmio_und_signed_fast.py`) are derived from `bctpy` and are governed by the GNU General Public License v3.0 (GPL-3.0 / GNU GPLv3+). They must not be described as MIT-only code. Any distribution or modification of these files must preserve upstream GPL-3.0 notices and Rubinov & Sporns (2011) attributions.
+The bundled BCT-derived source files (`src/exp02/null_model_und_sign_fixed.py` and `src/exp02/randmio_und_signed_fast.py`) are derived from `bctpy` and are governed by the GNU General Public License v3.0 or later (GPL-3.0-or-later). The full license text is provided in `LICENSES/GPL-3.0-or-later.txt`. They must not be described as MIT-only code. Any distribution or modification of these files must preserve upstream GPL-3.0-or-later notices and Rubinov & Sporns (2011) attributions.

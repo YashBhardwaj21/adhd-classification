@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# ============================================================================
-# GRAPH UTILITIES - Convert CC200 FC features to PyTorch Geometric graphs
-# Experiment 02: CC200 Atlas (190 ROIs, density 0.20)
-# Note: For topological analysis, notebooks/exp02/02_graph_construction_and_validation.ipynb
-# implements mst_graph (MST + Proportional Thresholding to 3,591 edges).
-# ============================================================================
+# Graph utilities to convert CC200 FC features to PyTorch Geometric graphs.
+# Experiment 02: CC200 Atlas (190 ROIs, density 0.20).
+# For topological analysis, see notebooks/exp02/02_graph_construction_and_validation.ipynb.
 
 import numpy as np
 import torch
@@ -72,4 +69,4 @@ def prepare_graphs(X_features, y_labels, n_rois=N_ROIS, density=DENSITY):
 if __name__ == "__main__":
     # Test the function
     print("Testing graph_utils...")
-    print("✅ graph_utils.py loaded successfully")
+    print("graph_utils.py loaded successfully")

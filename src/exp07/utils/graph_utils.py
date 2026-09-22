@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# ============================================================================
-# GRAPH UTILITIES FOR EXPERIMENT 7 (Track B)
-# Historical Protocol: AAL-116 (116 nodes, 117 features: 116 FC + 1 degree)
-# Edge selection: Strongest 15% absolute correlation magnitude, signed weights
-# No Minimum Spanning Tree (MST is specific to Exp 02 / Track A)
-# ============================================================================
+# Graph utilities for Experiment 7 (Track B).
+# Converts AAL-116 FC features to PyG Data objects with 117 node features
+# (116 FC + 1 normalized degree) and 15% nominal density thresholding.
 
 from typing import List, Optional, Union
 import numpy as np

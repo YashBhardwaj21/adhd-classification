@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# ============================================================================
-# TRAIN CLASSICAL GCN - Baseline run on GPU
-# ============================================================================
+# Train Classical GCN baseline model.
 
 import gc
 import json
@@ -65,13 +63,10 @@ def run_experiment(
         torch.cuda.manual_seed_all(seed)
 
     print_config()
-    print("\n" + "=" * 60)
-    print("CLASSICAL GCN EXPERIMENT (Track B)")
-    print("=" * 60)
+    print("\nClassical GCN Experiment (Track B)")
     print(f"Device: {active_device}")
     if torch.cuda.is_available() and active_device.type == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}")
-    print("=" * 60)
 
     # Load real data (fails loudly if absent)
     print("\nLoading data...")
@@ -110,9 +105,7 @@ def run_experiment(
     active_results_dir.mkdir(parents=True, exist_ok=True)
     active_checkpoints_dir.mkdir(parents=True, exist_ok=True)
 
-    print("\n" + "=" * 60)
-    print("STARTING CLASSICAL GCN TRAINING")
-    print("=" * 60)
+    print("\nStarting Classical GCN Training")
 
     total_start = time.time()
 

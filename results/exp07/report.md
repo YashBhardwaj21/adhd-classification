@@ -8,9 +8,7 @@ Experiment 7 evaluates Classical GCN and Quantum GCNN models on AAL-116 function
 
 Experiment 7 used a separately prepared cohort consisting of 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects.
 
-`part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects.
-
-The historical Experiment 7 cohort contains 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects.
+`part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects.
 
 The clean cohort was split using stratified train/test and train/validation splits with random_state=42, resulting in 103 training, 26 validation, and 33 test subjects.
 
@@ -43,7 +41,7 @@ Random state 42 was verified for the clean data split. Full deterministic traini
 - **Node Features**: 117-dimensional features consisting of 116 signed FC values + 1 normalized degree:
   `degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois`
   `node_features = np.hstack([fc_matrix, degree])`.
-  The degree feature is based on unweighted thresholded adjacency, not weighted node strength. No final z-score standardization was applied to the 117-dimensional node feature matrix.
+  The degree feature is based on unweighted thresholded adjacency, not weighted node strength. The inspected historical Exp07 graph-construction code does not apply a final z-score/StandardScaler transformation to the 117-dimensional node-feature matrix.
 
 ---
 

@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# ============================================================================
-# EXPERIMENT 7 CONFIGURATION
-# Track B: Graph Convolutional Networks (Classical GCN vs Quantum QGCNN)
-# Atlas: AAL-116 parcellation (116 regions of interest)
-# Loads verified historical parameters from configs/exp07/reported_run.json
-# ============================================================================
+# Experiment 7 configuration (Track B: Classical GCN vs Quantum QGCNN).
+# Atlas: AAL-116 parcellation (116 regions of interest).
+# Loads verified historical parameters from configs/exp07/reported_run.json.
 
 import json
 from pathlib import Path
@@ -57,9 +54,7 @@ RANDOM_SEED = SEED
 
 def print_config():
     """Print configuration summary to stdout."""
-    print("=" * 60)
-    print("EXPERIMENT 7 CONFIGURATION (Track B - Verified Historical)")
-    print("=" * 60)
+    print("Experiment 7 Configuration (Track B - Verified Historical)")
     print(f"Device:              {DEVICE}")
     print(f"Data Directory:      {DATA_DIR}")
     print(f"Results Directory:   {RESULTS_DIR}")
@@ -74,7 +69,6 @@ def print_config():
     print(f"Weight Decay:        {WEIGHT_DECAY}")
     print(f"Max Epochs:          {EPOCHS}")
     print(f"Early Stop Patience: {PATIENCE}")
-    print("=" * 60)
 
 
 if __name__ == "__main__":

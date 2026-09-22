@@ -1,17 +1,9 @@
 #!/usr/bin/env python
-# ============================================================================
-# DATA LOADER FOR EXPERIMENT 7 (Track B)
-# Historical Protocol: AAL-116 FC matrices and diagnostic labels
-# Historical contract: X_combined_full.npy, y_combined.npy, subjects_combined.npy
-# Cohort partition:
-#   - 162 clean-labelled subjects: 103 train, 26 validation, 33 held-out test
-#   - 713 pseudo-labelled subjects: allocated strictly to training
-#
-# Note: The original combined numpy arrays exceed distribution quotas and are
-# not stored in this public repository. This loader preserves the exact
-# historical execution contract and raises FileNotFoundError when called
-# without the external arrays present.
-# ============================================================================
+# Data loader for Experiment 7 (Track B).
+# Loads AAL-116 FC matrices and diagnostic labels across 162 clean
+# (103 train, 26 val, 33 test) and 713 pseudo-labeled subjects.
+# Note: Original combined arrays are not bundled in the public repository;
+# this loader preserves the historical contract and validates external inputs.
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple

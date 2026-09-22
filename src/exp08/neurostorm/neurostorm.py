@@ -168,10 +168,10 @@ def get_window_size(x_size, window_size, shift_size=None):
 
 
 def _build_strd_masks(window_size, l_spat: int, l_temp: int):
-    """Precompute Ω_s(i) and Ω_t(i) boolean masks for a given 4D window.
+    """Precompute Omega_s(i) and Omega_t(i) boolean masks for a given 4D window.
 
-    Ω_s(i) = { j : max(|d-d_i|, |h-h_i|, |w-w_i|) <= l_spat/2  AND  t_j = t_i  AND j != i }
-    Ω_t(i) = { j : (d_j, h_j, w_j) = (d_i, h_i, w_i)           AND  |t_j - t_i| <= l_temp/2  AND j != i }
+    Omega_s(i) = { j : max(|d-d_i|, |h-h_i|, |w-w_i|) <= l_spat/2  AND  t_j = t_i  AND j != i }
+    Omega_t(i) = { j : (d_j, h_j, w_j) = (d_i, h_i, w_i)           AND  |t_j - t_i| <= l_temp/2  AND j != i }
 
     Returns (mask_s, mask_t) each of shape [N, N] bool,  N = prod(window_size).
     """
@@ -348,7 +348,7 @@ class SwinTransformerBlock4D(nn.Module):
         else:
             self.register_parameter('prompt', None)
 
-        # STRD: precompute window-local Ω_s / Ω_t neighborhood masks once.
+        # STRD: precompute window-local Omega_s / Omega_t neighborhood masks once.
         # The window has fixed shape (d, h, w, t) = window_size, so the masks are
         # constant across forward passes. Stored as bool buffers (no grad).
         if self.use_strd:
@@ -432,7 +432,7 @@ class SwinTransformerBlock4D(nn.Module):
         mask_t = self.strd_mask_t
 
         # 2. f_spat / f_temp: max attention inside each neighborhood
-        # use masked_fill(-inf) so empty neighborhoods stay safely small (max → -inf, clamped)
+        # use masked_fill(-inf) so empty neighborhoods stay safely small (max -> -inf, clamped)
         neg_inf = torch.finfo(A_hat.dtype).min
         f_spat = A_hat.masked_fill(~mask_s, neg_inf).max(dim=-1).values        # [B*nw, N]
         f_temp = A_hat.masked_fill(~mask_t, neg_inf).max(dim=-1).values
@@ -444,7 +444,7 @@ class SwinTransformerBlock4D(nn.Module):
         sum_s = (A_hat * mask_s).sum(dim=-1, keepdim=True)                     # [B*nw, N, 1]
         sum_t = (A_hat * mask_t).sum(dim=-1, keepdim=True)
         # 4. element-wise dropout probability W (Eq. 3)
-        # Guard: where a neighborhood is empty, sum is 0 → avoid large values from /eps
+        # Guard: where a neighborhood is empty, sum is 0 -> avoid large values from /eps
         has_s = (self.strd_card_s > 0).unsqueeze(0).unsqueeze(-1)              # [1, N, 1]
         has_t = (self.strd_card_t > 0).unsqueeze(0).unsqueeze(-1)
         term_s = torch.where(has_s, f_temp.unsqueeze(-1) * A_hat / (sum_s + eps),
@@ -1030,7 +1030,7 @@ class NeuroSTORM(nn.Module):
             self.layers.append(layer)
 
         else:
-            #################Full MSA for last layer#####################
+            # Full MSA for last layer
 
             self.last_window_size = (
                 self.grid_size[0] // int(2 ** (self.num_layers - 1)),
@@ -1227,7 +1227,7 @@ class NeuroSTORMMAE(nn.Module):
             )
             self.layers.append(layer)
         else:
-            #################Full MSA for last layer#####################
+            # Full MSA for last layer
 
             self.last_window_size = (
                 self.grid_size[0] // int(2 ** (self.num_layers - 1)),

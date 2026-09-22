@@ -1,15 +1,8 @@
 #!/usr/bin/env python
-# ============================================================================
-# QUANTUM EMBEDDING - VECTORIZED USING PENNYLANE BROADCASTING
-# Canonical implementation variant for Experiment 7
-# Processes all 116 nodes in a graph with a single broadcasted quantum circuit call
-# Historical circuit gates:
-#   - 6 qubits
-#   - Angle encoding: RY + RZ
-#   - 1 trainable layer: RX + RY + RZ rotations
-#   - Entanglement: ring CNOT
-#   - Measurement: 6 Pauli-Z expectation values
-# ============================================================================
+# Quantum embedding vectorized using PennyLane broadcasting.
+# Evaluates nodes in a graph with 6 qubits, RY/RZ angle encoding,
+# 1 trainable layer (RX, RY, RZ rotations), ring CNOT entanglement,
+# and 6 Pauli-Z expectation value measurements.
 
 import numpy as np
 import pennylane as qml

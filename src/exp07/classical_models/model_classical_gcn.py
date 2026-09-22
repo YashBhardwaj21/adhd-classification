@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# ============================================================================
-# CLASSICAL GCN MODEL - Baseline without quantum embedding
-# ============================================================================
+# Classical GCN baseline model without quantum embedding.
 
 import torch.nn as nn
 import torch.nn.functional as F

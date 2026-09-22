@@ -44,9 +44,9 @@ Recorded from `configs/exp09/w2b_environment.json`:
 - **NumPy**: `2.4.6`, **Pandas**: `2.3.3`, **Scikit-Learn**: `1.8.0`
 
 ### 2.2 Track-Specific Environment Rationale
-Dependency requirements are partitioned into three track environments under `environment/` to minimize package conflicts and unnecessary dependencies:
-- **`environment/track_a/requirements.txt`**: Lightweight classical connectomics, graph theory, and statistical modeling (`bctpy`, `neuroCombat`, `scipy`, `pandas`, `scikit-learn`). Does not require GPU or PyTorch.
-- **`environment/track_b/requirements.txt`**: Hybrid quantum-classical and spatio-temporal deep learning stack (`pennylane`, `pennylane-lightning-gpu`, `monai`, `torch`, `torch-geometric`). Requires CUDA-enabled PyTorch.
+Dependency requirements are partitioned into three track environments under `environment/` to minimize package conflicts and maintain historical isolation:
+- **`environment/track_a/requirements.txt`**: Lightweight classical connectomics, graph theory, and statistical modeling (`bctpy`, `neuroCombat`, `scipy`, `pandas`, `scikit-learn`). Includes `bctpy` for the Experiment 02 BCT-dependent graph null-model functionality. Does not require GPU or PyTorch.
+- **`environment/track_b/requirements.txt`**: Hybrid quantum-classical and spatio-temporal deep learning stack (`pennylane`, `pennylane-lightning-gpu`, `monai`, `torch`, `torch-geometric`). Requires CUDA-enabled PyTorch. Experiment 07 itself operates on reconstructed adjacency and does not require `bctpy` merely because BCT exists elsewhere in the repository.
 - **`environment/track_c/requirements.txt`**: Population-level graph neural network learning (`torch`, `torch-geometric`, `scikit-learn`).
 
 ### 2.3 Suggested Installation

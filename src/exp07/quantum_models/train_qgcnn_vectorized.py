@@ -134,16 +134,13 @@ def run_experiment(
         torch.cuda.manual_seed_all(seed)
 
     print_config()
-    print("\n" + "=" * 60)
-    print("VECTORIZED QUANTUM GCNN (BROADCASTING)")
-    print("=" * 60)
+    print("\nVectorized Quantum GCNN (Broadcasting)")
     print(f"Device: {DEVICE}")
     if torch.cuda.is_available():
         print(f"GPU: {torch.cuda.get_device_name(0)}")
     print(f"Data directory: {data_dir}")
     print(f"Results directory: {results_dir}")
     print(f"Checkpoints directory: {checkpoints_dir}")
-    print("=" * 60)
 
     dev = create_quantum_device(quantum_device, N_QUBITS)
     print(f"Quantum device: {dev}")
@@ -176,9 +173,7 @@ def run_experiment(
     best_auc = -1.0
     patience_counter = 0
 
-    print("\n" + "=" * 60)
-    print("STARTING TRAINING (BROADCASTING)")
-    print("=" * 60)
+    print("\nStarting Training (Broadcasting)")
 
     total_start = time.time()
 
