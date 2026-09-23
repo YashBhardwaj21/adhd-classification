@@ -1,4 +1,4 @@
-# Experiment Notes (Exp 01 – Exp 09)
+# Experiment Notes (Exp 01 - Exp 09)
 
 This document provides a concise reference for the nine experiments comprising the ADHD-200 connectomics study, summarizing the inputs, protocol, critical hyperparameters, reported outputs, and documented discrepancies for each experiment.
 
@@ -66,7 +66,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Reported Output**:
   - Substantial cross-site scanner variation observed across global network features:
     - Global efficiency across sites: $F = 4,609.76, p < 10^{-300}$.
-    - Characteristic path length: $F = 3,674.34, p < 10^{-300}$.
+    - Characteristic path length: $F = 4,993.87, p < 10^{-300}$.
   - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`.
 - **Limitations & Discrepancies**:
   - ANOVA $F$-statistics reflect inter-site scanner variation, **not** clinical diagnostic separation (ADHD vs TDC).
@@ -89,10 +89,10 @@ This document provides a concise reference for the nine experiments comprising t
 - **Reported Output**:
   - Scanner identification accuracy dropped significantly post-ComBat ($58.64\% \to 31.29\%$).
   - Diagnostic classification accuracy exhibited a minor attenuation ($64.53\% \to 59.56\%$).
-  - Feature distributions: Raw clustering mean ($0.3333 \pm 0.0104$) vs ComBat adjusted ($0.3314 \pm 0.0094$).
+  - Feature distributions: Raw clustering mean ($0.33327 \pm 0.03430$) vs ComBat-adjusted ($0.33336 \pm 0.02754$).
   - Stored in `results/exp04/comparison_table.csv`, `results/exp04/site_prediction_results.csv`, and `results/exp04/diagnosis_prediction_results.csv`.
 - **Limitations & Discrepancies**:
-  - The drop in diagnostic classification illustrates that site-correlated clinical variance is partially removed alongside scanner noise.
+  - The observed reduction in diagnostic classification performance is consistent with attenuation of site-associated diagnostic signal; the retained result tables do not by themselves establish the causal mechanism.
   - See `notebooks/exp04/w2c_athena_2.ipynb`.
 
 ---
@@ -216,7 +216,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Reported Output**:
   - Lightweight 3D CNN: Accuracy = $76.19\%$, AUC = $0.7316$.
   - NeuroSTORM: 5-fold cross-validation accuracy = $59.10\%$.
-  - Temporal GNN: Test accuracy = $61.74\%$, Test AUC = $0.6231$.
+  - Temporal GNN: Test accuracy = $54.43\%$, Test AUC = $0.5534$.
   - Stored in `results/exp08/exp08_verified_results.json`.
 - **Limitations & Discrepancies**:
   - 3D CNN operates on functional BOLD volume sequences, not structural T1 anatomical scans.

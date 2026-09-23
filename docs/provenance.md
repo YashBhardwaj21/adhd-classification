@@ -108,7 +108,7 @@ This document provides a factual record of discrepancies between manuscript desc
 
 ### Experiment 08: Deep-Learning Baselines
 - **Input Modality**: The Lightweight 3D CNN was evaluated on 4D functional BOLD volume sequences ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
-- **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test), disproving conjectures of sliding-window data leakage across splits.
+- **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test). The evaluated partitions therefore do not assign the same subject to multiple splits.
 
 ### Experiment 09: Leave-One-Site-Out Population Graphs
 - **Graph Construction Protocol**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` thresholding with weighted edges and self-loops, rather than the unweighted MST + 20% distance mapping mentioned in manuscript text.
@@ -138,16 +138,16 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 
 | File Path | SHA256 Hash |
 | :--- | :--- |
-| `src/exp07/classical_models/model_classical_gcn.py` | `903D570CC18B095E82A1AE79BA237D60B5911BA578064C769EE7C0E800663919` |
-| `src/exp07/classical_models/train_classical_gcn.py` | `579F1B8C22BB403E6710371CA48B87A55E7DD43DB2041172C7401127AEE9D877` |
-| `src/exp07/classical_models/run_experiment.py` | `F63C5FBEA7EF613836AA7D5FB9DF2AD6095D876A0F4AFEBFD2A55F0C00C0714F` |
-| `src/exp07/quantum_models/quantum_embedding_broadcast.py` | `5A09340DD92E0916DCFB8C0D7E78069FCEC31B535AC1814CF02B402B93098C40` |
-| `src/exp07/quantum_models/train_qgcnn_vectorized.py` | `256CFFABA44BF9D9388788519096BB6495F34B68C8E839A48B6D35B771E8E67F` |
-| `src/exp07/quantum_models/run_experiment.py` | `E796EA1CEEB80661191C468D1D8A5287F9C4C85396E122B6888A98C7EFB7C331` |
-| `src/exp07/utils/config.py` | `27F9F9995DB1BE05185C2A3C39F494177958025BC13786AC7CE753F06ED3C164` |
-| `src/exp07/utils/data_loader.py` | `A8AB8FB7FF3AF68DDC5E0CCC69CA5E9B2EC270AD87E13C56CCFA5494E1F01E4E` |
-| `src/exp07/utils/graph_utils.py` | `056CB5C3480B47097A46EE2D03AFCA05266A652474CB3F8F8CEA0C732164D4BD` |
-| `src/exp07/utils/training_utils.py` | `52197F53F2DE0468805E6F105F3EA7ACF7584B3C1083F14AC24213820F9335E0` |
+| `src/exp07/classical_models/model_classical_gcn.py` | `957A74695BF8019113E16539975B437F27992D2AFC722C3229BBCC903EEB8F30` |
+| `src/exp07/classical_models/train_classical_gcn.py` | `FC286769593AD82FF955353832866DFFF59C451909A8EB4BC24DB83A090086B7` |
+| `src/exp07/classical_models/run_experiment.py` | `9411B98D180F38A1A1B95888EBD8C3120BA00C90D3BF56F699DDFE7BC3A3BB77` |
+| `src/exp07/quantum_models/quantum_embedding_broadcast.py` | `00DDF92117710F57389A32FDD935F0717E6D9A79F711DCE116C305642591CE7C` |
+| `src/exp07/quantum_models/train_qgcnn_vectorized.py` | `42290172B53F6DF147F437EA82C362B14AD075CF9D60808C14109525481FBC6C` |
+| `src/exp07/quantum_models/run_experiment.py` | `711B6A763C108FBC12BBBF554E9D92AFA3A64E1D0BDAFA2ED1557DB077B14023` |
+| `src/exp07/utils/config.py` | `67A878FFF3B5C2D9D821C50BD6EBF30F49B26FFEB7B2E9265F12B2FDFB5AE3AF` |
+| `src/exp07/utils/data_loader.py` | `6877ACBC2BB266B6D3A3F77C1A73803A254102247C997598792D836FF4CA1A7E` |
+| `src/exp07/utils/graph_utils.py` | `E831074B2F7C1809AC581E8995FD0E6F2848A90892B95EE241C5882FF37EEEA8` |
+| `src/exp07/utils/training_utils.py` | `DD518FC785846ADE93F8247EBD88CB4621AF7DAF47CE08EF03CF6462C19937DB` |
 
 ---
 
@@ -161,7 +161,7 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 
 ### Brain Connectivity Toolbox (BCT) Provenance
 
-The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
+The historical implementation contains BCT-derived graph-randomization code. In the historical source, `null_model_und_sign_fixed.py` depended on BCTPY utilities and the `randmio_und_signed` routine; the current repository version retains the derived null-model implementation and BCT utility imports. `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
 
 Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
 

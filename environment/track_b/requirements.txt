@@ -16,6 +16,6 @@ scipy==1.17.1
 tqdm>=4.65.0
 jupyter>=1.0.0
 einops==0.8.2
-# mamba-ssm is required by the bundled NeuroSTORM implementation.
+# Required only for the bundled NeuroSTORM path.
 # Historical execution metadata did not record its exact package version.
 mamba-ssm

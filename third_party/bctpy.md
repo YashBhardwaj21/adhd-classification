@@ -23,7 +23,7 @@ The BCT-derived source code bundled in this repository consists of:
 
 ## 3. Historical Provenance and Attribution
 
-The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
+The historical implementation contains BCT-derived graph-randomization code. In the historical source, `null_model_und_sign_fixed.py` depended on BCTPY utilities and the `randmio_und_signed` routine; the current repository version retains the derived null-model implementation and BCT utility imports. `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
 
 Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
 
@@ -33,7 +33,7 @@ The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attrib
 
 - **`src/exp02/null_model_und_sign_fixed.py`**:
   - Implements `null_model_und_sign_fixed(W, bin_swaps=5, wei_freq=.1, seed=None)`
-  - Imports `BCTParamError` and `get_rng` from `bct.utils.miscellaneous_utilities`, and `randmio_und_signed` from `bct.algorithms.reference`
+  - Imports `BCTParamError` and `get_rng` from `bct.utils.miscellaneous_utilities` (the historical source also imported `randmio_und_signed` from `bct.algorithms.reference`)
   - Explicitly carries Rubinov attribution: `# @due.dcite(BibTeX(RUBINOV2011), description="Undirected signed null model")`
   - Adapted/derived from `bctpy` for weight-conserving signed matrix randomization with fixed positive and negative strength sequences.
 

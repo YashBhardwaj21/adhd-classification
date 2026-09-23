@@ -89,7 +89,7 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray, y_prob: np.ndar
             auc = float(roc_auc_score(y_true, y_prob))
         else:
             auc = 0.5
-    except Exception:
+    except ValueError:
         auc = 0.5
 
     return {

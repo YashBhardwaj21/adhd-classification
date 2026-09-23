@@ -68,7 +68,7 @@ adhd-classification/
 ├── docs/             # Reproduction instructions, experiment notes, and provenance
 ├── environment/      # Track-specific dependency requirements
 ├── LICENSES/         # Official third-party license texts (GPL-3.0-or-later, Apache-2.0)
-├── notebooks/        # Executed Jupyter notebooks for Experiments 01–09
+├── notebooks/        # Executed Jupyter notebooks for Experiments 01-09
 ├── results/          # Lightweight result tables, confusion matrices, and manifest
 ├── scripts/          # Structural audit and result verification utilities
 ├── src/              # Python source code for graph utilities and models

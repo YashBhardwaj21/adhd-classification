@@ -1,9 +1,7 @@
-# ============================================================================
-# ADHD-200 RESEARCH REPOSITORY .GITIGNORE
-# Configured for Python, PyTorch/PyG, Jupyter, and Neuroimaging Data Exclusions
-# ============================================================================
+# ADHD-200 Research Repository Git Ignore
+# Configured for Python, PyTorch/PyG, Jupyter, and neuroimaging exclusions.
 
-# --- 1. Python Build & Bytecode Artifacts ---
+# Python build and bytecode artifacts
 __pycache__/
 *.py[cod]
 *$py.class
@@ -11,7 +9,7 @@ __pycache__/
 *.pyd
 *.dll
 
-# Packaging & distribution
+# Packaging and distribution
 build/
 develop-eggs/
 dist/
@@ -28,7 +26,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# --- 2. Testing, Coverage & Linting ---
+# Testing, coverage and linting
 .pytest_cache/
 .coverage
 .coverage.*
@@ -39,7 +37,7 @@ htmlcov/
 .tox/
 .nox/
 
-# --- 3. Virtual Environments ---
+# Virtual environments
 .env
 .venv
 env/
@@ -49,12 +47,12 @@ env.bak/
 venv.bak/
 conda-env/
 
-# --- 4. Jupyter Notebook Checkpoints & Cache ---
+# Jupyter notebook checkpoints and cache
 .ipynb_checkpoints/
 *-checkpoint.ipynb
 .jupyter/
 
-# --- 5. Operating System & Editor Metadata ---
+# Operating system and editor metadata
 # macOS
 .DS_Store
 .AppleDouble
@@ -69,7 +67,7 @@ ehthumbs_vista.db
 desktop.ini
 [Nn]on[Tt]racked/
 
-# Editors & IDEs
+# Editors and IDEs
 .idea/
 .vscode/
 *.swp
@@ -87,7 +85,7 @@ desktop.ini
 .claude/
 .cursor/
 
-# --- 6. Neuroimaging & High-Dimensional Biomedical Data ---
+# Neuroimaging and binary data exclusions
 # Raw NIfTI neuroimaging scans
 *.nii
 *.nii.gz
@@ -96,21 +94,21 @@ desktop.ini
 *.dcm
 *.dicom
 
-# Large tabular & columnar array stores (>100 MiB)
+# Large tabular and columnar array stores (>100 MiB)
 *.parquet
 *.feather
 *.h5
 *.hdf5
 *.mat
 
-# Serialized Python binaries & array dumps
+# Serialized Python binaries and array dumps
 *.npy
 *.npz
 *.pkl
 *.pickle
 *.joblib
 
-# Local raw / intermediate data staging directories
+# Local raw or intermediate data staging directories
 data/raw/
 data/processed/
 data/cache/
@@ -120,7 +118,7 @@ data/downloads/
 !data/README.md
 !data/provenance.md
 
-# --- 7. Deep Learning Model Weights & Checkpoints ---
+# Deep learning model weights and checkpoints
 checkpoints/
 artifacts/
 *.pt
@@ -130,13 +128,13 @@ artifacts/
 *.safetensors
 *.onnx
 
-# --- 8. Experiment Tracking & Logging ---
+# Experiment tracking and logging
 wandb/
 runs/
 lightning_logs/
 *.log
 
-# --- 9. Temporary & Scratch Files ---
+# Temporary and scratch files
 scratch/
 tmp/
 temp/

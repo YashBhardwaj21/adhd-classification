@@ -29,7 +29,6 @@ try:
     from .patchembedding import PatchEmbed
 except ImportError:
     from monai.networks.blocks import PatchEmbed
-# from .redundant_dropout import redundant_dropout
 
 rearrange, _ = optional_import("einops", name="rearrange")
 
@@ -661,7 +660,6 @@ class BasicLayer(nn.Module):
         wp = int(np.ceil(w / window_size[2])) * window_size[2]
         tp = int(np.ceil(t / window_size[3])) * window_size[3]
         attn_mask = compute_mask([dp, hp, wp, tp], window_size, shift_size, x.device)
-        # attn_mask = redundant_dropout(attn_mask, 0.1)
         for blk in self.blocks:
             x = blk(x, attn_mask)
         x = x.view(b, d, h, w, t, -1)
@@ -959,11 +957,8 @@ class NeuroSTORM(nn.Module):
         self.pos_drop = nn.Dropout(p=drop_rate)
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]
 
-        #patch_num = int((img_size[0]/patch_size[0]) * (img_size[1]/patch_size[1]) * (img_size[2]/patch_size[2]))
-        #time_num = int(img_size[3]/patch_size[3])
-        patch_dim =  ((img_size[0]//patch_size[0]), (img_size[1]//patch_size[1]), (img_size[2]//patch_size[2]), (img_size[3]//patch_size[3]))
+        patch_dim = ((img_size[0]//patch_size[0]), (img_size[1]//patch_size[1]), (img_size[2]//patch_size[2]), (img_size[3]//patch_size[3]))
 
-        #print img, patch size, patch dim
         self.pos_embeds = nn.ModuleList()
         pos_embed_dim = embed_dim
         for i in range(self.num_layers):
@@ -1063,18 +1058,12 @@ class NeuroSTORM(nn.Module):
 
     def forward(self, x):
         x = x.float()
-        # torch.Size([16, 1, 96, 96, 96, 20])
         x = self.patch_embed(x)
-        # torch.Size([16, 36, 16, 16, 16, 20])
         x = self.pos_drop(x)
 
         for i in range(self.num_layers):
             x = self.pos_embeds[i](x)
             x = self.layers[i](x.contiguous())
-            # torch.Size([16, 72, 8, 8, 8, 20])
-            # torch.Size([16, 144, 4, 4, 4, 20])
-            # torch.Size([16, 288, 2, 2, 2, 20])
-            # torch.Size([16, 288, 2, 2, 2, 20])
 
         return x
 
@@ -1148,11 +1137,8 @@ class NeuroSTORMMAE(nn.Module):
         self.pos_drop = nn.Dropout(p=drop_rate)
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]
 
-        #patch_num = int((img_size[0]/patch_size[0]) * (img_size[1]/patch_size[1]) * (img_size[2]/patch_size[2]))
-        #time_num = int(img_size[3]/patch_size[3])
         patch_dim = ((img_size[0]//patch_size[0]), (img_size[1]//patch_size[1]), (img_size[2]//patch_size[2]), (img_size[3]//patch_size[3]))
 
-        #print img, patch size, patch dim
         self.pos_embeds = nn.ModuleList()
         pos_embed_dim = embed_dim
         for i in range(self.num_layers):
@@ -1493,25 +1479,18 @@ class NeuroSTORMMAE(nn.Module):
 
     def forward_encoder(self, x):
         x = self.patch_embed(x)
-        # x = self.pos_drop(x)
         x, mask = self.random_masking(x)
 
         for i in range(self.num_layers):
             x = self.pos_embeds[i](x)
             x = self.layers[i](x.contiguous())
-            # torch.Size([16, 72, 8, 8, 8, 20])
-            # torch.Size([16, 144, 4, 4, 4, 20])
-            # torch.Size([16, 288, 2, 2, 2, 20])
-            # torch.Size([16, 288, 2, 2, 2, 20])
 
         return x, mask
 
     def forward_decoder(self, x):
-        # torch.Size([16, 288, 2, 2, 2, 20])
         x = rearrange(x, 'B C D H W T -> B D H W T C')
         x = self.first_patch_expanding(x)
         x = rearrange(x, 'B D H W T C -> B C D H W T')
-        # torch.Size([16, 144, 4, 4, 4, 20])
 
         for layer in self.layers_up:
             x = layer(x)

@@ -16,4 +16,4 @@ exp07,report.md,results/exp07/report.md,archived,AAL-116,33,42,Test evaluation p
 exp08,exp08_verified_results.json,results/exp08/exp08_verified_results.json,reported,ADHD-200,764,42,"3D CNN, NeuroSTORM, and temporal GNN benchmark metrics"
 exp09,w2b_loso_results.csv,results/exp09/w2b_loso_results.csv,derived,CC200,497,42,7-fold Leave-One-Site-Out population graph metrics across 4 GNNs
 exp09,graph_preprocessing_summary.csv,results/exp09/graph_preprocessing_summary.csv,derived,CC200,497,42,Subject graph preprocessing summary statistics (top 10% weighted)
-exp09,exp09_verified_results.json,results/exp09/exp09_verified_results.json,derived,CC200,497,42,Aggregate LOSO cross-validation metric summaries
+exp09,exp09_verified_results.json,results/exp09/exp09_verified_results.json,derived,CC200,497,42,Executed-protocol metadata and aggregate mean AUC values by architecture

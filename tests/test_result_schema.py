@@ -1,4 +1,4 @@
-"""Unit tests for result schema validation across CSV and JSON artifacts."""
+"""Schema tests for selected canonical CSV and JSON result artifacts."""
 
 import json
 from pathlib import Path

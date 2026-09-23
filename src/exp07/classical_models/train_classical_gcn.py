@@ -42,11 +42,12 @@ def run_experiment(
     Run classical GCN training experiment.
     
     Args:
-        data_dir: Directory containing input aal116_fc_features.npz and aal116_labels.csv.
+        data_dir: Directory containing historical X_combined_full.npy,
+            y_combined.npy, and subjects_combined.npy.
         results_dir: Directory to save metrics and history.
         checkpoints_dir: Directory to save model checkpoints.
         device: Torch compute device (default: autodetect CUDA/CPU).
-        seed: Deterministic random seed (default: 42).
+        seed: Random seed used for dataset splitting and RNG initialization (default: 42).
         
     Returns:
         model: Trained ClassicalGCN model.

@@ -12,7 +12,10 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 import torch
+
+pytest.importorskip("torch_geometric", reason="PyTorch Geometric required for Exp02 graph tests")
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))

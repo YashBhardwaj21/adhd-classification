@@ -3,7 +3,7 @@
 # Python 3.12.13, PyTorch 2.5.1+cu121 (CUDA 12.1), PyG 2.8.0, NumPy 2.4.6, Pandas 2.3.3, Scikit-Learn 1.8.0
 
 # Note: PyTorch with CUDA 12.1 support requires explicit wheel installation:
-# pip install torch==2.5.1+cu121 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+# pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
 torch==2.5.1
 torch-geometric==2.8.0
 numpy==2.4.6

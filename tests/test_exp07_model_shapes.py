@@ -3,8 +3,12 @@
 import sys
 from pathlib import Path
 
-import pennylane as qml
+import pytest
 import torch
+
+pytest.importorskip("torch_geometric", reason="PyTorch Geometric required for Exp07 model tests")
+qml = pytest.importorskip("pennylane", reason="PennyLane required for Exp07 quantum model shape tests")
+
 from torch_geometric.data import Batch, Data
 
 ROOT = Path(__file__).resolve().parent.parent

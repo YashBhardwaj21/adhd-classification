@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Repository audit script.
-# Validates directory structure, notebook validity, artifact non-emptiness,
+# Audits canonical notebook existence, JSON validity, and reports their cell counts.
+# Validates directory structure, key artifact non-emptiness,
 # and checks for 0-byte or corrupted staging files.
 
 
@@ -35,6 +36,7 @@ CANONICAL_NOTEBOOKS = [
 KEY_RESULT_ARTIFACTS = [
     "results/exp01/dynamic_temporal_validation.csv",
     "results/exp01/static_vs_dynamic_validation.csv",
+    "results/exp02/graph_construction_strategy.csv",
     "results/exp02/graph_metrics.csv",
     "results/exp02/subject_graph_metrics.csv",
     "results/exp03/feature_statistics.csv",
@@ -63,7 +65,7 @@ DOCUMENTATION_FILES = [
 
 
 def audit_notebooks() -> int:
-    print("\n--- 1. Auditing Canonical Notebooks ---")
+    print("\n--- 1. Auditing Canonical Notebook Integrity ---")
     errors = 0
     for rel_path in CANONICAL_NOTEBOOKS:
         full_path = ROOT_DIR / rel_path

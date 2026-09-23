@@ -51,6 +51,28 @@ def validate_exp02():
     print("  [OK] Exp 2 strategy verified (MST+PT at density 0.20)")
 
 
+def validate_exp03():
+    print("Validating Experiment 3 (Cross-Site ANOVA)...")
+    path = ROOT_DIR / "results/exp03/site_anova.csv"
+    assert path.exists(), f"Missing {path}"
+
+    df = pd.read_csv(path).set_index("feature")
+
+    assert np.isclose(
+        df.loc["efficiency", "F_statistic"],
+        4609.761769,
+        atol=1e-3,
+    )
+
+    assert np.isclose(
+        df.loc["path_length", "F_statistic"],
+        4993.870608,
+        atol=1e-3,
+    )
+
+    print("  [OK] Exp 3 cross-site ANOVA values verified")
+
+
 def validate_exp04():
     print("Validating Experiment 4 (ComBat Harmonization)...")
     comp_path = ROOT_DIR / "results/exp04/comparison_table.csv"
@@ -164,6 +186,7 @@ def main():
     try:
         validate_exp01()
         validate_exp02()
+        validate_exp03()
         validate_exp04()
         validate_exp05()
         validate_exp06()
@@ -174,7 +197,8 @@ def main():
         print("SUMMARY OF VALIDATED ARTIFACTS:")
         print("  - Exp 01: dFC temporal correlation decay (0.8990 -> 0.5467) & Frobenius distances")
         print("  - Exp 02: CC200 graph construction parameters (MST+PT, density 0.20)")
-        print("  - Exp 04: ComBat harmonization mean metrics (clustering 0.3333 -> 0.3314)")
+        print("  - Exp 03: Cross-site ANOVA F-tests (efficiency 4609.76, path length 4993.87)")
+        print("  - Exp 04: ComBat harmonization clustering mean (0.33327 -> 0.33336)")
         print("  - Exp 05: Micro-state cluster metrics (K=3, State 0 dwell time 6.24 windows)")
         print("  - Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484)")
         print("  - Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33)")

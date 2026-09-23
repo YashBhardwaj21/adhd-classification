@@ -21,7 +21,7 @@ This repository incorporates third-party open-source software and open datasets 
 - **Upstream Repository**: https://github.com/aestrivex/bctpy (`bctpy`, Brain Connectivity Toolbox for Python)
 - **License**: GNU General Public License v3.0 or later (GPL-3.0-or-later; see `LICENSES/GPL-3.0-or-later.txt`)
 - **Provenance & Attribution**:
-  The historical implementation contains BCT-derived graph-randomization code. `null_model_und_sign_fixed.py` imports utilities and the `randmio_und_signed` routine from the BCTPY package, while `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
+  The historical implementation contains BCT-derived graph-randomization code. In the historical source, `null_model_und_sign_fixed.py` depended on BCTPY utilities and the `randmio_und_signed` routine; the current repository version retains the derived null-model implementation and BCT utility imports. `randmio_und_signed_fast.py` is a Numba-accelerated reimplementation of the BCTPY `randmio_und_signed` routine. The relevant historical source is therefore treated as BCT-derived/adapted code rather than as an independently authored graph-randomization algorithm.
   Upstream project: aestrivex/bctpy (https://github.com/aestrivex/bctpy). The upstream BCTPY repository is GPL-3.0. The exact BCTPY version and upstream commit used during the historical experiment were not recorded in the available provenance evidence.
   The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attribution for the undirected signed null model.
 - **Reference**:

@@ -4,7 +4,7 @@ This directory contains lightweight experimental outputs, summary tables, and se
 
 Large raw neuroimaging data (4D BOLD fMRI scans), model checkpoints, and intermediate binary arrays exceed public repository quotas and are not included. See [`data/README.md`](../data/README.md) and [`data/provenance.md`](../data/provenance.md) for details on external data requirements and excluded files.
 
-A complete machine-readable index of all retained result artifacts is available in [`manifest.csv`](manifest.csv).
+A machine-readable index of the canonical retained result artifacts is available in [`manifest.csv`](manifest.csv). Additional supplementary and validation artifacts are retained within the experiment-specific result directories.
 
 ## Result Summary by Experiment
 

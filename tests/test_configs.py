@@ -1,4 +1,4 @@
-"""Unit tests for configuration integrity and environment metadata validation."""
+"""Tests for the recorded execution environment and Experiment 07 configuration."""
 
 import json
 import sys
