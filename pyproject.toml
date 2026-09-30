@@ -13,7 +13,9 @@ license-files = ["LICENSE", "LICENSES/*.txt"]
 authors = [
     { name = "Shantanu Khare" },
     { name = "Bhavana Deepthi" },
-    { name = "Yash Bhardwaj" }
+    { name = "Yash Bhardwaj" },
+    { name = "Shridevi S" },
+    { name = "Daehan Won" }
 ]
 keywords = [
     "neuroimaging",

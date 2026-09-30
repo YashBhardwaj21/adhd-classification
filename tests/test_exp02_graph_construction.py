@@ -50,7 +50,7 @@ def test_exp02_public_utility_pt_graph_shapes():
     assert len(graphs) == n_samples
 
     for idx, g in enumerate(graphs):
-        # Node features: 190 nodes, 191 features (190 FC + 1 normalized degree)
+        # Node features: 190 nodes with 191 features (190 FC and normalized degree)
         assert g.x.shape == (190, 191), f"Sample {idx} node feature shape mismatch: {g.x.shape}"
         assert g.y.item() == y_synthetic[idx]
 

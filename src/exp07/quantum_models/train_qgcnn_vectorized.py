@@ -3,10 +3,11 @@
 Hybrid Quantum-Classical Graph Convolutional Neural Network (QGCNN).
 Uses PennyLane broadcasting with the lightning.gpu simulator device.
 
-Audited Architecture (Exp 07 Track B):
-- Quantum embedding: 6 qubits, 1 variational layer, angle encoding (RY, RZ), CNOT entanglement ring.
-- GCN backbone: 3 GCNConv layers (6 -> 16 -> 16 -> 16) with BatchNorm1d and Dropout(0.30).
-- Global pooling: global_mean_pool -> Linear(16, 2).
+Architecture (Exp 07 Track B):
+  Quantum embedding: 6 qubits, 1 variational layer, angle encoding (RY, RZ), CNOT entanglement ring.
+  GCN backbone: 3 GCNConv layers (6 to 16 to 16 to 16 dimensions).
+  Regularization: BatchNorm1d, ReLU, Dropout (p=0.30).
+  Classification: Global mean pooling followed by Linear(16, 2).
 """
 
 import gc

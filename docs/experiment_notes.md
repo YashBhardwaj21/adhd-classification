@@ -7,7 +7,7 @@ This document provides a concise reference for the nine experiments comprising t
 ## Experiment 01: Dynamic Functional Connectivity & Temporal Stability
 
 - **Track**: Track A (CC200 Atlas, 190 active ROIs)
-- **Input**: Parcellated resting-state BOLD fMRI ROI time series (534 subjects across 8 scanner sites).
+- **Input**: Parcellated resting-state BOLD fMRI ROI time series (764 subjects across 9 scanner sites).
 - **Protocol**:
   - Sliding-window functional connectivity (dFC) estimation using Pearson correlation.
   - Window length: $W = 30$ volumes ($T = 60\text{ s}$ at $\text{TR}=2.0\text{ s}$).
@@ -72,11 +72,11 @@ This document provides a concise reference for the nine experiments comprising t
     - Dynamic range showed the highest diagnostic differentiation (53.8% of topological metrics significant after BH-FDR, min $p = 1.41 \times 10^{-7}$).
     - Standard deviation and variance descriptors showed 30.8% significant metrics after BH-FDR.
     - Static mean measures showed zero statistically significant diagnostic differentiation.
-  - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`. Diagnostic Welch $t$-test statistics were output directly to notebook cells in `06_temporal_dynamics_analysis.ipynb` (no standalone CSV was generated).
+  - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`. Diagnostic Welch $t$-test statistics were output directly to notebook cells in `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (no standalone CSV was generated).
 - **Limitations & Discrepancies**:
   - ANOVA $F$-statistics reflect inter-site scanner variation, **not** clinical diagnostic separation.
-  - Manuscript text referenced "Mann–Whitney U test"; actual executed code implemented Welch's unequal-variance $t$-test with BH-FDR.
-  - See `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` and `audit_source_files/notebooks/06_temporal_dynamics_analysis.ipynb`.
+  - An earlier manuscript draft referenced "Mann–Whitney U test"; actual executed code implemented Welch's unequal-variance $t$-test with BH-FDR.
+  - See `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (note that `audit_source_files/notebooks/06_temporal_dynamics_analysis.ipynb` is a historical non-public provenance source).
 
 ---
 
@@ -122,7 +122,7 @@ This document provides a concise reference for the nine experiments comprising t
   - State 2 (hypo-connected state): $3.15$ windows ($22.81\%$ occupancy).
   - Stored in `results/exp05/run_dynamic_biomarkers.csv`, `results/exp05/run_state_sequences.csv`, and `results/exp05/subject_dynamic_dataset.csv`.
 - **Limitations & Discrepancies**:
-  - Manuscript text simplified the selection to "silhouette analysis alone"; historical execution code utilized the multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin with 30-run ARI stability validation.
+  - An earlier manuscript draft simplified the selection to "silhouette analysis alone"; historical execution code utilized the multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin with 30-run ARI stability validation.
   - State dwell times reflect window overlaps ($W=30, S=5$); individual transitions occur at 5-frame resolution. Connectivity configurations represent data-driven recurring states rather than biological invariants.
   - See `notebooks/exp05/dynamic_transformer.ipynb` and `audit_source_files/w2c_athena_2.ipynb`.
 
@@ -243,7 +243,7 @@ This document provides a concise reference for the nine experiments comprising t
 - **Protocol**:
   - 7-fold Leave-One-Site-Out (LOSO) cross-validation: in each fold, all subjects from one site are held out for out-of-distribution evaluation while models train on the remaining 6 sites.
   - Four graph neural network architectures evaluated: GCN, GAT (Graph Attention Network), GraphSAGE, and GIN (Graph Isomorphism Network).
-  - Classical machine learning baselines: 52 models evaluated across 6 feature families with `SelectKBest(f_classif)` strictly nested inside each training fold (`12_classical_ml_baseline.ipynb`).
+  - Classical machine learning baselines: 7 classifier types evaluated across 6 feature families with `SelectKBest(f_classif)` strictly nested inside each training fold (`12_classical_ml_baseline.ipynb`; `w1_model_summary.csv` retains historical recorded rows).
   - Subject graph preprocessing: top-10% positive FC percentile thresholding (`fc >= 90th percentile`) with self-loops and signed correlation weights.
 - **Important Parameters**:
   - Atlas: CC200 ($190$ nodes).
@@ -263,6 +263,6 @@ This document provides a concise reference for the nine experiments comprising t
     - Phenotype only: Elastic Net (AUC = $0.5935$).
   - Stored in `results/exp09/w2b_loso_results.csv`, `w1_family_winners.csv`, `w1_model_summary.csv`, `w2_pareto_front.csv`, `graph_preprocessing_summary.csv`, and `exp09_verified_results.json`.
 - **Limitations & Discrepancies**:
-  - The executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops, whereas the paper describes an unweighted MST + 20% distance mapping (which belongs to the earlier Exp 02 workflow).
+  - The executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops, whereas an earlier manuscript draft described an unweighted MST + 20% distance mapping (which belongs to the earlier Exp 02 workflow). This is resolved in the current manuscript and repository alignment.
   - Feature selection nuance: GNNs use all 190 nodes without ROI subset selection. Classical ML nests `SelectKBest` within folds. Representation format selection (`connectivity` over `identity`/`strength`) was evaluated across LOSO folds prior to final GNN training.
   - See `notebooks/exp09/11_population_graph_learning.ipynb`, `notebooks/exp09/12_classical_ml_baseline.ipynb`, and `docs/provenance.md`.

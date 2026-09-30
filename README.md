@@ -20,7 +20,10 @@ This repository contains research code, configuration records, lightweight exper
 6. **Semi-Supervised Labeling**: Evaluation of multiple pseudo-labeling and ensemble-selection approaches on AAL-116 functional-connectivity features.
 7. **Classical GCN and QGCNN**: Evaluation on a separately prepared cohort of 162 clean and 713 selected pseudo-labeled subjects (117-d node features, unweighted degree, unweighted GCN message passing), with pseudo-labels restricted to training.
 8. **Deep-Learning Baselines**: Evaluation of 4D volumetric 3D CNN and NeuroSTORM spatio-temporal transformer on 626 scans, alongside temporal GNN on 764-subject CC200 timeseries.
-9. **Leave-One-Site-Out Population Graphs**: 7-fold LOSO cross-validation across 497 subjects and 7 sites using top-10% positive-FC thresholded graphs, alongside 52 classical ML baselines with fold-nested feature selection.
+9. **Leave-One-Site-Out Population Graphs**: Leave-One-Site-Out subject-level functional-connectivity graph learning across 497 subjects and 7 sites using top-10% positive-FC thresholded graphs, alongside 7 classical ML classifier types evaluated across 6 feature families with fold-nested feature selection.
+
+> [!NOTE]
+> For classical machine learning baselines in Experiment 09, `results/exp09/w1_model_summary.csv` contains historical recorded model rows (including intermediate and duplicate evaluation runs), while `results/exp09/w1_family_winners.csv` provides the canonical family-level summary.
 
 ---
 
@@ -79,7 +82,7 @@ Original project code is released under the MIT License. Bundled third-party sou
 ```bibtex
 @article{bhardwaj2026evaluating,
   title={ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical--Quantum Graph Learning, and Cross-Site Generalization},
-  author={Khare, Shantanu and Deepthi, Bhavana and Bhardwaj, Yash},
+  author={Khare, Shantanu and Deepthi, Bhavana and Bhardwaj, Yash and Shridevi, S. and Won, Daehan},
   year={2026},
   note={Manuscript in preparation}
 }

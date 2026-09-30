@@ -31,7 +31,7 @@ class QuantumEmbeddingGPU_Broadcast(nn.Module):
         self.n_layers = n_layers
         self.dev = dev
 
-        # Classical projection: (num_nodes, input_dim) -> (num_nodes, 2 * n_qubits)
+        # Project input nodes to qubit dimension
         self.classical_proj = nn.Linear(input_dim, 2 * n_qubits)
 
         # Learnable quantum weights
@@ -82,9 +82,9 @@ class QuantumEmbeddingGPU_Broadcast(nn.Module):
         Returns:
             Quantum embeddings tensor of shape (num_nodes, n_qubits)
         """
-        # Classical projection: (num_nodes, 117) -> (num_nodes, 2 * n_qubits)
+        # Project input features to qubit dimension
         x = self.classical_proj(x)
-        x = torch.tanh(x) * np.pi   # Scale to [-pi, pi]
+        x = torch.tanh(x) * np.pi   # Scale to angular range
 
         # Batched quantum call across all nodes
         result = self.broadcasted_circuit(x, self.quantum_weights)

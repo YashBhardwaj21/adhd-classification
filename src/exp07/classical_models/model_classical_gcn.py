@@ -13,8 +13,7 @@ HIDDEN_DIM = 32
 class ClassicalGCN(nn.Module):
     """
     Classical Graph Convolutional Network baseline.
-    Three GCN layers with batch normalization, ReLU activation, dropout,
-    global mean pooling, and linear binary classification.
+    Three GCN layers. BatchNorm1d, ReLU, and Dropout(p=0.30) are applied after the first two GCN layers; the third GCN layer is followed by ReLU only. Global mean pooling and a linear binary classifier are then applied.
     """
 
     def __init__(self, input_dim=NODE_FEATURE_DIM, hidden_dim=HIDDEN_DIM):

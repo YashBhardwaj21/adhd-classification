@@ -1,15 +1,19 @@
 # ADHD-200 Research Repository Git Ignore
-# Configured for Python, PyTorch/PyG, Jupyter, and neuroimaging exclusions.
+# Python, PyTorch/PyG, Jupyter, and neuroimaging exclusions
 
-# Python build and bytecode artifacts
+# Python bytecode and compiled extensions
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 *.pyd
 *.dll
+*.dylib
+*.exe
+*.out
+*.app
 
-# Packaging and distribution
+# Packaging and build artifacts
 build/
 develop-eggs/
 dist/
@@ -26,8 +30,9 @@ wheels/
 .installed.cfg
 *.egg
 
-# Testing, coverage and linting
+# Testing and linting caches
 .pytest_cache/
+.hypothesis/
 .coverage
 .coverage.*
 coverage.xml
@@ -37,8 +42,23 @@ htmlcov/
 .tox/
 .nox/
 
+# Profiling and debug traces
+*.prof
+*.pstats
+*.cprofile
+*.dmp
+*.dump
+*.crash
+core
+core.*
+*.nvvp
+*.qdrep
+*.nsys-rep
+
 # Virtual environments
 .env
+.env.*
+!.env.example
 .venv
 env/
 venv/
@@ -46,26 +66,45 @@ ENV/
 env.bak/
 venv.bak/
 conda-env/
+*.conda
+.pip-cache/
 
-# Jupyter notebook checkpoints and cache
+# Secrets and credentials
+secrets/
+secrets.*
+*.key
+*.pem
+*.cert
+*.crt
+*.pfx
+*.p12
+credentials.json
+client_secrets.json
+token.json
+id_rsa*
+id_ed25519*
+
+# Jupyter notebook checkpoints
 .ipynb_checkpoints/
 *-checkpoint.ipynb
 .jupyter/
 
-# Operating system and editor metadata
-# macOS
+# Operating system metadata
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
-
-# Windows
+.Trashes
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
 desktop.ini
 [Nn]on[Tt]racked/
+$RECYCLE.BIN/
+System Volume Information/
+.directory
+.Trash-*
 
 # Editors and IDEs
 .idea/
@@ -74,7 +113,9 @@ desktop.ini
 *.swo
 *~
 *.bak
+*.old
 *.orig
+*.save
 *.rej
 *.patch
 *.sublime-project
@@ -84,41 +125,80 @@ desktop.ini
 .gemini/
 .claude/
 .cursor/
+.windsurf/
+.copilot/
+.continue/
+.cline/
+.aider*
+.chat/
 
-# Neuroimaging and binary data exclusions
-# Raw NIfTI neuroimaging scans
+# Compressed archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.bz2
+*.xz
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.synctex.gz
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+
+# Neuroimaging and binary formats
 *.nii
 *.nii.gz
-
-# Medical imaging DICOM files
 *.dcm
 *.dicom
-
-# Large tabular and columnar array stores (>100 MiB)
+*.mgh
+*.mgz
+*.annot
+*.label
+*.crv
+*.trk
+*.tck
+*.BRIK
+*.BRIK.gz
+*.HEAD
+*.mnc
+*.gii
+*.surf.gii
+*.func.gii
+*.shape.gii
 *.parquet
 *.feather
 *.h5
 *.hdf5
 *.mat
-
-# Serialized Python binaries and array dumps
 *.npy
 *.npz
 *.pkl
 *.pickle
 *.joblib
 
-# Local raw or intermediate data staging directories
+# Local data staging
 data/raw/
 data/processed/
 data/cache/
 data/downloads/
 
-# Whitelist data documentation and provenance ledgers
+# Whitelist data documentation
 !data/README.md
 !data/provenance.md
 
-# Deep learning model weights and checkpoints
+# Model weights and checkpoints
 checkpoints/
 artifacts/
 *.pt
@@ -128,7 +208,7 @@ artifacts/
 *.safetensors
 *.onnx
 
-# Experiment tracking and logging
+# Experiment logs
 wandb/
 runs/
 lightning_logs/
@@ -139,11 +219,15 @@ scratch/
 tmp/
 temp/
 .cache/
+.scratch/
 *.tmp
 *.temp
+*.scratch
 .tmp_test_paths/
 tests/.tmp_test_paths/
 
-# Forensic audit and historical evidence mirrors
+# Forensic audit mirrors
 audit_source_files/
 docs/audit/
+audit_reports/
+*.audit

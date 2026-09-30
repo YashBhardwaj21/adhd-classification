@@ -161,7 +161,7 @@ def validate_exp08():
 
 
 def validate_exp09():
-    print("Validating Experiment 9 (LOSO Population Graphs)...")
+    print("Validating Experiment 9 (LOSO Population Graphs & Baselines)...")
     path = ROOT_DIR / "results/exp09/w2b_loso_results.csv"
     assert path.exists(), f"Missing {path}"
     df = pd.read_csv(path)
@@ -175,13 +175,57 @@ def validate_exp09():
     # Total subjects across 7 test sites
     n_subs = df[df["Architecture"] == "GCN"]["N_Test"].sum()
     assert n_subs == 497, f"Expected 497 total subjects across sites, got {n_subs}"
-    print("  [OK] Exp 9 LOSO results verified (497 subjects, GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437)")
+
+    # Validate Exp09 family winners
+    winners_path = ROOT_DIR / "results/exp09/w1_family_winners.csv"
+    assert winners_path.exists(), f"Missing {winners_path}"
+    w_df = pd.read_csv(winners_path).set_index("family")
+    expected_families = {
+        "FC_Phenotype",
+        "FC_only",
+        "Graph_Phenotype",
+        "Graph_only",
+        "Phenotype_NoIQ",
+        "Phenotype_only",
+    }
+    assert set(w_df.index) == expected_families, f"Family mismatch: {set(w_df.index)} vs {expected_families}"
+
+    expected_winners = {
+        "FC_Phenotype": ("ET", 0.632847),
+        "FC_only": ("LR", 0.614087),
+        "Graph_Phenotype": ("SVM", 0.649309),
+        "Graph_only": ("RF", 0.569260),
+        "Phenotype_NoIQ": ("EN", 0.593487),
+        "Phenotype_only": ("EN", 0.593487),
+    }
+    for fam, (exp_model, exp_auc) in expected_winners.items():
+        act_model = w_df.loc[fam, "model"]
+        act_auc = w_df.loc[fam, "mean_auc"]
+        assert act_model == exp_model, f"Winner model mismatch for {fam}: {act_model} != {exp_model}"
+        assert np.isclose(act_auc, exp_auc, atol=1e-3), f"Winner AUC mismatch for {fam}: {act_auc} != {exp_auc}"
+
+    # Validate Exp09 preprocessing summary
+    prep_path = ROOT_DIR / "results/exp09/graph_preprocessing_summary.csv"
+    assert prep_path.exists(), f"Missing {prep_path}"
+    p_df = pd.read_csv(prep_path)
+    assert p_df.iloc[0]["N_Subjects"] == 497, "Expected 497 subjects"
+    assert p_df.iloc[0]["N_ROI"] == 190, "Expected 190 ROIs"
+    assert p_df.iloc[0]["N_Sites"] == 7, "Expected 7 sites"
+    assert p_df.iloc[0]["Threshold"] == "top_10pct", "Expected top_10pct"
+    assert p_df.iloc[0]["Node_Feature_Type"] == "connectivity", "Expected connectivity"
+
+    # Validate self_loops from exp09_verified_results.json
+    v_path = ROOT_DIR / "results/exp09/exp09_verified_results.json"
+    assert v_path.exists(), f"Missing {v_path}"
+    with open(v_path, encoding="utf-8") as f:
+        v_data = json.load(f)
+    assert v_data.get("executed_protocol", {}).get("self_loops") is True, "Expected self_loops=True"
+
+    print("  [OK] Exp 9 LOSO and baseline results verified (497 subjects, 7 sites, 6 feature families, top_10pct connectivity with self-loops)")
 
 
 def main():
-    print("=" * 60)
-    print("NUMERICAL ARTIFACT VALIDATION")
-    print("=" * 60)
+    print("ADHD-200 Numerical Artifact Validation\n")
 
     try:
         validate_exp01()
@@ -193,19 +237,17 @@ def main():
         validate_exp07()
         validate_exp08()
         validate_exp09()
-        print("\n" + "=" * 60)
-        print("SUMMARY OF VALIDATED ARTIFACTS:")
-        print("  - Exp 01: dFC temporal correlation decay (0.8990 -> 0.5467) & Frobenius distances")
-        print("  - Exp 02: CC200 graph construction parameters (MST+PT, density 0.20)")
-        print("  - Exp 03: Cross-site ANOVA F-tests (efficiency 4609.76, path length 4993.87)")
-        print("  - Exp 04: ComBat harmonization clustering mean (0.33327 -> 0.33336)")
-        print("  - Exp 05: Micro-state cluster metrics (K=3, State 0 dwell time 6.24 windows)")
-        print("  - Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484)")
-        print("  - Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33)")
-        print("  - Exp 08: Deep learning baseline accuracies (3D CNN: 76.19%, NeuroSTORM: 59.10%)")
-        print("  - Exp 09: LOSO 7-fold mean AUCs (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437, N=497)")
-        print("=" * 60)
-        print("All configured result checks passed.")
+        print("\nSummary of Validated Artifacts:")
+        print("  Exp 01: dFC temporal correlation decay (0.8990 to 0.5467) and Frobenius distances")
+        print("  Exp 02: CC200 graph construction parameters (MST+PT, density 0.20)")
+        print("  Exp 03: Cross-site ANOVA F-tests (efficiency 4609.76, path length 4993.87)")
+        print("  Exp 04: ComBat harmonization clustering mean (0.33327 to 0.33336)")
+        print("  Exp 05: Micro-state cluster metrics (K=3, State 0 dwell time 6.24 windows)")
+        print("  Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484)")
+        print("  Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33)")
+        print("  Exp 08: Deep learning baseline accuracies (3D CNN: 76.19%, NeuroSTORM: 59.10%)")
+        print("  Exp 09: LOSO 7-fold mean AUCs (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437, N=497)")
+        print("\nAll configured result checks passed.")
         sys.exit(0)
     except Exception as e:
         print(f"\n[VALIDATION ERROR] {e}")

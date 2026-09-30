@@ -21,16 +21,14 @@ def prepare_graphs(
     """
     Convert functional connectivity matrices or upper-triangular vectors into PyG graphs.
 
-    Historical protocol specifications:
+    Protocol specifications:
       - 116 nodes (AAL-116 parcellation)
       - Proportional thresholding on absolute FC magnitude (15% nominal density parameter)
       - Percentile threshold on upper-triangle absolute FC values: threshold = np.percentile(upper_vals, 100 * (1 - density))
       - Edge selection: edge_mask = abs_fc >= threshold (note: >= comparison; ties may produce more than 15% edges)
       - Signed correlation values retained as edge_attr
-      - Stored edge_attr is NOT passed as edge weights to the historical GCNConv message-passing layers
+      - Stored edge_attr is retained on Data objects (not passed as edge weights to GCNConv layers)
       - 117 node features: 116 signed FC values + 1 normalized degree (np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois)
-        (Note: the historical code used normalized thresholded degree, whereas early paper drafts describe weighted node strength)
-      - No MST applied (MST + 20% is specific to Exp 02)
 
     Args:
         X_features: Array of shape (N, 6670) or (N, 116, 116)
@@ -79,7 +77,7 @@ def prepare_graphs(
         edge_index = torch.tensor(np.array(edge_coords), dtype=torch.long)
         edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)
 
-        # Historical node features: 116 signed FC row values + 1 normalized degree = 117
+        # Node features: 116 signed FC row values plus normalized degree
         degree = (np.sum(edge_mask, axis=1, keepdims=True) / n_rois).astype(np.float32)
         node_feats = np.hstack([fc_matrix, degree])  # shape: (116, 117)
         node_feats_tensor = torch.tensor(node_feats, dtype=torch.float32)

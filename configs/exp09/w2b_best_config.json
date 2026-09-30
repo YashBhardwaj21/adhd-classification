@@ -8,5 +8,8 @@
   "node_features": "connectivity",
   "threshold": "top_10pct",
   "mean_auc": 0.5751908960299881,
-  "std_auc": 0.04314677611172698
+  "std_auc": 0.04314677611172698,
+  "std_auc_definition": "population standard deviation (ddof=0) across 7 LOSO fold AUCs",
+  "paper_reported_std_auc": 0.04660384465872685,
+  "paper_reported_std_auc_definition": "sample standard deviation (ddof=1) across 7 LOSO fold AUCs"
 }

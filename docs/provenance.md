@@ -2,24 +2,24 @@
 
 This document provides a factual record of discrepancies between manuscript descriptions, early project notes, and the executed code artifacts across the study:
 *ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization*  
-**Authors**: Shantanu Khare, Bhavana Deepthi, Yash Bhardwaj (Vellore Institute of Technology).  
+**Authors**: Shantanu Khare, Bhavana Deepthi, Yash Bhardwaj, Shridevi S, Daehan Won (Vellore Institute of Technology & Binghamton University).  
 **Status**: Manuscript in preparation (2026).
 
 ---
 
 ## 1. Executive Discrepancy Table
 
-| Experiment | Manuscript / Initial Description | Executed Code Artifact | Status |
+| Experiment | Earlier Manuscript / Early Project Description | Executed Code Artifact | Status |
 | :---: | :--- | :--- | :---: |
 | **Exp 01** | Static vs dynamic FC stability comparison | Diagonal zeroed before distance computation; lag correlation decay $0.8990 \to 0.5467$ | Documented |
 | **Exp 02** | MST + 20% proportional thresholding | `mst_graph` in notebook implements MST + PT ($\rho=0.20$); `src/exp02/graph_utils.py` provides simplified PT | Documented |
-| **Exp 03** | Diagnostic group separation analysis | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR (range 53.8%, std 30.8% significant) output directly to notebook cells in `06_temporal_dynamics_analysis.ipynb` (no standalone CSV) | Documented |
+| **Exp 03** | Diagnostic group separation analysis (Earlier draft: Mann–Whitney U) | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR (range 53.8%, std 30.8% significant) output directly to notebook cells in `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (no standalone CSV) | Documented |
 | **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.6\% \to 31.3\%$, but diagnostic accuracy also drops $64.5\% \to 59.6\%$ | Documented |
 | **Exp 05** | Dynamic micro-state clustering | $K=3$ selected via multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin ($K \in [2, 10]$) and confirmed by 30-run ARI stability ($0.9950 \pm 0.0024$); State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
 | **Exp 06** | Semi-supervised pseudo-labelling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484; independent cohort from Exp 07 | Documented |
-| **Exp 07** | Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 117 node features (116 FC + unweighted normalized degree), stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train) | Documented / Archived |
-| **Exp 08** | Lightweight 3D CNN on structural T1 scans | Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM (Acc 68.25% / 59.10%) evaluated on 4D functional BOLD volume sequences across 626 scans; Temporal GNN (Acc 54.43%) evaluated on 764-subject CC200 timeseries cohort | Documented |
-| **Exp 09** | Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops across 497 subjects and 7 sites; Classical ML baselines evaluated 52 models with fold-nested `SelectKBest` | Documented |
+| **Exp 07** | Earlier manuscript draft: Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 117 node features (116 FC + unweighted normalized degree), stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train) | Documented / Archived |
+| **Exp 08** | Earlier manuscript draft: Lightweight 3D CNN on structural T1 scans | Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM (Acc 68.25% / 59.10%) evaluated on 4D functional BOLD volume sequences across 626 scans; Temporal GNN (Acc 54.43%) evaluated on 764-subject CC200 timeseries cohort | Documented |
+| **Exp 09** | Earlier manuscript draft: Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops across 497 subjects and 7 sites; Classical ML baselines evaluated 7 classifier types across 6 feature families with fold-nested `SelectKBest` (summary CSV retains historical recorded rows) | Resolved |
 
 ---
 
@@ -35,8 +35,8 @@ This document provides a factual record of discrepancies between manuscript desc
 
 ### Experiment 03: Cross-Site Scanner ANOVA & Diagnostic Group Comparison
 - **Scope of $F$-Statistics**: The large $F$-statistics reported ($F > 4,000, p < 10^{-300}$ for global efficiency and path length) quantify variance attributable to acquisition site (scanner differences across 8 participating clinics), **not** diagnostic variance between ADHD and typically developing controls (TDC).
-- **Diagnostic Group Comparisons**: Diagnostic separation between ADHD and TDC was evaluated using Welch unequal-variance $t$-tests with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction ($\alpha=0.05$) across 26 dynamic topological metrics (range 53.8% and std 30.8% reaching statistical significance).
-- **Artifact Location**: The diagnostic comparison results and distributions exist directly within the executed notebook cell outputs of `notebooks/exp03/06_temporal_dynamics_analysis.ipynb` (cells 14–22). There is no missing standalone CSV file.
+- **Diagnostic Group Comparisons (Earlier Draft Discrepancy)**: An earlier manuscript draft referenced a Mann–Whitney U test; actual diagnostic separation between ADHD and TDC was evaluated using Welch unequal-variance $t$-tests with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction ($\alpha=0.05$) across 26 dynamic topological metrics (range 53.8% and std 30.8% reaching statistical significance).
+- **Artifact Location**: The diagnostic comparison results and distributions exist directly within the executed notebook cell outputs of `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (cells 14–22). (The reference to `06_temporal_dynamics_analysis.ipynb` corresponds to the historical non-public provenance source `audit_source_files/notebooks/06_temporal_dynamics_analysis.ipynb`.) There is no missing standalone CSV file.
 
 ### Experiment 04: ComBat Harmonization
 - **Clinical Variance Attenuation**: Empirical Bayes ComBat reduced scanner identification accuracy from $58.64\%$ to $31.29\%$, while diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$. This reflects that diagnostic status was non-uniformly distributed across collection sites, leading ComBat to adjust partially for site-associated clinical variance.
@@ -104,21 +104,21 @@ This document provides a factual record of discrepancies between manuscript desc
   - Each model's metrics are reported independently without comparative ranking, tiers, or verdicts.
   - Stored in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`.
 
-- **Paper-vs-Code Discrepancies**:
-  - Text referenced 0.20 density; historical code executed with nominal density 0.15.
-  - Manuscript described weighted node strength; historical code used unweighted normalized degree.
-  - Manuscript implied weighted convolutions; historical code did not pass `edge_attr` to `GCNConv`.
-  - Manuscript described 2 quantum layers; historical code executed with 1 quantum layer.
+- **Paper-vs-Code Discrepancies (Earlier Manuscript Drafts)**:
+  - Earlier draft text referenced 0.20 density; historical code executed with nominal density 0.15.
+  - Earlier draft described weighted node strength; historical code used unweighted normalized degree.
+  - Earlier draft implied weighted convolutions / weighted message passing; historical code did not pass `edge_attr` as weights to `GCNConv`.
+  - Earlier draft described 2 quantum layers; historical code executed with 1 quantum layer.
 
 ### Experiment 08: Deep-Learning Baselines
-- **Cohort & Modality Distinctions**:
-  - **4D Volumetric Cohort (626 Scans)**: The Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM spatio-temporal transformer (Acc 68.25% / 59.10%) were evaluated on sequences of 4D functional BOLD volumes ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
+- **Cohort & Modality Distinctions (Earlier Draft Discrepancy)**:
+  - **4D Volumetric Cohort (626 Scans)**: An earlier project note suggested evaluation on structural T1 scans; in actual execution, the Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM spatio-temporal transformer (Acc 68.25% / 59.10%) were evaluated on sequences of 4D functional BOLD volumes ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
   - **Timeseries Cohort (764 Subjects)**: The Temporal GNN (Acc 54.43%) was evaluated on extracted 1D BOLD timeseries from CC200 parcellations across 764 subjects.
 - **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test). The evaluated partitions do not leak subjects across splits.
 
 ### Experiment 09: Leave-One-Site-Out Population Graphs
-- **Graph Construction Protocol**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with signed weighted edges and self-loops, across 497 subjects from 7 clinical sites and 190 CC200 ROIs. This departs from the unweighted MST + 20% distance mapping mentioned in early manuscript drafts.
-- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 52 models using fold-nested `SelectKBest`.
+- **Graph Construction Protocol (Earlier Draft Discrepancy — Resolved)**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with signed weighted edges and self-loops, across 497 subjects from 7 clinical sites and 190 CC200 ROIs. Earlier manuscript drafts referenced an unweighted MST + 20% distance mapping; this discrepancy is resolved in the current manuscript and repository alignment.
+- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 7 classifier types and 6 feature families with fold-nested `SelectKBest`. The summary CSV (`w1_model_summary.csv`) retains historical recorded model rows (including intermediate runs), while `w1_family_winners.csv` provides the canonical family winners.
 
 #### Feature Selection and Leakage Nuance
 - **ROI / Node Selection**: There was **no** subset selection of CC200 ROIs or nodes; all 190 brain regions were retained across all evaluated models.

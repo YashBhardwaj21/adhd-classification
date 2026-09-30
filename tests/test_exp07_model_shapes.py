@@ -102,8 +102,8 @@ def test_quantum_embedding_module_parameters():
     dev = qml.device("default.qubit", wires=6)
     embedding = QuantumEmbeddingGPU_Broadcast(dev=dev, input_dim=117, n_qubits=6, n_layers=1)
 
-    # Classical proj: 117 * 12 + 12 = 1416
-    # Quantum weights: 1 * 6 * 3 = 18
-    # Total = 1434
+    # Classical projection parameters: 1416
+    # Quantum weights: 18
+    # Total embedding parameters: 1434
     total_embedding_params = count_parameters(embedding)
     assert total_embedding_params == 1434, f"Embedding params expected 1434, got {total_embedding_params}"

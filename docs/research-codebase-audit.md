@@ -978,9 +978,8 @@ The research unrolls as an honest empirical journey through the core challenges 
 # 32. One-Page Research Cheat Sheet
 
 ```text
-====================================================================================================
 ADHD-200 CONNECTOMICS & GRAPH LEARNING: RESEARCH CHEAT SHEET
-====================================================================================================
+
 RESEARCH PROBLEM        : Diagnostic classification of ADHD from multi-site resting-state fMRI.
 RESEARCH QUESTION       : Can dynamic graph learning and quantum/foundation models overcome scanner
                           site heterogeneity and generalize to unseen clinical centers?
@@ -1042,5 +1041,4 @@ TECHNICAL DEBT          : 3 distinct environment requirement files due to upstre
 
 UNRESOLVED QUESTIONS    : Can adaptive attention mechanisms completely decouple scanner hardware
                           artifacts from neurological dysregulation in larger multicenter cohorts?
-====================================================================================================
 ```

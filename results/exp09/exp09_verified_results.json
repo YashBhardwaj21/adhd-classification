@@ -18,19 +18,18 @@
     "SAGE_mean_auc": 0.5502,
     "GIN_mean_auc": 0.5437
   },
-  "protocol_discrepancy": {
-    "paper_description": [
+  "historical_manuscript_discrepancy": {
+    "historical_draft_description": [
       "MST + 20% graph construction",
-      "inverse-distance mapping d = 1/|r|",
-      "497 subjects across 7 sites"
+      "inverse-distance mapping d = 1/|r|"
     ],
     "executed_configuration": [
-      "top_10pct graph selection",
-      "connectivity features",
-      "weighted edges with self-loops",
+      "top_10pct positive-FC percentile thresholding",
+      "190-dimensional connectivity node features",
+      "signed FC edge attributes with self-loops",
       "497 subjects across 7 sites"
     ],
-    "status": "Verified code/results, but paper-method versus executed-configuration mismatch is unresolved."
+    "status": "Resolved in the current manuscript; repository artifacts and the current method description are aligned."
   },
-  "note": "The repository staging preserves the executed artifacts and documents the discrepancy; no source files were modified, moved, or deleted."
+  "note": "The repository staging preserves the executed artifacts and canonical results; all documentation and configurations reflect the verified execution state."
 }

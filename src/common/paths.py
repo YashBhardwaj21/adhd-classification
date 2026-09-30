@@ -14,7 +14,7 @@ def project_root() -> Path:
     env_root = os.environ.get("ADHD200_PROJECT_ROOT")
     if env_root:
         return Path(env_root).resolve()
-    # Resolve relative to this file: src/common/paths.py -> parent x 2 = repo root
+    # Resolve repository root relative to this file
     return Path(__file__).resolve().parents[2]
 
 

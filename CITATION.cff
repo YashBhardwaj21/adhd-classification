@@ -28,6 +28,10 @@ authors:
     given-names: "Yash"
     affiliation: "Vellore Institute of Technology"
     country: "IN"
+  - family-names: "S"
+    given-names: "Shridevi"
+  - family-names: "Won"
+    given-names: "Daehan"
 preferred-citation:
   type: article
   title: "ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization"
@@ -38,6 +42,10 @@ preferred-citation:
       given-names: "Bhavana"
     - family-names: "Bhardwaj"
       given-names: "Yash"
+    - family-names: "S"
+      given-names: "Shridevi"
+    - family-names: "Won"
+      given-names: "Daehan"
   year: 2026
   status: "in preparation"
   notes: "Manuscript in preparation"

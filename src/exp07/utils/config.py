@@ -35,7 +35,7 @@ _quantum_cfg = _reported_config.get("quantum", {})
 
 # Verified Architecture & Parcellation parameters
 N_ROIS = int(_graph_cfg.get("n_rois", 116))
-NODE_FEATURE_DIM = N_ROIS + 1  # 116 FC correlations + 1 normalized degree = 117
+NODE_FEATURE_DIM = N_ROIS + 1  # 116 FC correlations plus normalized degree
 N_QUBITS = int(_quantum_cfg.get("n_qubits", 6))
 N_LAYERS = int(_quantum_cfg.get("n_layers", 1))
 HIDDEN_DIM = 32

@@ -153,7 +153,7 @@ Execute the canonical notebooks in sequence (paths verified against the reposito
 1. **Exp 09 Graph Representation & Feature Selection**:
    - GNN models operate on the full 190-node connectome thresholded at the 90th percentile of positive correlations (`top_10pct` density, mean 3,782 directed edges) with self-loops and signed edge weights. No ROI feature selection is applied to the graph inputs.
    - For classical machine learning baselines (`12_classical_ml_baseline.ipynb`), feature selection (`SelectKBest(f_classif)`) is strictly nested within each training fold, ensuring held-out scanner sites remain completely unobserved during feature ranking.
-   - Representation format selection (`connectivity` vs `identity` vs `strength`) was evaluated across LOSO folds in Workflow 2A prior to final GNN training, confirming `connectivity` (unreduced 190-dim correlation rows) as optimal.
+   - Node representation format selection (`connectivity` vs `identity` vs `strength`) was compared in an exploratory, non-nested LOSO workflow in Workflow 2A. This selection occurred prior to final GNN hyperparameter training, confirming `connectivity` (unreduced 190-dim correlation rows) as optimal; this exploratory comparison should not be interpreted as an unbiased nested LOSO performance estimate.
 
 2. **External Data Prerequisites**:
    - **Volumetric 4D Scans (Exp 08)**: Raw 4D BOLD fMRI volumes (`>120 GB`) and converted MNI `.npy` arrays (`>30 GB`) exceed repository storage quotas and must be retrieved from institutional ADHD-200 mirrors.

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # Repository audit script.
-# Audits canonical notebook existence, JSON validity, and reports their cell counts.
-# Validates directory structure, key artifact non-emptiness,
-# and checks for 0-byte or corrupted staging files.
+# Audits canonical notebook integrity, result artifacts, directory structure,
+# and documentation consistency across the repository.
 
 
 import json
@@ -31,6 +30,7 @@ CANONICAL_NOTEBOOKS = [
     "notebooks/exp08/neuro.ipynb",
     "notebooks/exp08/true_neuro.ipynb",
     "notebooks/exp09/11_population_graph_learning.ipynb",
+    "notebooks/exp09/12_classical_ml_baseline.ipynb",
 ]
 
 KEY_RESULT_ARTIFACTS = [
@@ -48,8 +48,12 @@ KEY_RESULT_ARTIFACTS = [
     "results/exp05/run_state_sequences.csv",
     "results/exp06/exp06_verified_results.json",
     "results/exp07/checkpoint_analysis.json",
+    "results/exp07/pseudolabel_provenance.json",
     "results/exp07/report.md",
     "results/exp08/exp08_verified_results.json",
+    "results/exp09/w1_model_summary.csv",
+    "results/exp09/w1_family_winners.csv",
+    "results/exp09/w2_pareto_front.csv",
     "results/exp09/w2b_loso_results.csv",
     "results/exp09/exp09_verified_results.json",
     "results/exp09/graph_preprocessing_summary.csv",
@@ -65,7 +69,7 @@ DOCUMENTATION_FILES = [
 
 
 def audit_notebooks() -> int:
-    print("\n--- 1. Auditing Canonical Notebook Integrity ---")
+    print("\n[1] Auditing Canonical Notebook Integrity")
     errors = 0
     for rel_path in CANONICAL_NOTEBOOKS:
         full_path = ROOT_DIR / rel_path
@@ -85,7 +89,7 @@ def audit_notebooks() -> int:
 
 
 def audit_artifacts() -> int:
-    print("\n--- 2. Auditing Key Result Artifacts ---")
+    print("\n[2] Auditing Key Result Artifacts")
     errors = 0
     for rel_path in KEY_RESULT_ARTIFACTS:
         full_path = ROOT_DIR / rel_path
@@ -101,7 +105,7 @@ def audit_artifacts() -> int:
 
 
 def audit_zero_byte_files() -> int:
-    print("\n--- 3. Checking for 0-Byte or Orphaned Source Files ---")
+    print("\n[3] Checking for 0-Byte or Orphaned Source Files")
     errors = 0
     for root, dirs, files in os.walk(ROOT_DIR / "src"):
         for file in files:
@@ -117,7 +121,7 @@ def audit_zero_byte_files() -> int:
 
 
 def audit_documentation() -> int:
-    print("\n--- 4. Auditing Documentation Coverage ---")
+    print("\n[4] Auditing Documentation Coverage")
     errors = 0
     for rel_path in DOCUMENTATION_FILES:
         full_path = ROOT_DIR / rel_path
@@ -133,7 +137,7 @@ def audit_documentation() -> int:
 
 
 def audit_stale_references_and_obsolete_files() -> int:
-    print("\n--- 5. Auditing for Stale References & Obsolete Files ---")
+    print("\n[5] Auditing for Stale References and Obsolete Files")
     errors = 0
     obsolete_files = [
         "src/exp07/quantum_models/quantum_embedding_vectorized.py",
@@ -168,7 +172,7 @@ def audit_stale_references_and_obsolete_files() -> int:
 
 
 def audit_markdown_links() -> int:
-    print("\n--- 6. Auditing Internal Markdown Links ---")
+    print("\n[6] Auditing Internal Markdown Links")
     import re
     errors = 0
     link_pattern = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
@@ -206,7 +210,7 @@ def audit_markdown_links() -> int:
 
 
 def audit_terminology() -> int:
-    print("\n--- 7. Auditing for Neutral Technical Terminology ---")
+    print("\n[7] Auditing for Neutral Technical Terminology")
     errors = 0
     discouraged_phrases = [
         "massive scanner batch effects",
@@ -230,9 +234,7 @@ def audit_terminology() -> int:
 
 
 def main():
-    print("=" * 60)
-    print("ADHD-200 REPOSITORY INTEGRITY AUDIT")
-    print("=" * 60)
+    print("ADHD-200 Repository Integrity Audit")
     print(f"Root Directory: {ROOT_DIR}")
 
     err_nb = audit_notebooks()
@@ -244,12 +246,12 @@ def main():
     err_term = audit_terminology()
 
     total_errors = err_nb + err_art + err_zero + err_doc + err_stale + err_links + err_term
-    print("\n" + "=" * 60)
+    print()
     if total_errors == 0:
         print("Repository structure checks passed.")
         sys.exit(0)
     else:
-        print(f"AUDIT FAILED WITH {total_errors} ISSUES. Review details above.")
+        print(f"Audit failed with {total_errors} issues. Review details above.")
         sys.exit(1)
 
 
