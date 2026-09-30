@@ -121,14 +121,32 @@ Execute the canonical notebooks in sequence (paths verified against the reposito
 
 ### Track C: Population Graph Learning & Generalization (CC200 Atlas)
 
-8. **Exp 09 — Leave-One-Site-Out (LOSO) Cross-Validation**:
+8. **Exp 09a — Population Graph Learning (GNN Architectures)**:
    ```bash
    jupyter nbconvert --execute notebooks/exp09/11_population_graph_learning.ipynb --to notebook
    ```
 
+9. **Exp 09b — Classical Machine Learning LOSO Benchmarks**:
+   ```bash
+   jupyter nbconvert --execute notebooks/exp09/12_classical_ml_baseline.ipynb --to notebook
+   ```
+
 ---
 
-## 4. Verification & Testing
+## 4. Methodological & Preprocessing Notes
+
+1. **Exp 09 Graph Representation & Feature Selection**:
+   - GNN models operate on the full 190-node connectome thresholded at the 90th percentile of positive correlations (`top_10pct` density, mean 3,782 directed edges) with self-loops and signed edge weights. No ROI feature selection is applied to the graph inputs.
+   - For classical machine learning baselines (`12_classical_ml_baseline.ipynb`), feature selection (`SelectKBest(f_classif)`) is strictly nested within each training fold, ensuring held-out scanner sites remain completely unobserved during feature ranking.
+   - Representation format selection (`connectivity` vs `identity` vs `strength`) was evaluated across LOSO folds in Workflow 2A prior to final GNN training, confirming `connectivity` (unreduced 190-dim correlation rows) as optimal.
+
+2. **External Data Prerequisites**:
+   - **Volumetric 4D Scans (Exp 08)**: Raw 4D BOLD fMRI volumes (`>120 GB`) and converted MNI `.npy` arrays (`>30 GB`) exceed repository storage quotas and must be retrieved from institutional ADHD-200 mirrors.
+   - **Combined Pseudo-Label Arrays (Exp 07)**: The 875-subject correlation array (`X_combined_full.npy`, 162 clean + 713 pseudo) is preserved externally. The complete cohort composition, split rules, and test evaluation metrics on the 33 held-out subjects are documented in `results/exp07/pseudolabel_provenance.json` and `results/exp07/checkpoint_analysis.json`.
+
+---
+
+## 5. Verification & Testing
 
 Verify repository structural integrity and numerical consistency:
 
@@ -142,3 +160,4 @@ python scripts/validate_results.py
 # 3. Run automated unit test suite
 pytest tests/
 ```
+

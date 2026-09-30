@@ -1,0 +1,5 @@
+Representation,ADHD_AUC_Mean,Mean_Site_BA
+ComBat FC,0.586307,0.12895
+Raw GraphPheno,0.622432,0.563011
+ComBat FCPheno,0.588417,0.131962
+ComBat FCGraphPheno,0.589047,0.173169

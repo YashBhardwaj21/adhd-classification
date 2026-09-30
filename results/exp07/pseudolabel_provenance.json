@@ -1,0 +1,52 @@
+{
+  "experiment": "exp07",
+  "artifact_type": "pseudolabel_provenance_manifest",
+  "clean_cohort": {
+    "total_subjects": 162,
+    "stratified_splits": {
+      "random_state": 42,
+      "train_clean": 103,
+      "val_clean": 26,
+      "test_clean": 33
+    },
+    "test_composition": {
+      "typically_developing_controls": 19,
+      "adhd": 14
+    }
+  },
+  "pseudolabel_cohort": {
+    "candidate_pool_size": 713,
+    "accepted_pseudolabels": 713,
+    "selection_procedure": "4-Model Ensemble Soft Consensus (Procedure II)",
+    "ensemble_models": [
+      "RandomForestClassifier",
+      "GradientBoostingClassifier",
+      "LogisticRegression",
+      "CalibratedClassifierCV(LinearSVC)"
+    ],
+    "selection_thresholds": {
+      "consensus_threshold": 0.67,
+      "confidence_threshold": 0.60
+    },
+    "accepted_distribution": {
+      "typically_developing_controls": 535,
+      "adhd": 178
+    },
+    "partition_allocation": "training_only"
+  },
+  "training_partition_total": {
+    "total_training_graphs": 816,
+    "clean_graphs": 103,
+    "pseudolabeled_graphs": 713
+  },
+  "feature_specification": {
+    "atlas": "AAL-116",
+    "n_rois": 116,
+    "upper_triangle_features": 6670,
+    "node_feature_dimension": 117,
+    "node_feature_composition": "116 signed Pearson correlation values + 1 normalized unweighted degree (degree / 116)",
+    "edge_density_threshold": 0.15,
+    "message_passing_type": "unweighted_isotropic_gcn"
+  },
+  "storage_notice": "Raw combined NumPy array artifacts (X_combined_full.npy [875, 6670], y_combined.npy [875], subjects_combined.npy [875]) exceed repository storage quotas (>50 MB) and are maintained in external institutional storage. Model evaluation metrics on the 33 held-out clean test subjects are archived in results/exp07/checkpoint_analysis.json."
+}

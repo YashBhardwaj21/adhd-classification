@@ -1,5 +1,6 @@
 {
   "selected_threshold": "top_10pct",
   "selection_source": "previous executed optimization",
-  "optimization_artifacts_in_repository": false
+  "optimization_artifacts_in_repository": true,
+  "provenance_artifact": "results/exp09/w2_pareto_front.csv"
 }

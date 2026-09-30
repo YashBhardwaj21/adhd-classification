@@ -143,3 +143,7 @@ temp/
 *.temp
 .tmp_test_paths/
 tests/.tmp_test_paths/
+
+# Forensic audit and historical evidence mirrors
+audit_source_files/
+docs/audit/
