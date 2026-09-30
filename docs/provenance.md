@@ -13,13 +13,13 @@ This document provides a factual record of discrepancies between manuscript desc
 | :---: | :--- | :--- | :---: |
 | **Exp 01** | Static vs dynamic FC stability comparison | Diagonal zeroed before distance computation; lag correlation decay $0.8990 \to 0.5467$ | Documented |
 | **Exp 02** | MST + 20% proportional thresholding | `mst_graph` in notebook implements MST + PT ($\rho=0.20$); `src/exp02/graph_utils.py` provides simplified PT | Documented |
-| **Exp 03** | Diagnostic group separation analysis | One-way ANOVA $F$-tests capture inter-site scanner variation ($F > 4,000$), not clinical separation | Documented |
+| **Exp 03** | Diagnostic group separation analysis | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR (range 53.8%, std 30.8% significant) output directly to notebook cells in `06_temporal_dynamics_analysis.ipynb` (no standalone CSV) | Documented |
 | **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.6\% \to 31.3\%$, but diagnostic accuracy also drops $64.5\% \to 59.6\%$ | Documented |
-| **Exp 05** | Dynamic micro-state clustering | $K=3$ selected by silhouette analysis; State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
+| **Exp 05** | Dynamic micro-state clustering | $K=3$ selected via multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin ($K \in [2, 10]$) and confirmed by 30-run ARI stability ($0.9950 \pm 0.0024$); State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
 | **Exp 06** | Semi-supervised pseudo-labelling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484; independent cohort from Exp 07 | Documented |
 | **Exp 07** | Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 117 node features (116 FC + unweighted normalized degree), stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train) | Documented / Archived |
-| **Exp 08** | Lightweight 3D CNN on structural T1 scans | CNN evaluated on functional 4D BOLD volume sequences ($T=25, 99 \times 117 \times 95$), not T1 scans | Documented |
-| **Exp 09** | Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` thresholding with weighted edges and self-loops | Documented |
+| **Exp 08** | Lightweight 3D CNN on structural T1 scans | Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM (Acc 68.25% / 59.10%) evaluated on 4D functional BOLD volume sequences across 626 scans; Temporal GNN (Acc 54.43%) evaluated on 764-subject CC200 timeseries cohort | Documented |
+| **Exp 09** | Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops across 497 subjects and 7 sites; Classical ML baselines evaluated 52 models with fold-nested `SelectKBest` | Documented |
 
 ---
 
@@ -33,14 +33,18 @@ This document provides a factual record of discrepancies between manuscript desc
 - **Algorithm**: The executed notebook (`notebooks/exp02/02_graph_construction_and_validation.ipynb`, cell 71) implemented `mst_graph(fc, density=0.20)` by first extracting a Minimum Spanning Tree on distance matrix $D = 1 - |r|$ and then adding the highest absolute correlation edges until reaching 3,591 edges (20% density for 190 nodes).
 - **Utility vs Notebook**: `src/exp02/graph_utils.py` contains a standalone PyG graph generation utility that performs proportional thresholding without the initial MST pass. Topological metrics reported in `results/exp02/graph_metrics.csv` were computed from the notebook implementation.
 
-### Experiment 03: Cross-Site Scanner ANOVA
+### Experiment 03: Cross-Site Scanner ANOVA & Diagnostic Group Comparison
 - **Scope of $F$-Statistics**: The large $F$-statistics reported ($F > 4,000, p < 10^{-300}$ for global efficiency and path length) quantify variance attributable to acquisition site (scanner differences across 8 participating clinics), **not** diagnostic variance between ADHD and typically developing controls (TDC).
+- **Diagnostic Group Comparisons**: Diagnostic separation between ADHD and TDC was evaluated using Welch unequal-variance $t$-tests with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction ($\alpha=0.05$) across 26 dynamic topological metrics (range 53.8% and std 30.8% reaching statistical significance).
+- **Artifact Location**: The diagnostic comparison results and distributions exist directly within the executed notebook cell outputs of `notebooks/exp03/06_temporal_dynamics_analysis.ipynb` (cells 14–22). There is no missing standalone CSV file.
 
 ### Experiment 04: ComBat Harmonization
 - **Clinical Variance Attenuation**: Empirical Bayes ComBat reduced scanner identification accuracy from $58.64\%$ to $31.29\%$, while diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$. This reflects that diagnostic status was non-uniformly distributed across collection sites, leading ComBat to adjust partially for site-associated clinical variance.
 
 ### Experiment 05: Data-Driven Dynamic Connectivity States
-- **Cluster Number**: Analysis evaluated $K \in \{2, 3, 4, 5, 6\}$; $K=3$ was selected as the optimal partition by silhouette coefficient. State 0 exhibited the longest mean dwell time ($6.24$ windows) and highest occupancy ($49.05\%$).
+- **Cluster Count Selection**: Dynamic micro-state clustering evaluated candidate state counts $K \in [2, 10]$ across three internal validation metrics: Silhouette Coefficient, Calinski–Harabasz (CH) index, and Davies–Bouldin (DB) index.
+- **MeanRank Procedure**: A composite MeanRank metric selected $K=3$ as the optimal state count, driven by a pronounced Calinski–Harabasz peak (12,892.17) alongside robust Silhouette (0.2772) and Davies–Bouldin (1.1399) scores. Clustering stability was confirmed via 30 repeated random initializations, yielding an Adjusted Rand Index (ARI) of $0.9950 \pm 0.0024$.
+- **Dwell Time & Occupancy**: State 0 exhibited the longest mean dwell time ($6.24$ windows) and highest fractional occupancy ($49.05\%$).
 
 ### Experiment 06: Semi-Supervised Pseudo-Labeling
 - **Cohort Decoupling**: Experiment 06 operated on a cohort of 955 subjects (391 clean-labelled and 564 unlabelled). Two procedural variants were executed: Procedure I generated 552 pseudo-labels, and Procedure II generated 484 pseudo-labels. This partition is historically decoupled from the 162 clean + 713 pseudo cohort utilized in Experiment 07.
@@ -107,11 +111,19 @@ This document provides a factual record of discrepancies between manuscript desc
   - Manuscript described 2 quantum layers; historical code executed with 1 quantum layer.
 
 ### Experiment 08: Deep-Learning Baselines
-- **Input Modality**: The Lightweight 3D CNN was evaluated on 4D functional BOLD volume sequences ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
-- **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test). The evaluated partitions therefore do not assign the same subject to multiple splits.
+- **Cohort & Modality Distinctions**:
+  - **4D Volumetric Cohort (626 Scans)**: The Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM spatio-temporal transformer (Acc 68.25% / 59.10%) were evaluated on sequences of 4D functional BOLD volumes ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
+  - **Timeseries Cohort (764 Subjects)**: The Temporal GNN (Acc 54.43%) was evaluated on extracted 1D BOLD timeseries from CC200 parcellations across 764 subjects.
+- **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test). The evaluated partitions do not leak subjects across splits.
 
 ### Experiment 09: Leave-One-Site-Out Population Graphs
-- **Graph Construction Protocol**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` thresholding with weighted edges and self-loops, rather than the unweighted MST + 20% distance mapping mentioned in manuscript text.
+- **Graph Construction Protocol**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with signed weighted edges and self-loops, across 497 subjects from 7 clinical sites and 190 CC200 ROIs. This departs from the unweighted MST + 20% distance mapping mentioned in early manuscript drafts.
+- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 52 models using fold-nested `SelectKBest`.
+
+#### Feature Selection and Leakage Nuance
+- **ROI / Node Selection**: There was **no** subset selection of CC200 ROIs or nodes; all 190 brain regions were retained across all evaluated models.
+- **Classical ML**: Feature selection via ANOVA $F$-score (`SelectKBest(f_classif)`) was strictly nested inside each training fold of the cross-validation loop, preventing test fold leakage.
+- **Representation Format Selection**: The evaluation of node representation formats (`connectivity` vs `identity` vs `strength`) was conducted across LOSO folds in Workflow 2A prior to final GNN hyperparameter training. While no ROI-level data leakage occurred, format selection was an exploratory workflow across folds and should not be characterized as "zero leakage" without qualification.
 
 ---
 
@@ -133,21 +145,6 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 | `src/exp07/quantum_models/resume.py` | `FC2803A39EEADAD35A98FD3BB7154E502E67301471EC0AEF66B2863EFB995303` | Training checkpoint resumption utility |
 | `scripts/clean_notebooks.py` | `6A01A093DE8D3FF3690B8100529D7D62FBBEB93375815610DB7023BF4DDE4BFD` | Maintenance utility for notebook output stripping |
 | `scripts/fix_markdown_links.py` | `28F0FA1DF334A2E7ED4965377DA9CEAFE91A6E77A8EEAE49D6A1296C8395BBA4` | Maintenance utility for markdown link validation |
-
-### Canonical Exp 07 File Hashes (Retained)
-
-| File Path | SHA256 Hash |
-| :--- | :--- |
-| `src/exp07/classical_models/model_classical_gcn.py` | `957A74695BF8019113E16539975B437F27992D2AFC722C3229BBCC903EEB8F30` |
-| `src/exp07/classical_models/train_classical_gcn.py` | `FC286769593AD82FF955353832866DFFF59C451909A8EB4BC24DB83A090086B7` |
-| `src/exp07/classical_models/run_experiment.py` | `9411B98D180F38A1A1B95888EBD8C3120BA00C90D3BF56F699DDFE7BC3A3BB77` |
-| `src/exp07/quantum_models/quantum_embedding_broadcast.py` | `00DDF92117710F57389A32FDD935F0717E6D9A79F711DCE116C305642591CE7C` |
-| `src/exp07/quantum_models/train_qgcnn_vectorized.py` | `42290172B53F6DF147F437EA82C362B14AD075CF9D60808C14109525481FBC6C` |
-| `src/exp07/quantum_models/run_experiment.py` | `711B6A763C108FBC12BBBF554E9D92AFA3A64E1D0BDAFA2ED1557DB077B14023` |
-| `src/exp07/utils/config.py` | `67A878FFF3B5C2D9D821C50BD6EBF30F49B26FFEB7B2E9265F12B2FDFB5AE3AF` |
-| `src/exp07/utils/data_loader.py` | `6877ACBC2BB266B6D3A3F77C1A73803A254102247C997598792D836FF4CA1A7E` |
-| `src/exp07/utils/graph_utils.py` | `E831074B2F7C1809AC581E8995FD0E6F2848A90892B95EE241C5882FF37EEEA8` |
-| `src/exp07/utils/training_utils.py` | `DD518FC785846ADE93F8247EBD88CB4621AF7DAF47CE08EF03CF6462C19937DB` |
 
 ---
 

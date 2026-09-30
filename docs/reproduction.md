@@ -17,13 +17,14 @@ The following experiments can be executed using the code in this repository once
   - Exp 04: ComBat scanner harmonization and classification trade-offs
   - Exp 05: Data-driven dynamic connectivity states and Markov transitions
 - **Track C (Population Graph Learning & Generalization)**:
-  - Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph learning
+  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning (GNN architectures)
+  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks
 
 ### Category B: Requires Reconstruction of Excluded Intermediates
 The following experiments can be reproduced after reconstructing intermediate data structures from raw or preprocessed scans:
 - **Track B (Semi-Supervised & Baseline Deep Learning)**:
   - Exp 06: Semi-supervised pseudo-labeling (Procedure I & II) generates intermediate pseudo-label assignments from AAL-116 correlation arrays.
-  - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$), which are excluded from the repository.
+  - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$, $>120\text{ GB}$, 626 scans), which are excluded from the repository.
 
 ### Category C: Archived / Not Currently Rerunnable from Repository
 - **Exp 07 (Classical GCN vs Quantum QGCNN)**:
@@ -33,41 +34,55 @@ The following experiments can be reproduced after reconstructing intermediate da
 
 ## 2. Environment Specifications
 
-### 2.1 Recorded Historical Environment (A100 Execution)
-Recorded from `configs/exp09/w2b_environment.json`:
-- **Hardware**: NVIDIA A100-SXM4-80GB GPU, x86_64 Host
-- **Python**: `3.12.13`
-- **PyTorch**: `2.5.1+cu121` (CUDA 12.1 runtime)
-- **PyTorch Geometric**: `2.8.0`
-- **PennyLane**: `0.44.1`
-- **PennyLane-Lightning-GPU**: `0.44.0`
-- **NumPy**: `2.4.6`, **Pandas**: `2.3.3`, **Scikit-Learn**: `1.8.0`
+### 2.1 Recorded Historical Environments
+The experiments in this study were executed across distinct, isolated computing environments:
+- **Track A (Experiments 01–05: Connectomics & Harmonization)**:
+  - Hardware: x86_64 CPU workstation
+  - Python: `3.10`–`3.12`
+  - Core dependencies: `bctpy==0.6.1`, `neuroCombat==0.2.12`, `scipy==1.17.1`, `scikit-learn==1.8.0`, `pandas==2.3.3`, `numpy==2.4.6`
+- **Track B — Experiments 06 & 07 (Semi-Supervised & Quantum GNN)**:
+  - Hardware: NVIDIA GPU with CUDA 12.1 runtime
+  - Python: `3.12.13`
+  - Core dependencies: `torch==2.5.1+cu121`, `torch-geometric==2.8.0`, `pennylane==0.44.1`, `pennylane-lightning-gpu==0.44.0`
+- **Track B — Experiment 08 (NeuroSTORM Spatio-Temporal Baseline)**:
+  - Hardware: Brev NVIDIA A100 GPU instance
+  - Python: `3.12`
+  - Core dependencies: `torch==2.7.1`, CUDA 12.6, Docker-pinned `causal-conv1d==v1.5.0.post8`, `mamba==v2.2.2` built from source
+  - Canonical NeuroSTORM commit: `8080b539432862d72f90482da22aa2a19f4edc5d`
+- **Track C — Experiment 09 (LOSO Population Graphs & Classical Baselines)**:
+  - Hardware: Azure Cloud VM, NVIDIA A100-SXM4-80GB GPU
+  - Recorded in `configs/exp09/w2b_environment.json`:
+  - Python: `3.12.13`, `torch==2.5.1+cu121` (CUDA 12.1), `torch-geometric==2.8.0`, `scikit-learn==1.8.0`, `pandas==2.3.3`, `numpy==2.4.6`
 
-### 2.2 Track-Specific Environment Rationale
-Dependency requirements are partitioned into three track environments under `environment/` to minimize package conflicts and maintain historical isolation:
-- **`environment/track_a/requirements.txt`**: Lightweight classical connectomics, graph theory, and statistical modeling (`bctpy`, `neuroCombat`, `scipy`, `pandas`, `scikit-learn`). Includes `bctpy` for the Experiment 02 BCT-dependent graph null-model functionality. Does not require GPU or PyTorch.
-- **`environment/track_b/requirements.txt`**: Hybrid quantum-classical and spatio-temporal deep learning stack (`pennylane`, `pennylane-lightning-gpu`, `monai`, `torch`, `torch-geometric`). Requires CUDA-enabled PyTorch. Experiment 07 itself operates on reconstructed adjacency and does not require `bctpy` merely because BCT exists elsewhere in the repository.
-- **`environment/track_c/requirements.txt`**: Population-level graph neural network learning (`torch`, `torch-geometric`, `scikit-learn`).
+### 2.2 Track-Specific Environment Installation
+Do not attempt to install all tracks into a single unified environment, as NeuroSTORM and PennyLane have conflicting CUDA and C++ extension build requirements. Install the dedicated environment matching the track you wish to reproduce:
 
-### 2.3 Suggested Installation
-
-`pyproject.toml` provides package-level dependencies for local package installation (`pip install -e .`). Track-specific requirements files document the runtime dependency versions and ranges used for each experimental track. The separately recorded environment metadata provides the observed package versions for the historical execution environment.
-
+#### Track A (Connectomics & Graph Null Models)
 ```bash
-# 1. Create dedicated Python 3.12 virtual environment
-conda create -n adhd200 python=3.12.13 -y
-conda activate adhd200
+conda create -n adhd200_track_a python=3.12 -y
+conda activate adhd200_track_a
+pip install -r environment/track_a/requirements.txt
+pip install -e .
+```
 
-# 2. Install PyTorch with CUDA 12.1 runtime
+#### Track B — Experiments 06 & 07 (Semi-Supervised & Quantum GNN)
+```bash
+conda create -n adhd200_track_b python=3.12 -y
+conda activate adhd200_track_b
 pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
-
-# 3. Install PyTorch Geometric
 pip install torch-geometric==2.8.0
-
-# 4. Install Track-specific dependencies (e.g. Track B for quantum/GNN models)
 pip install -r environment/track_b/requirements.txt
+pip install -e .
+```
+*Note on NeuroSTORM (Exp 08)*: NeuroSTORM requires a specialized Docker container built with PyTorch 2.7.1, CUDA 12.6, and custom Mamba/causal-conv1d extensions (see `audit_source_files/NeuroSTORM/Dockerfile`). It cannot be reproduced simply via standard pip install on commodity systems.
 
-# 5. Install local package in editable mode
+#### Track C (LOSO Population Graphs & Classical Baselines)
+```bash
+conda create -n adhd200_track_c python=3.12 -y
+conda activate adhd200_track_c
+pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
+pip install torch-geometric==2.8.0
+pip install -r environment/track_c/requirements.txt
 pip install -e .
 ```
 

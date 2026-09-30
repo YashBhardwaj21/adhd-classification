@@ -58,19 +58,25 @@ This document provides a concise reference for the nine experiments comprising t
 - **Track**: Track A (CC200 Atlas, 190 active ROIs)
 - **Input**: Windowed topological metrics from Exp 02 across 534 subjects.
 - **Protocol**:
-  - Summary metric extraction per subject: mean, standard deviation, and dynamic range of nodal degree, global efficiency, characteristic path length, clustering coefficient, and modularity.
+  - Summary metric extraction per subject: mean, standard deviation, variance, dynamic range, and coefficient of variation of nodal degree, global efficiency, characteristic path length, clustering coefficient, and modularity across 13 topological descriptors.
   - One-way Analysis of Variance (ANOVA) assessing variance attributable to scanner site ($8$ acquisition sites).
+  - Diagnostic-group temporal analysis: Evaluated using **Welch's unequal-variance $t$-test** (`scipy.stats.ttest_ind(..., equal_var=False)`) with Benjamini–Hochberg FDR correction across ADHD vs typically developing control subjects.
 - **Important Parameters**:
-  - Independent variable: Scanner site (Peking, NYU, KKI, OHSU, NeuroIMAGE, Pittsburgh, WashU, Brown).
-  - Alpha threshold: $\alpha = 0.05$ with Bonferroni multiple testing correction.
+  - Independent variables: Scanner site (cross-site ANOVA); Diagnostic group (ADHD vs TDC Welch $t$-test).
+  - Alpha threshold: $\alpha = 0.05$ with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction.
 - **Reported Output**:
   - Substantial cross-site scanner variation observed across global network features:
     - Global efficiency across sites: $F = 4,609.76, p < 10^{-300}$.
     - Characteristic path length: $F = 4,993.87, p < 10^{-300}$.
-  - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`.
+  - Diagnostic separation across dynamic temporal descriptors:
+    - Dynamic range showed the highest diagnostic differentiation (53.8% of topological metrics significant after BH-FDR, min $p = 1.41 \times 10^{-7}$).
+    - Standard deviation and variance descriptors showed 30.8% significant metrics after BH-FDR.
+    - Static mean measures showed zero statistically significant diagnostic differentiation.
+  - Stored in `results/exp03/feature_statistics.csv` and `results/exp03/site_anova.csv`. Diagnostic Welch $t$-test statistics were output directly to notebook cells in `06_temporal_dynamics_analysis.ipynb` (no standalone CSV was generated).
 - **Limitations & Discrepancies**:
-  - ANOVA $F$-statistics reflect inter-site scanner variation, **not** clinical diagnostic separation (ADHD vs TDC).
-  - See `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb`.
+  - ANOVA $F$-statistics reflect inter-site scanner variation, **not** clinical diagnostic separation.
+  - Manuscript text referenced "Mann–Whitney U test"; actual executed code implemented Welch's unequal-variance $t$-test with BH-FDR.
+  - See `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` and `audit_source_files/notebooks/06_temporal_dynamics_analysis.ipynb`.
 
 ---
 
@@ -103,19 +109,22 @@ This document provides a concise reference for the nine experiments comprising t
 - **Input**: Windowed connectivity vectors across all subjects ($N = 31,060$ window observations).
 - **Protocol**:
   - Dimensionality reduction: subject-exemplar window selection via local variance peaks.
-  - Unsupervised clustering: $K$-Means clustering evaluating $K \in \{2, 3, 4, 5, 6\}$ (optimal $K=3$ selected by silhouette analysis) to identify data-driven dynamic connectivity states.
-  - State dynamics: Markovian transition probability matrices, mean dwell time (consecutive windows in a state), and fractional occupancy across dynamic connectivity configurations.
+  - Unsupervised clustering: Evaluated candidate state counts $K \in [2, 10]$ across 30 repeated $K$-Means initializations.
+  - Candidate-$K$ selection: Evaluated composite metric rank `MeanRank = mean(SilhouetteRank, CHRank, DBRank)`. State count $K=3$ ranked first overall (MeanRank = 2.3333, Calinski–Harabasz global peak 12,892.17, Silhouette = 0.2772).
+  - Cluster stability: Confirmed by 30-run Adjusted Rand Index (ARI) stability ($0.9950 \pm 0.0024$).
+  - Downstream modeling: $K=3$ recurring connectivity states used for all downstream dynamic biomarkers, Markov transition probability matrices, mean dwell times, and fractional occupancies.
 - **Important Parameters**:
-  - Optimal cluster count: $K = 3$.
-  - Distance metric: Manhattan / Euclidean distance on upper-triangular FC vectors.
+  - Selected state count: $K = 3$.
+  - Evaluation range: $K = 2 \dots 10$ across 30 initializations.
 - **Reported Output**:
   - State 0 (modular/baseline state) dominates dwell time: $6.24$ windows ($49.05\%$ fractional occupancy).
   - State 1 (hyper-connected state): $3.82$ windows ($28.14\%$ occupancy).
   - State 2 (hypo-connected state): $3.15$ windows ($22.81\%$ occupancy).
-  - Stored in `results/exp05/run_dynamic_biomarkers.csv` and `results/exp05/run_state_sequences.csv`.
+  - Stored in `results/exp05/run_dynamic_biomarkers.csv`, `results/exp05/run_state_sequences.csv`, and `results/exp05/subject_dynamic_dataset.csv`.
 - **Limitations & Discrepancies**:
+  - Manuscript text simplified the selection to "silhouette analysis alone"; historical execution code utilized the multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin with 30-run ARI stability validation.
   - State dwell times reflect window overlaps ($W=30, S=5$); individual transitions occur at 5-frame resolution. Connectivity configurations represent data-driven recurring states rather than biological invariants.
-  - See `notebooks/exp05/dynamic_transformer.ipynb`.
+  - See `notebooks/exp05/dynamic_transformer.ipynb` and `audit_source_files/w2c_athena_2.ipynb`.
 
 ---
 
@@ -205,45 +214,55 @@ This document provides a concise reference for the nine experiments comprising t
 ## Experiment 08: Volumetric 3D CNN, NeuroSTORM & Spatio-Temporal Baselines
 
 - **Track**: Track B (Volumetric 4D fMRI & CC200 Atlas)
-- **Input**: Preprocessed 4D fMRI volume sequences ($T=25, 99 \times 117 \times 95$) and windowed graph sequences across 764 subjects.
+- **Cohorts & Inputs**:
+  - **4D Volumetric Cohort (3D CNN & NeuroSTORM)**: 626 subjects/scans across 7 scanner sites from raw 4D BOLD functional volume sequences ($T=25, 99 \times 117 \times 95$).
+  - **CC200 Timeseries Cohort (Temporal GNN)**: 764 subjects (534 train, 115 validation, 115 test) with windowed CC200 connectome sequences.
 - **Protocol**:
   - Lightweight 3D CNN: Multi-layer 3D convolutions with global average pooling evaluated on temporal functional fMRI volumes.
-  - NeuroSTORM: 4D spatio-temporal Swin Transformer backbone (adapted from SwinUNETR / SwiFT) evaluated on functional sequences.
+  - NeuroSTORM: 4D spatio-temporal Swin Transformer backbone (adapted from SwinUNETR / SwiFT) evaluated on functional sequences. Pinned to commit `8080b539...` with Docker-pinned `causal-conv1d v1.5.0.post8` and `mamba v2.2.2`.
   - Temporal GNN: Sequential GCN + GRU processing windowed connectomes across strictly disjoint subject partitions (534 train, 115 validation, 115 test).
 - **Important Parameters**:
-  - 3D CNN input: 4D functional volume sequence slices.
+  - 3D CNN input: 4D functional volume sequence slices ($99 \times 117 \times 95$).
   - Temporal GNN: Disjoint subject-level partitions (no window leakage).
 - **Reported Output**:
   - Lightweight 3D CNN: Accuracy = $76.19\%$, AUC = $0.7316$.
-  - NeuroSTORM: 5-fold cross-validation accuracy = $59.10\%$.
+  - NeuroSTORM: Single-split Accuracy = $68.25\%$, AUROC = $0.6800$; 5-fold cross-validation Accuracy = $59.10\%$, AUROC = $0.5880$.
   - Temporal GNN: Test accuracy = $54.43\%$, Test AUC = $0.5534$.
-  - Stored in `results/exp08/exp08_verified_results.json`.
+  - Stored in `results/exp08/exp08_verified_results.json` and `results/exp08/neurostorm_true_results.png`.
 - **Limitations & Discrepancies**:
-  - 3D CNN operates on functional BOLD volume sequences, not structural T1 anatomical scans.
+  - 3D CNN and NeuroSTORM operate on functional BOLD volume sequences across 626 subjects, not structural T1 anatomical scans or the full 764-subject CC200 timeseries cohort.
   - Raw 4D volumes ($>120\text{ GB}$) exceed repository storage quotas and are not tracked in Git.
   - See `notebooks/exp08/neuro.ipynb`, `true_neuro.ipynb`, and `09_temporal_graph_learning.ipynb`.
 
 ---
 
-## Experiment 09: Leave-One-Site-Out (LOSO) Population Graph Learning
+## Experiment 09: Leave-One-Site-Out (LOSO) Population Graph Learning & Classical Baselines
 
 - **Track**: Track C (CC200 Atlas, 190 active ROIs)
 - **Input**: Functional connectomes and demographic metadata across 497 subjects from 7 scanner sites (Brown, KKI, NeuroIMAGE, NYU, OHSU, Peking, Pittsburgh).
 - **Protocol**:
   - 7-fold Leave-One-Site-Out (LOSO) cross-validation: in each fold, all subjects from one site are held out for out-of-distribution evaluation while models train on the remaining 6 sites.
   - Four graph neural network architectures evaluated: GCN, GAT (Graph Attention Network), GraphSAGE, and GIN (Graph Isomorphism Network).
-  - Subject graph preprocessing: top 10% absolute FC edge selection with self-loops and signed correlation weights.
+  - Classical machine learning baselines: 52 models evaluated across 6 feature families with `SelectKBest(f_classif)` strictly nested inside each training fold (`12_classical_ml_baseline.ipynb`).
+  - Subject graph preprocessing: top-10% positive FC percentile thresholding (`fc >= 90th percentile`) with self-loops and signed correlation weights.
 - **Important Parameters**:
   - Atlas: CC200 ($190$ nodes).
-  - Edge selection: top 10% absolute FC thresholding with self-loops.
+  - Edge selection: top 10% positive FC thresholding (`top_10pct` density $\approx 0.1000$, mean 3,782 directed edges) with self-loops.
   - 7 site folds, $N = 497$ total subjects.
 - **Reported Output**:
-  - Generalization metrics across unseen sites (7-fold mean):
-    - GAT: AUC = $0.5752 \pm 0.081$, Balanced Accuracy = $0.5601$, F1 = $0.4789$.
-    - SAGE: AUC = $0.5502 \pm 0.074$, Balanced Accuracy = $0.5368$, F1 = $0.4578$.
-    - GCN: AUC = $0.5468 \pm 0.069$, Balanced Accuracy = $0.5372$, F1 = $0.4688$.
-    - GIN: AUC = $0.5437 \pm 0.082$, Balanced Accuracy = $0.5309$, F1 = $0.4529$.
-  - Stored in `results/exp09/w2b_loso_results.csv`, `graph_preprocessing_summary.csv`, and `exp09_verified_results.json`.
+  - GNN generalization metrics across unseen sites (7-fold mean):
+    - GAT: AUC = $0.5752 \pm 0.043$, Balanced Accuracy = $0.5601$, F1 = $0.4789$.
+    - SAGE: AUC = $0.5502 \pm 0.052$, Balanced Accuracy = $0.5368$, F1 = $0.4578$.
+    - GCN: AUC = $0.5468 \pm 0.067$, Balanced Accuracy = $0.5372$, F1 = $0.4688$.
+    - GIN: AUC = $0.5437 \pm 0.060$, Balanced Accuracy = $0.5309$, F1 = $0.4529$.
+  - Classical ML family winners (7-fold LOSO mean AUC):
+    - Multi-domain (FC + Phenotype): Extra Trees (AUC = $0.6328$).
+    - FC only: Logistic Regression (AUC = $0.6141$).
+    - Graph + Phenotype: SVM (AUC = $0.6493$).
+    - Graph only: Random Forest (AUC = $0.5693$).
+    - Phenotype only: Elastic Net (AUC = $0.5935$).
+  - Stored in `results/exp09/w2b_loso_results.csv`, `w1_family_winners.csv`, `w1_model_summary.csv`, `w2_pareto_front.csv`, `graph_preprocessing_summary.csv`, and `exp09_verified_results.json`.
 - **Limitations & Discrepancies**:
-  - The executed notebook used `top_10pct` thresholding with weighted edges and self-loops, whereas the paper describes an unweighted MST + 20% distance mapping.
-  - See `notebooks/exp09/11_population_graph_learning.ipynb` and `docs/provenance.md`.
+  - The executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops, whereas the paper describes an unweighted MST + 20% distance mapping (which belongs to the earlier Exp 02 workflow).
+  - Feature selection nuance: GNNs use all 190 nodes without ROI subset selection. Classical ML nests `SelectKBest` within folds. Representation format selection (`connectivity` over `identity`/`strength`) was evaluated across LOSO folds prior to final GNN training.
+  - See `notebooks/exp09/11_population_graph_learning.ipynb`, `notebooks/exp09/12_classical_ml_baseline.ipynb`, and `docs/provenance.md`.

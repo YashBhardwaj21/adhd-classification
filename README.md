@@ -14,13 +14,13 @@ This repository contains research code, configuration records, lightweight exper
 
 1. **Dynamic Functional Connectivity**: Sliding-window correlation generation and temporal stability analysis ($W=30, S=5$).
 2. **Graph Construction and Null Models**: Minimum Spanning Tree (MST) + proportional thresholding ($\rho=0.20$) and signed null models.
-3. **Graph Features**: Extraction of dynamic topological metrics and cross-site scanner variation ANOVA.
+3. **Graph Features**: Extraction of dynamic topological metrics, cross-site scanner variation ANOVA, and Welch unequal-variance diagnostic group comparisons.
 4. **ComBat Harmonization**: Scanner batch-effect removal via empirical Bayes and classification trade-off evaluation.
-5. **Dynamic States**: Unsupervised $K$-Means clustering ($K=3$) of recurring connectome states and transition dynamics.
+5. **Dynamic States**: Dynamic micro-state clustering ($K=3$ selected via multi-index ranking across $K \in [2, 10]$) and transition dynamics.
 6. **Semi-Supervised Labeling**: Evaluation of multiple pseudo-labeling and ensemble-selection approaches on AAL-116 functional-connectivity features.
-7. **Classical GCN and QGCNN**: Evaluation on a separately prepared cohort of 162 clean and 713 selected pseudo-labeled subjects, with pseudo-labeled subjects used only for training.
-8. **Deep-Learning Baselines**: Evaluation of volumetric 3D CNN, NeuroSTORM spatio-temporal transformer, and temporal GNN models.
-9. **Leave-One-Site-Out Population Graphs**: 7-fold LOSO cross-validation across 497 subjects using GCN, GAT, GraphSAGE, and GIN.
+7. **Classical GCN and QGCNN**: Evaluation on a separately prepared cohort of 162 clean and 713 selected pseudo-labeled subjects (117-d node features, unweighted degree, unweighted GCN message passing), with pseudo-labels restricted to training.
+8. **Deep-Learning Baselines**: Evaluation of 4D volumetric 3D CNN and NeuroSTORM spatio-temporal transformer on 626 scans, alongside temporal GNN on 764-subject CC200 timeseries.
+9. **Leave-One-Site-Out Population Graphs**: 7-fold LOSO cross-validation across 497 subjects and 7 sites using top-10% positive-FC thresholded graphs, alongside 52 classical ML baselines with fold-nested feature selection.
 
 ---
 
@@ -32,24 +32,14 @@ ADHD-200 neuroimaging data are not redistributed in this repository. To obtain t
 
 ## Installation & Environments
 
-Dependency requirements are organized into track-specific environments under `environment/`:
-- **Track A (Experiments 01–05)**: Uses `environment/track_a/requirements.txt`, which includes `bctpy` for the Experiment 02 BCT-dependent graph null-model functionality.
-- **Track B (Experiments 06–08)**: Uses `environment/track_b/requirements.txt` for deep learning and hybrid quantum-classical GNN pipelines. Experiment 07 itself does not require `bctpy` merely because BCT exists elsewhere in the repository.
-- **Track C (Experiment 09)**: Uses `environment/track_c/requirements.txt` for population-level graph neural network learning.
+Due to conflicting PyTorch, CUDA, and specialized library dependencies across experimental generations, dependencies are strictly separated into track-specific environments under `environment/`:
+- **Track A (Experiments 01–05)**: Python 3.12 CPU environment (`environment/track_a/requirements.txt`), including `scikit-learn`, `scipy`, `statsmodels`, `neuroCombat`, and `bctpy` (GPL-3.0 null-model algorithms).
+- **Track B (Experiments 06–07)**: Python 3.12 GPU environment (`environment/track_b/requirements.txt`) with PyTorch 2.5.1+cu121, PyTorch Geometric 2.8.0, PennyLane 0.44.1, and PennyLane-Lightning-GPU 0.44.0.
+- **Track B (Experiment 08 NeuroSTORM)**: Brev A100 environment requiring Python 3.12, PyTorch 2.7.1, CUDA 12.6, and pinned hardware kernels (`causal-conv1d v1.5.0.post8`, `mamba v2.2.2`).
+- **Track C (Experiment 09)**: Azure A100 environment (`environment/track_c/requirements.txt`) with Python 3.12, PyTorch 2.5.1+cu121, and PyG 2.8.0.
 
-```bash
-# 1. Create a dedicated Python 3.12 environment
-conda create -n adhd200 python=3.12.13 -y
-conda activate adhd200
-
-# 2. Install PyTorch with CUDA 12.1 support (for Track B or C)
-pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
-
-# 3. Install PyTorch Geometric and track dependencies (e.g. Track B)
-pip install torch-geometric==2.8.0
-pip install -r environment/track_b/requirements.txt
-pip install -e .
-```
+> [!IMPORTANT]
+> Do **not** attempt to install all tracks into a single monolithic Python environment. For exact setup instructions, dependency pins, and reproduction categories, see [`docs/reproduction.md`](docs/reproduction.md).
 
 ---
 
