@@ -51,6 +51,7 @@ KEY_RESULT_ARTIFACTS = [
     "results/exp07/pseudolabel_provenance.json",
     "results/exp07/report.md",
     "results/exp08/exp08_verified_results.json",
+    "results/exp09/w1_canonical_model_summary.csv",
     "results/exp09/w1_model_summary.csv",
     "results/exp09/w1_family_winners.csv",
     "results/exp09/w2_pareto_front.csv",

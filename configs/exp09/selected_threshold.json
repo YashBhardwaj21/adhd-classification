@@ -1,6 +1,7 @@
 {
   "selected_threshold": "top_10pct",
-  "selection_source": "previous executed optimization",
-  "optimization_artifacts_in_repository": true,
-  "provenance_artifact": "results/exp09/w2_pareto_front.csv"
+  "selection_source": "previous executed exploratory optimization",
+  "optimization_artifacts_in_repository": false,
+  "rationale": "Adopted from prior exploratory threshold optimization over graph connectivity, density, small-worldness, and downstream GCN performance; the raw threshold sweep ledger is not retained in the repository tree.",
+  "representation_pareto_artifact": "results/exp09/w2_pareto_front.csv"
 }

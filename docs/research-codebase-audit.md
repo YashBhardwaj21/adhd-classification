@@ -182,9 +182,13 @@ Empirically Supported:
 - Exp 01: dFC temporal decay supported (correlation drops monotonically from 0.8990 at lag 1 to 0.5467 at lag 4).
 - Exp 02: Dual-constraint MST+PT at density 0.20 eliminates isolates while preserving small-worldness.
 - Exp 03: Massive scanner site confounding confirmed (ANOVA F=4,609.76 for efficiency, F=4,993.87 for path length).
-- Exp 04: ComBat eliminates scanner site identification (accuracy drops from 95.7% to 14.8%) but reduces diagnostic classification from 68.2% to 57.4%.
-- Exp 05: Discrete micro-states identified (K=3); State 0 dominates with mean dwell time 6.24 windows.
-- Exp 09: GAT achieves highest LOSO generalization (0.5752 mean AUC), outperforming GCN (0.5468) and classical baselines.
+- Exp 04 (Dual-Phase ComBat Findings):
+  * Phase E (Static Topological Metrics): ComBat eliminated scanner site identification (accuracy dropped from 95.7% to 14.8%) but degraded diagnostic classification from 68.2% to 57.4% (RF) / 64.5% to 59.6% (SVM) across N=534 subjects.
+  * Phase E2 (Dynamic Brain-State Biomarkers, w2c_athena_2.ipynb Cells 351, 360-366, 388-404): On 8 continuous dynamic micro-state features across N=764 subjects, a 500-tree Random Forest with 5-fold Stratified CV (seed 42) demonstrated that ComBat harmonization improved diagnosis accuracy from 0.625645 (~0.626) before ComBat to 0.675353 (~0.675) after ComBat (+0.049708).
+- Exp 05: Discrete micro-states identified (K=3); State 0 dominates with mean dwell time 6.24 windows. Note: run_dynamic_biomarkers.csv serializes multiclass 0, 1, 2, 3 values in a column labeled 'label_binary' before renaming in subject_dynamic_dataset.csv.
+- Exp 06: Semi-supervised pseudo-labeling on unannotated cohort: Ensemble voting (Procedure II) produced 484 consensus labels at tau=0.80 across N=391 clean aligned subjects (from 955 candidate FC matrices and 691 phenotypic records).
+- Exp 09: GAT achieves highest LOSO generalization (0.5752 mean AUC), outperforming GCN (0.5468) and classical baselines under top_10pct positive-FC proportional thresholding.
+- Exp 09 Table XII Baseline: Master cohort phenotypic records contained only ['Age', 'Gender', 'Handedness'] without cognitive/IQ columns (VIQ, PIQ, FIQ). In 12_classical_ml_baseline.ipynb, dropping IQ columns was a no-op; thus 'Phenotype only' and 'Phenotype without IQ' evaluated bit-for-bit identical arrays with identical 7-fold LOSO metrics (Elastic Net winner: AUC = 0.593487, Std = 0.103454, BA = 0.600693).
 
 Contradicted / Negative Results:
 - Exp 07: Quantum QGCNN did NOT outperform Classical GCN (Classical GCN: 0.7293 AUC, 69.70% Acc; Quantum QGCNN: 0.6429 AUC, 57.58% Acc). The quantum circuit suffered from barren plateaus / expressive restriction on 33 held-out test subjects.
@@ -222,19 +226,24 @@ G. Conclusions: Final claims regarding hypothesis validity.
 - **G. Conclusion**: Claim fully supported. `null_model_und_sign_fixed.py` is verified and reproducible.
 
 #### 2. Multi-Site ComBat Harmonization (Exp 04)
-- **A. Intent**: Remove scanner site variance from dynamic topological features while preserving subtle ADHD-related biological variance.
-- **B. Specification**: Empirical Bayes ComBat adjusted for age and sex covariates; linear mixed-effects modeling.
+- **A. Intent**: Remove scanner site variance from functional connectivity features while preserving subtle ADHD-related biological variance.
+- **B. Specification**: Empirical Bayes ComBat adjusted for age and sex covariates; linear mixed-effects modeling across static and dynamic representations.
 - **C. Implementation**: `audit_source_files/history.py` (blocks 38-39), `notebooks/exp04/w2c_athena_2.ipynb`.
-- **D. Configuration**: 534 subjects, 8 scanner sites, CC200 parcellation.
-- **E. Observations**: `results/exp04/comparison_table.csv`, `results/exp04/site_prediction_results.csv`, `results/exp04/diagnosis_prediction_results.csv`.
-- **F. Interpretation**: Site prediction plummeted from 95.7% (raw) to 14.8% (ComBat), proving site removal. However, diagnosis prediction simultaneously degraded from 68.2% to 57.4%.
-- **G. Conclusion**: Harmonization-classification trade-off discovered. Standard ComBat overcorrects, partially scrubbing disease variance that is collinear with scanner site distributions.
+- **D. Configuration**: 
+  - Phase E: 534 subjects, 8 scanner sites, static CC200 graph metrics.
+  - Phase E2: 764 subjects, 8 scanner sites, 8 continuous dynamic micro-state features (dwell times, fractional occupancy, transition entropy), 500-tree Random Forest, 5-fold Stratified CV (seed 42).
+- **E. Observations**: `results/exp04/comparison_table.csv`, `results/exp04/site_prediction_results.csv`, `results/exp04/diagnosis_prediction_results.csv`, and notebook cell outputs (Cells 351, 388-404):
+  - Phase E (Static Metrics): Site prediction plummeted from 95.7% (raw) to 14.8% (ComBat). However, diagnosis prediction simultaneously degraded from 68.2% to 57.4% (RF) and 64.5% to 59.6% (SVM).
+  - Phase E2 (Dynamic State Features): ComBat harmonization significantly improved diagnostic classification from 0.625645 (~0.626) to 0.675353 (~0.675) fold accuracy (+0.049708).
+- **F. Interpretation**: Demonstrates a fundamental duality in multi-site neuroimaging: static global topological metrics are heavily collinear with scanner hardware and lose predictive power when harmonized, whereas higher-order dynamic micro-state transitions benefit from scanner harmonization as additive technical variance is stripped away.
+- **G. Conclusion**: Claim supported conditionally. Dynamic micro-state features retain and improve diagnostic utility under ComBat ($0.626 \to 0.675$), while static graph metrics exhibit a severe harmonization-classification trade-off.
 
 #### 3. Classical GCN vs. Quantum QGCNN (Exp 07)
 - **A. Intent**: Demonstrate that parameterized quantum circuits provide superior representation capacity for fMRI functional connectivity graphs.
 - **B. Specification**: 2-layer GCN vs Hybrid QGCNN. Quantum circuit uses 6 qubits, angle encoding with RY and RZ gates, 1 trainable entangling layer with CNOT ring topology, and Pauli-Z expectation measurements.
 - **C. Implementation**: `src/exp07/quantum_models/quantum_embedding_broadcast.py` (PennyLane GPU broadcasting), `src/exp07/classical_models/model_classical_gcn.py`.
 - **D. Configuration**: `configs/exp07/reported_run.json` (Seed 42, 162 total clean cohort, 129 train, 33 held-out test, 100 epochs, lr 0.001, Adam, weight decay 1e-4).
+- **Cohort Lineage Provenance**: Exp 06 established a clean aligned cohort of $N=391$ via an inner-join of 955 candidate FC matrices (`X_fc_subjects.npy`) and 691 phenotypic records (`subjects.npy`, `y_binary.npy`), creating `aligned_subjects.npy` and `X_fc_aligned.npy`. In Exp 07, data loading (`src/exp07/utils/data_loader.py` line 79) accessed an external combined array `X_combined_full.npy` ($875, 6670$) and sliced the first 162 subjects (`n_clean: int = 162`). The intermediate filtering code (`part1.ipynb`) and subject ID list for the 162 cohort were external and unarchived, meaning the 391 and 162 cohorts are historically decoupled in the repository tree.
 - **E. Observations**: `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`.
   - Classical GCN: Test Accuracy = 69.70%, AUC = 0.7293, Sensitivity = 72.73%, Specificity = 68.18%.
   - Quantum QGCNN: Test Accuracy = 57.58%, AUC = 0.6429, Sensitivity = 63.64%, Specificity = 54.55%.
@@ -246,6 +255,7 @@ G. Conclusions: Final claims regarding hypothesis validity.
 - **B. Specification**: 7-fold Leave-One-Site-Out (LOSO) cross-validation on 497 subjects from 7 clinical sites (excluding Brown due to 0% ADHD labels).
 - **C. Implementation**: `notebooks/exp09/11_population_graph_learning.ipynb`, `src/exp07/utils/graph_utils.py`.
 - **D. Configuration**: `configs/exp09/w2b_best_config.json` (GAT, GCN, GIN, SAGE; hidden dim 64, lr 0.001, top 10% proportional threshold).
+- **Graph Threshold Provenance**: Positive-FC proportional thresholding was set to `top_10pct` in `notebooks/exp09/11_population_graph_learning.ipynb` Cell 5 (`SELECTED_THRESHOLD = "top_10pct"` with metadata `method: hardcoded_from_prior_optimization`). The preliminary grid search exploring alternative densities was performed externally and not archived in git.
 - **E. Observations**: `results/exp09/w2b_loso_results.csv`, 28 confusion matrices, 28 prediction tables.
   - GAT: Mean AUC = 0.5752, Balanced Acc = 0.5490
   - SAGE: Mean AUC = 0.5502, Balanced Acc = 0.5147
@@ -253,6 +263,17 @@ G. Conclusions: Final claims regarding hypothesis validity.
   - GIN: Mean AUC = 0.5437, Balanced Acc = 0.5313
 - **F. Interpretation**: Graph Attention Networks (GAT) achieved superior generalization by learning attention weights over edges, downweighting site-specific noisy connections.
 - **G. Conclusion**: Claim supported. GAT is the most robust architecture for multi-site fMRI graph classification.
+
+#### 5. Phenotypic Baseline & Feature Equivalence (Exp 09 Table XII)
+- **A. Intent**: Evaluate non-imaging demographic and cognitive baselines against graph neural networks under 7-fold LOSO cross-validation, comparing models trained with full phenotypes vs. phenotypes without IQ features (Table XII).
+- **B. Specification**: Train classical ML models (Logistic Regression, Elastic Net, Random Forest, SVM, XGBoost) on demographic and cognitive features.
+- **C. Implementation**: `notebooks/exp09/12_classical_ml_baseline.ipynb` Cells 7, 13, 17, 18, 37.
+- **D. Configuration**: 497 subjects across 7 scanner sites (Brown excluded); 7-fold Leave-One-Site-Out cross-validation.
+- **E. Observations**: `results/exp09/w1_model_summary.csv` and `results/exp09/w1_family_winners.csv`:
+  - Elastic Net winner: Mean AUC = 0.593487, Std = 0.103454, Balanced Acc = 0.600693.
+  - Exactly identical metrics were recorded for 'Phenotype only' and 'Phenotype without IQ' across all evaluated model families.
+- **F. Interpretation**: Forensic inspection of Cell 7 and Cell 18 revealed that `master_cohort.csv` contained only `['subject_id', 'site', 'roi_file', 'DX', 'Age', 'Gender', 'Handedness']`. No cognitive or IQ columns (`VIQ`, `PIQ`, `FIQ`) were present in the cohort file. Consequently, the pandas drop operation in Cell 18 was a no-op; both baseline tracks evaluated bit-for-bit identical 3-column arrays (`['Age', 'Gender', 'Handedness']`).
+- **G. Conclusion**: Claimed comparison between 'Phenotype' and 'Phenotype without IQ' represents an artifact equivalence caused by missing cognitive columns in `master_cohort.csv`.
 
 ---
 
@@ -431,12 +452,12 @@ Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph benchmarking (497 subj
 | **Exp 01** | `notebooks/exp01/` | Is dynamic FC temporally non-stationary? | Autocorrelation decays smoothly across lags; dFC is not white noise | Sliding-window Pearson correlation ($W=30, S=5$) | CC200, 534 subjects, 8 sites | TR=2.0s, 31,060 windows | Pearson $r$ decay, Frobenius dist | Lag 1: $r=0.8990$; Lag 2: 0.7789; Lag 3: 0.6609; Lag 4: 0.5467 | Validated / Conclusive |
 | **Exp 02** | `notebooks/exp02/`, `src/exp02/` | Can sparse graphs be constructed without disconnecting nodes? | MST + Proportional Thresholding eliminates isolates while preserving small-worldness | Dual-constraint MST+PT ($D=0.20$) + signed null models | CC200, 534 subjects | $N=190$, density=0.20, bin_swaps=5 | Degree distribution, small-worldness ($\sigma$) | Average degree $k=38.0$, 0 isolated nodes, small-world $\sigma > 1.2$ | Validated / Conclusive |
 | **Exp 03** | `notebooks/exp03/` | How severe is scanner site bias in topological metrics? | Scanner center explains significant variance in topological metrics | Graph metric extraction + One-way ANOVA across 8 sites | CC200, 534 subjects | 8 scanner sites, 6 graph metrics | ANOVA $F$-statistic, $p$-value | Efficiency $F=4,609.76$; Path Length $F=4,993.87$ ($p < 10^{-300}$) | Validated / Conclusive |
-| **Exp 04** | `notebooks/exp04/` | Does ComBat harmonize multi-site dFC without scrubbing diagnosis? | ComBat removes scanner bias while preserving diagnostic classification | Empirical Bayes ComBat with Age & Gender covariates | CC200, 534 subjects | 8 scanner sites, linear mixed models | Site ID Acc, Diagnosis Acc | Site Acc: $95.7\% \to 14.8\%$; Diagnosis Acc: $68.2\% \to 57.4\%$ | Validated / Trade-off Discovered |
+| **Exp 04** | `notebooks/exp04/` | Does ComBat harmonize multi-site dFC without scrubbing diagnosis? | ComBat removes scanner bias while preserving diagnostic classification | Empirical Bayes ComBat with Age & Gender covariates; Dual Phase evaluation (Phase E: static metrics; Phase E2: dynamic micro-state biomarkers) | CC200, 534 subjects (Phase E) / 764 subjects (Phase E2) | 8 scanner sites; RF & SVM classifiers | Site ID Acc, Diagnosis Acc | Phase E: Site Acc $95.7\% \to 14.8\%$, Diagnosis Acc $68.2\% \to 57.4\%$; Phase E2 (Cells 351, 388-404, 500-tree RF, 5-fold CV): Diagnosis Acc $0.625645 \to 0.675353$ ($+0.0497$) | Validated / Dual-Phase Trade-off |
 | **Exp 05** | `notebooks/exp05/` | Are dynamic brain micro-states discrete and recurrent? | Unsupervised clustering reveals distinct states with differential ADHD dwell times | K-means clustering ($K=3$) on sliding-window metrics | CC200, 534 subjects | $K=3$ clusters, Euclidean distance | Dwell time, fractional occupancy | State 0 dwell time = 6.24 windows; State 1 = 3.82; State 2 = 2.45 | Validated / Conclusive |
-| **Exp 06** | `notebooks/exp06/` | Can pseudo-labeling expand effective sample size? | Ensemble agreement yields higher pseudo-label quality than self-training | Self-training (Procedure I) vs Ensemble Voting (Procedure II) | AAL-116, 955 subjects | Confidence threshold $\tau=0.80$ | Candidate count, pseudo-label accuracy | Procedure I: 552 labels; Procedure II: 484 consensus labels | Validated / Conclusive |
-| **Exp 07** | `src/exp07/`, `results/exp07/` | Does Quantum GCNN outperform Classical GCN on brain graphs? | 6-qubit PQC node encoding provides superior expressive representation | Classical GCN vs Hybrid QGCNN on AAL-116 graphs | AAL-116, 162 subjects (33 test) | 100 epochs, lr 0.001, seed 42, 6 qubits | Accuracy, ROC-AUC, Balanced Acc | Classical: 0.7293 AUC, 69.70% Acc; Quantum: 0.6429 AUC, 57.58% Acc | Validated / Negative Result |
+| **Exp 06** | `notebooks/exp06/` | Can pseudo-labeling expand effective sample size? | Ensemble agreement yields higher pseudo-label quality than self-training | Self-training (Procedure I) vs Ensemble Voting (Procedure II) | AAL-116, 955 candidate FC matrices $\cap$ 691 phenotypic records = 391 clean aligned subjects | Confidence threshold $\tau=0.80$ | Candidate count, pseudo-label accuracy | Procedure I: 552 labels; Procedure II: 484 consensus labels | Validated / Conclusive |
+| **Exp 07** | `src/exp07/`, `results/exp07/` | Does Quantum GCNN outperform Classical GCN on brain graphs? | 6-qubit PQC node encoding provides superior expressive representation | Classical GCN vs Hybrid QGCNN on AAL-116 graphs | AAL-116, 162 clean cohort (sliced via n_clean=162 from external 875-subject array; 129 train / 33 test) | 100 epochs, lr 0.001, seed 42, 6 qubits | Accuracy, ROC-AUC, Balanced Acc | Classical: 0.7293 AUC, 69.70% Acc; Quantum: 0.6429 AUC, 57.58% Acc | Validated / Negative Result |
 | **Exp 08** | `notebooks/exp08/`, `src/exp08/` | Can 4D foundation models outperform topological graph networks? | Swin4D+Mamba foundation model learns richer spatio-temporal features than 2D GNNs | NeuroSTORM fine-tuning vs 3D CNN fallback vs Temporal GNN | ADHD-200 raw 4D volumes / CC200 | 96x96x96x80 volumes, batch size 2 | Test Accuracy, ROC-AUC | 3D CNN: 76.19% Acc; NeuroSTORM: 59.10% Acc; Temporal GNN: 54.43% Acc | Validated / Negative Result |
-| **Exp 09** | `notebooks/exp09/`, `results/exp09/` | Which GNN generalizes best under Leave-One-Site-Out CV? | Spatial attention (GAT) generalizes better to unseen sites than isotropic GCN | 7-fold Leave-One-Site-Out (LOSO) cross-validation | CC200, 497 subjects, 7 sites | GAT, GCN, GIN, SAGE; lr 0.001, hidden 64 | LOSO Mean AUC, Balanced Acc, F1 | GAT: 0.5752 AUC; SAGE: 0.5502; GCN: 0.5468; GIN: 0.5437 | Validated / Conclusive |
+| **Exp 09** | `notebooks/exp09/`, `results/exp09/` | Which GNN generalizes best under Leave-One-Site-Out CV? | Spatial attention (GAT) generalizes better to unseen sites than isotropic GCN | 7-fold Leave-One-Site-Out (LOSO) cross-validation; positive-FC top_10pct threshold | CC200, 497 subjects, 7 sites | GAT, GCN, GIN, SAGE; lr 0.001, hidden 64, top_10pct threshold | LOSO Mean AUC, Balanced Acc, F1 | GAT: 0.5752 AUC; SAGE: 0.5502; GCN: 0.5468; GIN: 0.5437; Table XII Pheno/NoIQ: 0.5935 AUC | Validated / Conclusive |
 
 ---
 
@@ -458,26 +479,30 @@ Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph benchmarking (497 subj
 ### Transition 3: Exp 03 $\to$ Exp 04
 - **Previous Observation**: Severe scanner bias invalidated raw graph metrics as direct biomarkers.
 - **Reason for Next Experiment**: Must harmonize multi-site features before training downstream classifiers.
-- **Modification**: Applied Empirical Bayes ComBat harmonization to dynamic graph metrics, modeling Age and Gender as biological covariates. Evaluated site prediction and diagnostic prediction before vs after ComBat.
-- **New Hypothesis**: ComBat will completely eliminate scanner site identification while leaving ADHD diagnostic classification unaffected.
-- **Observed Result**: Site identification dropped from 95.7% to 14.8%, but ADHD classification dropped from 68.2% to 57.4%, revealing that clinical diagnosis is partially entangled with scanner distributions.
+- **Modification**: Applied Empirical Bayes ComBat harmonization to graph metrics and dynamic micro-state features, modeling Age and Gender as biological covariates. Evaluated site prediction and diagnostic prediction before vs after ComBat across two phases: Phase E (static topological metrics, $N=534$) and Phase E2 (8 dynamic micro-state features, $N=764$).
+- **New Hypothesis**: ComBat will eliminate scanner site identification while preserving or enhancing diagnostic classification.
+- **Observed Result**: Discovered a dual-phase trade-off:
+  - In Phase E (static metrics), site identification dropped from 95.7% to 14.8%, but ADHD diagnosis dropped from 68.2% to 57.4% (RF) / 64.5% to 59.6% (SVM).
+  - In Phase E2 (`notebooks/exp04/w2c_athena_2.ipynb` Cells 351, 388-404), on 8 dynamic micro-state features, a 500-tree Random Forest with 5-fold Stratified CV improved diagnosis accuracy from $0.625645$ (~0.626) to $0.675353$ (~0.675) ($+0.049708$).
 
 ### Transition 4: Exp 04 $\to$ Exp 05 & Exp 06
-- **Previous Observation**: Static feature aggregation over time loses critical transient information.
+- **Previous Observation**: Static feature aggregation over time loses critical transient information, while dynamic features benefit from harmonization.
 - **Reason for Next Experiment**: Unsupervised clustering of sliding windows to detect recurring connectivity states (Exp 05), while expanding the labeled sample size via semi-supervised learning on unannotated subjects (Exp 06).
-- **Modification**: K-means clustering on window metric vectors ($K=3$) to measure dwell times and transition probabilities; self-training and ensemble pseudo-labeling on 955 subjects.
+- **Modification**: K-means clustering on window metric vectors ($K=3$) to measure dwell times and transition probabilities; self-training and ensemble pseudo-labeling on unannotated subjects.
+- **Implementation Note**: In Exp 05, `results/exp05/run_dynamic_biomarkers.csv` and `run_state_sequences.csv` serialize multiclass diagnosis codes ($0, 1, 2, 3$) in a column labeled `label_binary`. In Exp 06, inner-joining 955 candidate FC matrices with 691 phenotypic records established a clean aligned cohort of $N=391$ subjects (`aligned_subjects.npy`), with ensemble voting generating 484 consensus labels at $\tau=0.80$.
 
 ### Transition 5: Exp 05/06 $\to$ Exp 07
 - **Previous Observation**: Traditional vector-based ML models reached an accuracy plateau around 65-70%.
 - **Reason for Next Experiment**: Test whether quantum computing algorithms (Parameterized Quantum Circuits) can embed high-dimensional functional graphs more effectively than classical neural networks.
 - **Modification**: Built a 6-qubit Hybrid QGCNN using PennyLane parameter broadcasting to embed graph node features into quantum Hilbert space before classical graph convolution.
+- **Cohort Lineage Note**: Exp 07 loaded an external combined array of 875 subjects (`X_combined_full.npy`) and sliced the first 162 subjects (`n_clean: int = 162`) for its clean benchmark cohort (129 train / 33 test). The intermediate filtering code (`part1.ipynb`) and subject ID list for the 162 cohort were external and unarchived, breaking verifiable subject-level lineage between the 391 and 162 cohorts.
 - **Observed Result**: Classical GCN achieved 0.7293 AUC / 69.70% Accuracy; Quantum QGCNN achieved 0.6429 AUC / 57.58% Accuracy. Quantum advantage was rejected.
 
-### Transition 6: Exp 07 $\to$ Exp 08 & Exp 09
+### Transition 6: Exp 07 $	o$ Exp 08 & Exp 09
 - **Previous Observation**: Random single-split evaluations (e.g. 129 train / 33 test in Exp 07) fail to test cross-site generalization.
 - **Reason for Next Experiment**: Benchmark 4D deep learning foundation models on raw fMRI volumes (Exp 08) and test graph architectures under realistic Leave-One-Site-Out (LOSO) cross-validation across 7 clinical sites (Exp 09).
-- **Modification**: Evaluated NeuroSTORM (4D Swin-Mamba), 3D CNN, and Temporal GNN in Exp 08; evaluated GCN, GAT, GIN, SAGE across 7 LOSO folds (497 subjects) in Exp 09.
-- **Observed Result**: GAT achieved highest out-of-distribution generalization (0.5752 AUC), demonstrating that attention mechanisms are required to downweight site-specific noise.
+- **Modification**: Evaluated NeuroSTORM (4D Swin-Mamba), 3D CNN, and Temporal GNN in Exp 08; evaluated GCN, GAT, GIN, SAGE across 7 LOSO folds (497 subjects) in Exp 09. Graph construction used positive-FC proportional thresholding hardcoded to `top_10pct` from prior exploratory tuning. Evaluated classical non-imaging baselines on `master_cohort.csv`.
+- **Observed Result**: GAT achieved highest out-of-distribution generalization (0.5752 AUC), demonstrating that attention mechanisms are required to downweight site-specific noise. In phenotypic baselines (Table XII), `master_cohort.csv` contained only demographic features `['Age', 'Gender', 'Handedness']` without IQ columns, resulting in bit-for-bit identical results for 'Phenotype' and 'Phenotype without IQ' (Elastic Net winner: 0.5935 AUC).
 
 ---
 
@@ -659,6 +684,11 @@ Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph benchmarking (497 subj
 | Single-split cohort size (Exp 07) | `results/exp07/report.md` | `src/exp07/utils/data_loader.py` | **Implemented as specified** | Clean cohort $N=162$; split 129 train / 33 test (Seed 42). |
 | 4D fMRI Foundation Model fine-tuning | `docs/experiment_notes.md` | `notebooks/exp08/true_neuro.ipynb` | **Implemented as specified** | Successfully compiled C++ kernels and trained NeuroSTORM backbone with RAM caching. |
 | 7-Fold Leave-One-Site-Out (LOSO) | `results/exp09/README.md` | `notebooks/exp09/11_population...` | **Implemented as specified** | 497 subjects across 7 scanner sites; exactly 7 folds evaluated per architecture. |
+| Phenotype vs Phenotype-without-IQ Baseline | Manuscript Table XII, `docs/experiment_notes.md` | `notebooks/exp09/12_classical_ml_baseline.ipynb` | **Implemented differently / Artifact Equivalence** | `master_cohort.csv` only contains demographic features `['Age', 'Gender', 'Handedness']`. No cognitive/IQ columns (`VIQ`, `PIQ`, `FIQ`) are present. Dropping IQ columns in Cell 18 is a no-op; both conditions evaluated identical 3-column arrays yielding identical 7-fold LOSO metrics (Elastic Net winner: AUC = 0.593487, Std = 0.103454, BA = 0.600693 in `results/exp09/w1_model_summary.csv`). |
+| Exp 04 Phase E2 Dynamic-State Diagnosis Improvement | Manuscript, `docs/experiment_notes.md` | `notebooks/exp04/w2c_athena_2.ipynb` | **Implemented as specified (Phase E2)** | 500-tree Random Forest with 5-fold Stratified CV on 8 continuous dynamic micro-state features across $N=764$ subjects improved accuracy from 0.625645 (~0.626) before ComBat to 0.675353 (~0.675) after ComBat (+0.049708). Distinct from Phase E (static metrics) where diagnosis dropped $68.2\% \to 57.4\%$. |
+| Exp 06 $\to$ Exp 07 Cohort Lineage ($391 \to 162$) | `docs/provenance.md`, `results/exp07/report.md` | `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb` Cell 22 vs `src/exp07/utils/data_loader.py` line 79 | **Unverified / Decoupled Lineage** | Exp 06 creates $N=391$ clean subjects by inner-joining 955 candidate FC matrices and 691 phenotypic records. Exp 07 loads an external combined array of 875 subjects and hardcodes `n_clean: int = 162`. The intermediate selection script (`part1.ipynb`) and subject ID list for the 162 cohort are external/untracked. $162 \subset 391$ cannot be proven from repository artifacts alone. |
+| Exp 09 Positive-FC Threshold Selection (`top_10pct`) | `configs/exp09/selected_threshold.json`, `docs/experiment_notes.md` | `notebooks/exp09/11_population_graph_learning.ipynb` Cell 5 | **Implemented with prior hardcoding** | `SELECTED_THRESHOLD = "top_10pct"` is fixed a priori with metadata `method: hardcoded_from_prior_optimization`. Raw preliminary density sweep artifacts were external and not archived in git tree. |
+| Exp 05 `label_binary` Column Naming | `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb`, `results/exp05/` | `notebooks/exp04/w2c_athena_2.ipynb` Cells 143-148 | **Implemented with misnomer** | `results/exp05/run_dynamic_biomarkers.csv` and `results/exp05/run_state_sequences.csv` serialize raw multiclass diagnosis codes ($0, 1, 2, 3$) in a column named `label_binary`. Renamed to `diagnosis_code` and properly binarized to `diagnosis_binary` in Cell 148 for `subject_dynamic_dataset.csv`. |
 
 ---
 
@@ -674,9 +704,24 @@ Exp 09: 7-fold Leave-One-Site-Out (LOSO) population graph benchmarking (497 subj
 - *Claimed*: 4D self-supervised foundation model extracts richer spatio-temporal representations than hand-engineered graph metrics.
 - *Actual Runtime Result*: Foundation model fine-tuning yielded 59.10% test accuracy, falling significantly short of the simple 3D volumetric CNN baseline (76.19%). The large parameter count (~数十 million) overfit the small fine-tuning sample size.
 
+#### Exp 04 (Dual-Phase ComBat Harmonization Findings)
+- *Claimed in Notes / Manuscript*: ComBat harmonization improves ADHD diagnostic classification ($0.626 \to 0.675$) while reducing scanner bias.
+- *Actual Runtime Result*: Code analysis of `notebooks/exp04/w2c_athena_2.ipynb` reveals two distinct experimental phases with opposite behaviors:
+  1. **Phase E (Static Topological Metrics, $N=534$)**: ComBat successfully reduced scanner site identification ($95.7\% \to 14.8\%$), but diagnostic classification degraded from $68.2\%$ to $57.4\%$ (Random Forest) and $64.5\%$ to $59.6\%$ (SVM).
+  2. **Phase E2 (Dynamic Micro-State Biomarkers, $N=764$)**: On 8 continuous dynamic micro-state features (dwell times, fractional occupancy, transition entropy), a 500-tree Random Forest with 5-fold Stratified CV (Cells 351, 388-404) demonstrated that ComBat harmonization improved diagnosis accuracy from $0.625645$ (~0.626) before ComBat to $0.675353$ (~0.675) after ComBat ($+0.049708$).
+  The codebase thus contains empirical evidence supporting both the degradation (on static metrics) and the improvement (on dynamic state features).
+
+#### Exp 06 $\to$ Exp 07 (Cohort Lineage Decoupling: $391 \to 162$)
+- *Claimed*: Exp 07 evaluates a clean gold-standard benchmark cohort derived from the preprocessed and quality-controlled ADHD-200 cohort.
+- *Actual Runtime Result*: In `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb` Cell 22, the clean aligned cohort consists of $N=391$ subjects (from inner-joining 955 candidate FC matrices with 691 phenotypic records). In `src/exp07/utils/data_loader.py` line 79, the clean cohort is loaded by slicing the first 162 rows (`n_clean: int = 162`) from `X_combined_full.npy` ($875, 6670$). The intermediate script (`part1.ipynb`) and subject ID list for the 162 cohort were external and unarchived, meaning the 391 and 162 cohorts are historically decoupled in the repository tree.
+
 #### Exp 09 (Population GNN LOSO Benchmark)
 - *Claimed*: Classical GCNs achieve robust generalization across clinical sites.
 - *Actual Runtime Result*: Under true Leave-One-Site-Out cross-validation, GCN achieved only 0.5468 AUC (barely above chance), while Graph Attention Networks (GAT) reached 0.5752 AUC. The code reveals that site-specific edge distributions degrade isotropic message passing.
+
+#### Exp 09 (Table XII Phenotype vs Phenotype-without-IQ Baseline)
+- *Claimed*: Manuscript Table XII reports a comparison between classical ML models trained on full phenotypic features versus phenotypic features without IQ.
+- *Actual Runtime Result*: In `notebooks/exp09/12_classical_ml_baseline.ipynb` Cells 7, 13, 17, 18, 37, `master_cohort.csv` only contained demographic features `['Age', 'Gender', 'Handedness']`. No cognitive/IQ columns (`VIQ`, `PIQ`, `FIQ`) were present. Cell 18 attempting to drop IQ columns was a no-op; both tracks evaluated bit-for-bit identical arrays with identical 7-fold LOSO metrics (Elastic Net winner: AUC = 0.593487, Std = 0.103454, BA = 0.600693 in `results/exp09/w1_model_summary.csv`).
 
 ---
 
@@ -843,11 +888,15 @@ graph TD
 1. **Packaging & Dependency Fragmentation**: The repository spans three distinct requirement tracks (`track_a`, `track_b`, `track_c`) because NeuroSTORM requires PyTorch 2.5 + CUDA C++ kernels, PennyLane requires PennyLane 0.44+, and classical connectomics uses scikit-learn. Consolidating into a single monolithic environment is prevented by upstream library constraints.
 2. **Notebook Monoliths**: Some exploratory notebooks (e.g., `w2c_athena_2.ipynb` with 413 cells and 6.7 MB) contain hundreds of interactive cells combining EDA, harmonization, ANOVA, and model training in a single file.
 3. **Redundant Auxiliary Artifacts in `results/`**: As documented in the redundant file audit, 56 fold-by-fold prediction CSVs and confusion matrices in `results/exp09/` are unreferenced by downstream code, serving only as historical intermediate dumps.
+4. **`label_binary` Misnomer in Exp 05 CSVs**: `results/exp05/run_dynamic_biomarkers.csv` and `results/exp05/run_state_sequences.csv` serialize a column named `label_binary` that actually contains raw multiclass diagnosis codes `0, 1, 2, 3` (counts: 0: 743, 1: 260, 3: 175, 2: 15). Only in `notebooks/exp04/w2c_athena_2.ipynb` Cell 148 was it renamed to `diagnosis_code` and binarized to `diagnosis_binary = (diagnosis_code > 0).astype(int)` before creating `subject_dynamic_dataset.csv`.
+5. **Absent IQ Columns in Baseline Master Cohort**: In `notebooks/exp09/12_classical_ml_baseline.ipynb`, `master_cohort.csv` only contained `['subject_id', 'site', 'roi_file', 'DX', 'Age', 'Gender', 'Handedness']`. None of the cognitive/IQ features (`VIQ`, `PIQ`, `FIQ`) were present. The code attempting to drop IQ columns was a no-op, resulting in bit-for-bit identical evaluations for 'Phenotype' and 'Phenotype without IQ' (Table XII).
 
 ### Research Debt
 1. **Unexplained Discrepancy Between Single-Split and LOSO Performance**: Exp 07 reports 0.7293 AUC on a single stratified 80/20 split, whereas Exp 09 reports 0.5468 AUC for GCN under Leave-One-Site-Out cross-validation. This reflects the standard connectomics pitfall where random splits leak site distributions, but the conceptual relationship was not explicitly consolidated into a single comparative chapter in earlier notes.
 2. **Scanner Imbalance in ADHD Labels**: The Brown University cohort contained 0% ADHD labels (100% TDC), forcing its exclusion from LOSO training in Exp 09.
 3. **Negative Quantum Result Documentation**: While faithfully logged in `results/exp07/report.md`, early documentation notes had not fully highlighted that the quantum circuit acted as an information bottleneck.
+4. **Decoupled Cohort Lineage from Exp 06 to Exp 07**: Exp 06 established a clean aligned cohort of $N=391$ via an inner-join of 955 FC matrices and 691 phenotypic records. Exp 07 loaded an external combined array of 875 subjects (`X_combined_full.npy`) and sliced the first 162 subjects (`n_clean: int = 162`). The intermediate filtering notebook (`part1.ipynb`) and subject ID list for the 162 subjects are external and unarchived, breaking verifiable subject-level lineage between the 391 and 162 cohorts.
+5. **A Priori Positive-FC Threshold Selection**: In Exp 09, `top_10pct` proportional thresholding was adopted a priori with metadata `method: hardcoded_from_prior_optimization`. The preliminary grid search exploring alternative densities was performed externally and not archived in git.
 
 ---
 
@@ -876,6 +925,18 @@ graph TD
 2. **Impact of Site-Specific Motion Confounding**:
    - *Unknown*: Whether cross-site ANOVA variance ($F > 4,600$) is driven by scanner hardware differences vs systematic head motion differences across pediatric age brackets.
    - *Resolution*: Run ANCOVA with Framewise Displacement (mean FD) as an explicit continuous nuisance covariate.
+3. **Cohort Lineage Bridge from Exp 06 (391) to Exp 07 (162)**:
+   - *Unknown*: The exact subject ID mapping connecting the 391 clean subjects in `aligned_subjects.npy` (Exp 06) to the 162 clean subjects sliced from `X_combined_full.npy` (Exp 07).
+   - *Why it matters*: While both represent clean, verified ADHD-200 cohorts, whether the 162 cohort is a strict demographic/quality subset of the 391 cohort cannot be verified from local artifacts alone.
+   - *Resolution*: Recover `part1.ipynb` or an explicit subject ID mapping file that accompanied `X_combined_full.npy`.
+4. **Exploratory Threshold Sweep Raw Data**:
+   - *Unknown*: The full grid search logs evaluating alternative positive FC thresholds (e.g., top 5%, 15%, 20%) before selecting `top_10pct` in Exp 09.
+   - *Why it matters*: Validates the empirical optimality of 10% edge density across multi-site population graphs.
+   - *Resolution*: Archive the preliminary sweep notebook or sweep results CSV.
+5. **Cognitive / IQ Feature Provenance for Phenotypic Baseline**:
+   - *Unknown*: The original phenotypic data source containing Full Scale, Performance, and Verbal IQ scores (`FIQ`, `PIQ`, `VIQ`) referenced in the design of Table XII.
+   - *Why it matters*: Explains why `master_cohort.csv` only retained demographic variables (`Age`, `Gender`, `Handedness`).
+   - *Resolution*: Locate raw phenotypic tables from the ADHD-200 preprocessed repository release.
 
 ---
 
@@ -1018,15 +1079,20 @@ PRIMARY METRICS         : ROC-AUC, Balanced Accuracy, Sensitivity, Specificity, 
 RESULT ARTIFACTS        : results/exp01/dynamic_temporal_validation.csv (Decay: 0.8990 -> 0.5467)
                           results/exp03/site_anova.csv (Efficiency F=4,609.76; Path F=4,993.87)
                           results/exp04/site_prediction_results.csv (Site ID: 95.7% -> 14.8%)
+                          results/exp04/w2c_athena_2.ipynb (Cells 351, 388-404: 0.6256 -> 0.6754 Acc)
                           results/exp07/report.md (Classical AUC 0.7293 vs Quantum AUC 0.6429)
                           results/exp08/exp08_verified_results.json (3D CNN 76.19% vs NeuroSTORM 59.10%)
-                          results/exp09/w2b_loso_results.csv (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468).
+                          results/exp09/w2b_loso_results.csv (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468)
+                          results/exp09/w1_model_summary.csv (Table XII baseline winner: EN AUC 0.5935).
 
 CODE <-> PAPER MATCHES  : Exact match on dFC window parameters, MST+PT density (0.20), ComBat covariates,
-                          PennyLane quantum architecture, and 7-fold LOSO cross-validation folds.
+                          Phase E2 dynamic-state improvement (0.626 -> 0.675), PennyLane quantum
+                          architecture, and 7-fold LOSO cross-validation folds.
 
 CODE <-> EXP MISMATCHES : Single-split random evaluation (Exp 07: 0.7293 AUC) inflates performance
-                          relative to true out-of-distribution cross-site evaluation (Exp 09: 0.5752 AUC).
+                          relative to true out-of-distribution cross-site evaluation (Exp 09: 0.5752 AUC);
+                          Table XII Phenotype vs Phenotype-without-IQ evaluates identical demographic arrays;
+                          Exp 06 (N=391) to Exp 07 (N=162) clean cohorts are decoupled without local ID mapping.
 
 CURRENT STATUS          : Complete, fully validated, reproducible across all 9 experiments.
 
@@ -1034,11 +1100,15 @@ KNOWN LIMITATIONS       : Multi-site scanner variance is heavily collinear with 
                           Quantum GCNN and Foundation Models suffer from sample size constraints.
 
 RESEARCH DEBT           : Quantum negative result requires explicit discussion in final paper draft;
-                          Brown site excluded from LOSO due to 100% TDC diagnostic distribution.
+                          Brown site excluded from LOSO due to 100% TDC diagnostic distribution;
+                          Decoupled cohort lineage between Exp 06 and Exp 07; hardcoded top_10pct threshold.
 
 TECHNICAL DEBT          : 3 distinct environment requirement files due to upstream library conflicts;
-                          56 unreferenced per-fold CSV files retained in results/exp09/.
+                          56 unreferenced per-fold CSV files retained in results/exp09/;
+                          label_binary misnomer in Exp 05 CSVs (holding multiclass 0, 1, 2, 3);
+                          absent IQ features in master_cohort.csv causing no-op drop in Table XII.
 
 UNRESOLVED QUESTIONS    : Can adaptive attention mechanisms completely decouple scanner hardware
-                          artifacts from neurological dysregulation in larger multicenter cohorts?
+                          artifacts from neurological dysregulation in larger multicenter cohorts;
+                          what is the exact subject-level mapping bridging the 391 and 162 cohorts?
 ```

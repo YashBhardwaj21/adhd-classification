@@ -48,7 +48,7 @@ This document provides a concise reference for the nine experiments comprising t
   - Stored in `results/exp02/graph_metrics.csv` and `results/exp02/subject_graph_metrics.csv`.
 - **Limitations & Discrepancies**:
   - `notebooks/exp02/02_graph_construction_and_validation.ipynb` implements the full MST + PT algorithm (`mst_graph`).
-  - `src/exp02/graph_utils.py` contains a simplified proportional thresholding utility without the MST initial pass.
+  - `src/exp02/graph_utils.py` implements the canonical MST+PT graph construction matching `src/exp02/config.py` and the notebook implementation.
   - See `notebooks/exp02/02_graph_construction_and_validation.ipynb`, `notebooks/exp02/03_graph_metrics_and_null_models.ipynb`, and `third_party/bctpy.md` for BCT/bctpy provenance and GPL-3.0-or-later licensing terms.
 
 ---
@@ -239,29 +239,29 @@ This document provides a concise reference for the nine experiments comprising t
 ## Experiment 09: Leave-One-Site-Out (LOSO) Population Graph Learning & Classical Baselines
 
 - **Track**: Track C (CC200 Atlas, 190 active ROIs)
-- **Input**: Functional connectomes and demographic metadata across 497 subjects from 7 scanner sites (Brown, KKI, NeuroIMAGE, NYU, OHSU, Peking, Pittsburgh).
+- **Input**: Functional connectomes and demographic metadata across 497 subjects from 7 scanner sites (KKI, NYU, NeuroIMAGE, OHSU, Peking_1, Peking_2, Peking_3).
 - **Protocol**:
   - 7-fold Leave-One-Site-Out (LOSO) cross-validation: in each fold, all subjects from one site are held out for out-of-distribution evaluation while models train on the remaining 6 sites.
   - Four graph neural network architectures evaluated: GCN, GAT (Graph Attention Network), GraphSAGE, and GIN (Graph Isomorphism Network).
-  - Classical machine learning baselines: 7 classifier types evaluated across 6 feature families with `SelectKBest(f_classif)` strictly nested inside each training fold (`12_classical_ml_baseline.ipynb`; `w1_model_summary.csv` retains historical recorded rows).
+  - Classical machine learning baselines: 7 classifier types evaluated across 6 feature families with `SelectKBest(f_classif)` strictly nested inside each training fold (`12_classical_ml_baseline.ipynb`; canonical 42-row summary stored in `w1_canonical_model_summary.csv`, master historical ledger in `w1_model_summary.csv`).
   - Subject graph preprocessing: top-10% positive FC percentile thresholding (`fc >= 90th percentile`) with self-loops and signed correlation weights.
 - **Important Parameters**:
   - Atlas: CC200 ($190$ nodes).
   - Edge selection: top 10% positive FC thresholding (`top_10pct` density $\approx 0.1000$, mean 3,782 directed edges) with self-loops.
   - 7 site folds, $N = 497$ total subjects.
 - **Reported Output**:
-  - GNN generalization metrics across unseen sites (7-fold mean):
-    - GAT: AUC = $0.5752 \pm 0.043$, Balanced Accuracy = $0.5601$, F1 = $0.4789$.
-    - SAGE: AUC = $0.5502 \pm 0.052$, Balanced Accuracy = $0.5368$, F1 = $0.4578$.
-    - GCN: AUC = $0.5468 \pm 0.067$, Balanced Accuracy = $0.5372$, F1 = $0.4688$.
-    - GIN: AUC = $0.5437 \pm 0.060$, Balanced Accuracy = $0.5309$, F1 = $0.4529$.
+  - GNN generalization metrics across unseen sites (7-fold mean from `results/exp09/architecture_summary.csv`):
+    - GAT: AUC = $0.5752 \pm 0.0466$, Balanced Accuracy = $0.5490 \pm 0.0384$, F1 = $0.4827 \pm 0.1366$.
+    - SAGE: AUC = $0.5502 \pm 0.0448$, Balanced Accuracy = $0.5147 \pm 0.0361$, F1 = $0.3309 \pm 0.1899$.
+    - GCN: AUC = $0.5468 \pm 0.0733$, Balanced Accuracy = $0.5407 \pm 0.0387$, F1 = $0.4802 \pm 0.1137$.
+    - GIN: AUC = $0.5437 \pm 0.0633$, Balanced Accuracy = $0.5313 \pm 0.0579$, F1 = $0.4690 \pm 0.1552$.
   - Classical ML family winners (7-fold LOSO mean AUC):
     - Multi-domain (FC + Phenotype): Extra Trees (AUC = $0.6328$).
     - FC only: Logistic Regression (AUC = $0.6141$).
     - Graph + Phenotype: SVM (AUC = $0.6493$).
     - Graph only: Random Forest (AUC = $0.5693$).
     - Phenotype only: Elastic Net (AUC = $0.5935$).
-  - Stored in `results/exp09/w2b_loso_results.csv`, `w1_family_winners.csv`, `w1_model_summary.csv`, `w2_pareto_front.csv`, `graph_preprocessing_summary.csv`, and `exp09_verified_results.json`.
+  - Stored in `results/exp09/w2b_loso_results.csv`, `w1_family_winners.csv`, `w1_canonical_model_summary.csv`, `w1_model_summary.csv`, `w2_pareto_front.csv`, `graph_preprocessing_summary.csv`, and `exp09_verified_results.json`.
 - **Limitations & Discrepancies**:
   - The executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops, whereas an earlier manuscript draft described an unweighted MST + 20% distance mapping (which belongs to the earlier Exp 02 workflow). This is resolved in the current manuscript and repository alignment.
   - Feature selection nuance: GNNs use all 190 nodes without ROI subset selection. Classical ML nests `SelectKBest` within folds. Representation format selection (`connectivity` over `identity`/`strength`) was evaluated across LOSO folds prior to final GNN training.

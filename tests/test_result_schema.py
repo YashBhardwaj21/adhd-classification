@@ -65,6 +65,17 @@ def test_exp09_loso_results_schema():
     assert len(df["Test_Site"].unique()) == 7
 
 
+def test_exp09_canonical_model_summary_schema():
+    path = ROOT / "results/exp09/w1_canonical_model_summary.csv"
+    assert path.exists()
+    df = pd.read_csv(path)
+    expected_cols = {"family", "model", "mean_auc", "std_auc", "ci_lower", "ci_upper", "mean_ba", "std_ba", "n_folds", "n_sites"}
+    assert expected_cols.issubset(set(df.columns))
+    assert len(df) == 42  # 7 classifiers x 6 feature families
+    assert (df["n_folds"] == 7).all()
+    assert (df["n_sites"] == 7).all()
+
+
 def test_results_manifest_schema():
     path = ROOT / "results/manifest.csv"
     assert path.exists()

@@ -231,3 +231,13 @@ audit_source_files/
 docs/audit/
 audit_reports/
 *.audit
+
+# Local history and miscellaneous
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.history/
+.local/
+~$*
+

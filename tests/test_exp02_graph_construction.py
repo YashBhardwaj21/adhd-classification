@@ -1,11 +1,11 @@
 """
 Unit tests for Experiment 2 (Track A) CC200 graph construction.
 
-Protocol distinction:
+Graph construction protocol:
   - Executed notebook protocol (`notebooks/exp02/02_graph_construction_and_validation.ipynb`):
-    Implements MST + Proportional Thresholding (`mst_graph`, density=0.20, CC200).
+    Implements MST + Proportional Thresholding (`mst_graph`, density=0.20, CC200, 3,591 target edges).
   - Public standalone utility (`src/exp02/graph_utils.py`):
-    Implements Proportional Thresholding (PT-only) graph tensor generation.
+    Implements canonical MST + Proportional Thresholding (MST+PT) graph tensor generation.
 """
 
 import sys
@@ -35,8 +35,8 @@ def test_exp02_config_constants():
     assert EXP02_DENSITY == 0.20, "Exp 02 uses 0.20 density"
 
 
-def test_exp02_public_utility_pt_graph_shapes():
-    """Verify that public PT utility generates CC200 graphs with 190 nodes and 191 features."""
+def test_exp02_public_utility_mst_pt_graph_shapes():
+    """Verify that public MST+PT utility generates CC200 graphs with 190 nodes and 191 features."""
     n_rois = EXP02_N_ROIS
     triu_dim = n_rois * (n_rois - 1) // 2  # 17,955 features
     n_samples = 2
@@ -64,8 +64,8 @@ def test_exp02_public_utility_pt_graph_shapes():
         assert not torch.any(g.edge_index[0] == g.edge_index[1]), "Graph must not contain self-loops"
 
 
-def test_exp02_public_utility_pt_edge_count():
-    """Verify that public PT utility edge density matches ~0.20 of total possible connections."""
+def test_exp02_public_utility_mst_pt_edge_count():
+    """Verify that public MST+PT utility edge density matches exactly 0.20 of total possible connections (3,591 edges)."""
     n_rois = 190
     triu_dim = n_rois * (n_rois - 1) // 2  # 17,955
     density = 0.20
@@ -78,8 +78,8 @@ def test_exp02_public_utility_pt_edge_count():
     g = graphs[0]
 
     undirected_edges = g.edge_index.shape[1] // 2
-    expected_undirected = int(np.round(triu_dim * density))  # ~3,591
+    expected_undirected = int(np.round(triu_dim * density))  # 3,591
 
-    assert abs(undirected_edges - expected_undirected) <= 10, (
-        f"Undirected edge count {undirected_edges} deviates from expected ~{expected_undirected}"
+    assert undirected_edges == expected_undirected == 3591, (
+        f"Undirected edge count {undirected_edges} deviates from expected {expected_undirected}"
     )

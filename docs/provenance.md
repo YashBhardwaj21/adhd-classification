@@ -12,7 +12,7 @@ This document provides a factual record of discrepancies between manuscript desc
 | Experiment | Earlier Manuscript / Early Project Description | Executed Code Artifact | Status |
 | :---: | :--- | :--- | :---: |
 | **Exp 01** | Static vs dynamic FC stability comparison | Diagonal zeroed before distance computation; lag correlation decay $0.8990 \to 0.5467$ | Documented |
-| **Exp 02** | MST + 20% proportional thresholding | `mst_graph` in notebook implements MST + PT ($\rho=0.20$); `src/exp02/graph_utils.py` provides simplified PT | Documented |
+| **Exp 02** | MST + 20% proportional thresholding | `mst_graph` in notebook and `src/exp02/graph_utils.py` both implement canonical MST + PT ($\rho=0.20$, 3,591 edges, $D = 1 - |r|$) | Documented |
 | **Exp 03** | Diagnostic group separation analysis (Earlier draft: Mann–Whitney U) | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR (range 53.8%, std 30.8% significant) output directly to notebook cells in `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (no standalone CSV) | Documented |
 | **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.6\% \to 31.3\%$, but diagnostic accuracy also drops $64.5\% \to 59.6\%$ | Documented |
 | **Exp 05** | Dynamic micro-state clustering | $K=3$ selected via multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin ($K \in [2, 10]$) and confirmed by 30-run ARI stability ($0.9950 \pm 0.0024$); State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
@@ -31,7 +31,7 @@ This document provides a factual record of discrepancies between manuscript desc
 
 ### Experiment 02: CC200 Graph Construction
 - **Algorithm**: The executed notebook (`notebooks/exp02/02_graph_construction_and_validation.ipynb`, cell 71) implemented `mst_graph(fc, density=0.20)` by first extracting a Minimum Spanning Tree on distance matrix $D = 1 - |r|$ and then adding the highest absolute correlation edges until reaching 3,591 edges (20% density for 190 nodes).
-- **Utility vs Notebook**: `src/exp02/graph_utils.py` contains a standalone PyG graph generation utility that performs proportional thresholding without the initial MST pass. Topological metrics reported in `results/exp02/graph_metrics.csv` were computed from the notebook implementation.
+- **Algorithm Alignment**: `src/exp02/graph_utils.py` implements canonical MST + Proportional Thresholding (MST+PT) matching the notebook implementation (`mst_graph`, 20% density, 3,591 edges, $D = 1 - |r|$). Topological metrics reported in `results/exp02/graph_metrics.csv` are derived from the canonical MST+PT construction across 31,060 sliding windows.
 
 ### Experiment 03: Cross-Site Scanner ANOVA & Diagnostic Group Comparison
 - **Scope of $F$-Statistics**: The large $F$-statistics reported ($F > 4,000, p < 10^{-300}$ for global efficiency and path length) quantify variance attributable to acquisition site (scanner differences across 8 participating clinics), **not** diagnostic variance between ADHD and typically developing controls (TDC).
@@ -118,7 +118,7 @@ This document provides a factual record of discrepancies between manuscript desc
 
 ### Experiment 09: Leave-One-Site-Out Population Graphs
 - **Graph Construction Protocol (Earlier Draft Discrepancy — Resolved)**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with signed weighted edges and self-loops, across 497 subjects from 7 clinical sites and 190 CC200 ROIs. Earlier manuscript drafts referenced an unweighted MST + 20% distance mapping; this discrepancy is resolved in the current manuscript and repository alignment.
-- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 7 classifier types and 6 feature families with fold-nested `SelectKBest`. The summary CSV (`w1_model_summary.csv`) retains historical recorded model rows (including intermediate runs), while `w1_family_winners.csv` provides the canonical family winners.
+- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 7 classifier types and 6 feature families with fold-nested `SelectKBest`. The canonical 42-row 7-fold LOSO evaluation is provided in `w1_canonical_model_summary.csv`, while the historical execution ledger (`w1_model_summary.csv`) retains all 52 recorded model rows (including intermediate 3-, 5-, and 6-fold runs and winner duplicates), and `w1_family_winners.csv` provides the 6 family winners.
 
 #### Feature Selection and Leakage Nuance
 - **ROI / Node Selection**: There was **no** subset selection of CC200 ROIs or nodes; all 190 brain regions were retained across all evaluated models.

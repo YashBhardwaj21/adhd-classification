@@ -17,14 +17,15 @@ The following experiments can be executed using the code in this repository once
   - Exp 04: ComBat scanner harmonization and classification trade-offs
   - Exp 05: Data-driven dynamic connectivity states and Markov transitions
 - **Track C (Population Graph Learning & Generalization)**:
-  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning (GNN architectures)
-  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks
+  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks (evaluates 7 classifier types across 6 tabular feature families).
 
 ### Category B: Requires Reconstruction of Excluded Intermediates
 The following experiments can be reproduced after reconstructing intermediate data structures from raw or preprocessed scans:
 - **Track B (Semi-Supervised & Baseline Deep Learning)**:
   - Exp 06: Semi-supervised pseudo-labeling (Procedure I & II) generates intermediate pseudo-label assignments from AAL-116 correlation arrays.
   - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$, $>120\text{ GB}$, 626 scans), which are excluded from the repository.
+- **Track C (GNN Population Graph Learning)**:
+  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning across GNN architectures (`notebooks/exp09/11_population_graph_learning.ipynb`). While final evaluation outputs and `w2_pareto_front.csv` are retained in `results/exp09/`, executing the notebook requires intermediate feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) and upstream Workflow 2A representation audit ledgers (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) which are not bundled in the public repository tree.
 
 ### Category C: Archived / Not Currently Rerunnable from Repository
 - **Exp 07 (Classical GCN vs Quantum QGCNN)**:
@@ -137,6 +138,7 @@ Execute the canonical notebooks in sequence (paths verified against the reposito
 ### Track C: Population Graph Learning & Generalization (CC200 Atlas)
 
 8. **Exp 09a — Population Graph Learning (GNN Architectures)**:
+   *Note*: Requires upstream Workflow 2A intermediate audit artifacts (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and Workflow 1 feature parquets:
    ```bash
    jupyter nbconvert --execute notebooks/exp09/11_population_graph_learning.ipynb --to notebook
    ```
@@ -158,6 +160,7 @@ Execute the canonical notebooks in sequence (paths verified against the reposito
 2. **External Data Prerequisites**:
    - **Volumetric 4D Scans (Exp 08)**: Raw 4D BOLD fMRI volumes (`>120 GB`) and converted MNI `.npy` arrays (`>30 GB`) exceed repository storage quotas and must be retrieved from institutional ADHD-200 mirrors.
    - **Combined Pseudo-Label Arrays (Exp 07)**: The 875-subject correlation array (`X_combined_full.npy`, 162 clean + 713 pseudo) is preserved externally. The complete cohort composition, split rules, and test evaluation metrics on the 33 held-out subjects are documented in `results/exp07/pseudolabel_provenance.json` and `results/exp07/checkpoint_analysis.json`.
+   - **Workflow 2A Representation Audit Artifacts (Exp 09a)**: Intermediate sweep files (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) used during exploratory representation selection are unbundled from the repository. The canonical Pareto trade-off summary is retained in `results/exp09/w2_pareto_front.csv`, and final LOSO evaluation metrics are retained in `results/exp09/w2b_loso_results.csv` and `architecture_summary.csv`.
 
 ---
 

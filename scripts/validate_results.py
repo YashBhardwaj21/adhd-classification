@@ -176,6 +176,13 @@ def validate_exp09():
     n_subs = df[df["Architecture"] == "GCN"]["N_Test"].sum()
     assert n_subs == 497, f"Expected 497 total subjects across sites, got {n_subs}"
 
+    # Validate Exp09 canonical model summary
+    canon_path = ROOT_DIR / "results/exp09/w1_canonical_model_summary.csv"
+    assert canon_path.exists(), f"Missing {canon_path}"
+    c_df = pd.read_csv(canon_path)
+    assert len(c_df) == 42, f"Expected 42 canonical model rows, got {len(c_df)}"
+    assert (c_df["n_folds"] == 7).all(), "All canonical rows must have n_folds=7"
+
     # Validate Exp09 family winners
     winners_path = ROOT_DIR / "results/exp09/w1_family_winners.csv"
     assert winners_path.exists(), f"Missing {winners_path}"

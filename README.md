@@ -23,7 +23,7 @@ This repository contains research code, configuration records, lightweight exper
 9. **Leave-One-Site-Out Population Graphs**: Leave-One-Site-Out subject-level functional-connectivity graph learning across 497 subjects and 7 sites using top-10% positive-FC thresholded graphs, alongside 7 classical ML classifier types evaluated across 6 feature families with fold-nested feature selection.
 
 > [!NOTE]
-> For classical machine learning baselines in Experiment 09, `results/exp09/w1_model_summary.csv` contains historical recorded model rows (including intermediate and duplicate evaluation runs), while `results/exp09/w1_family_winners.csv` provides the canonical family-level summary.
+> For classical machine learning baselines in Experiment 09, `results/exp09/w1_canonical_model_summary.csv` provides the canonical 42-row 7-fold LOSO evaluation, `results/exp09/w1_family_winners.csv` provides the family winners, and `results/exp09/w1_model_summary.csv` retains the master historical execution ledger (52 recorded rows).
 
 ---
 
