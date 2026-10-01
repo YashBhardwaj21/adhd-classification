@@ -5,6 +5,7 @@
   "n_subjects": 497,
   "n_sites": 7,
   "weighted_edges": true,
+  "edge_attribute_semantics": "signed Pearson correlation values are stored as edge_attr; in the main LOSO benchmark only GCN consumes edge_weight while GAT, SAGE, and GIN pass unweighted edge_index",
   "self_loops": true,
   "adhd_ratio": 0.4346076458752515,
   "mean_density": 0.10002784739626842,

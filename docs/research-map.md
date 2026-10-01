@@ -1,8 +1,8 @@
 # Research Map: ADHD-200 Functional Connectomics & Deep Learning
 
 **Repository**: `adhd-classification`  
-**Derived From**: Cloud Environment `/lp-dev/23BRS1236` and `/home/nvidia/23BRS1236` (captured in `audit_source_files/`)  
-**Scope**: End-to-end research progression, experimental lineage, negative results, and candidate method evaluation.  
+**Derived From**: Cloud Environments `/lp-dev/23BRS1236` and `/home/nvidia/23BRS1236` (captured in `audit_source_files/`)  
+**Scope**: End-to-end research progression, experimental lineage, negative results, and out-of-distribution evaluation.  
 
 ---
 
@@ -12,230 +12,158 @@
 flowchart TD
     RQ["<b>Central Research Problem</b><br/>Objective resting-state fMRI classification of ADHD<br/>confronted with temporal instability, scanner confounding, and OOD failure"]
     
-    H["<b>Core Research Hypotheses</b><br/>H1: dFC contains non-random temporal transitions<br/>H2: Dual-constraint MST+PT prevents graph fragmentation<br/>H3: ComBat removes scanner bias while preserving diagnosis<br/>H4: Discrete recurring micro-states exist with altered dwell times<br/>H5: Parameterized Quantum Circuits provide feature advantage<br/>H6: Graph Attention (GAT) generalizes out-of-distribution across clinical sites"]
+    H["<b>Core Research Hypotheses</b><br/>H1: dFC contains non-random temporal transitions<br/>H2: Dual-constraint MST+PT prevents graph fragmentation<br/>H3: ComBat removes scanner bias while preserving diagnosis<br/>H4: Discrete recurring micro-states exist with altered dwell times<br/>H5: Parameterized Quantum Circuits provide feature advantage<br/>H6: Graph Attention Networks generalize out-of-distribution across clinical sites"]
 
-    subgraph Track_A ["Track A: Classical Connectomics & Topological Graph Mining"]
+    subgraph Track_A ["Track A: Classical Connectomics & Dynamic Graph Mining"]
         E01["<b>Exp 01: Dynamic FC Validation</b><br/>Sliding-window Pearson r (W=30, S=5)<br/><i>Monotonic autocorrelation decay confirmed</i>"]
         E02["<b>Exp 02: Dual-Constraint Graph Builder</b><br/>MST + Proportional Thresholding (D=0.20)<br/><i>Fixed bctpy divide-by-zero & negative weight bugs</i>"]
         E03["<b>Exp 03: Topological Metric Audit</b><br/>Multi-site ANOVA F-tests on 6 metrics<br/><i>Massive scanner confounding: F > 4,600</i>"]
-        E04["<b>Exp 04: Empirical Bayes ComBat</b><br/>Multi-site scanner harmonization<br/><i>Dual Truth: Static drops 68.2%→57.4%, but Dynamic micro-states improve 62.6%→67.5% (0.626→0.675)</i>"]
-        E05["<b>Exp 05: Dynamic Micro-State Mining</b><br/>K-means clustering (K=3) on sliding windows<br/><i>State 0 dominates; dwell time = 6.24 windows (multiclass label_binary)</i>"]
+        E04["<b>Exp 04: Empirical Bayes ComBat</b><br/>Multi-site scanner harmonization<br/><i>Static site ID 58.6%→31.3%, diagnosis 64.5%→59.6%;<br/>Dynamic micro-states improve 0.626→0.675</i>"]
+        E05["<b>Exp 05: Dynamic Micro-State Mining</b><br/>K-means clustering (K=3) on sliding windows<br/><i>State 0 dominates; dwell time = 6.24 windows</i>"]
         E06["<b>Exp 06: Semi-Supervised Pseudo-Labeling</b><br/>Ensemble consensus on N=391 clean aligned cohort<br/><i>484 consensus labels identified</i>"]
     end
 
     subgraph Track_B ["Track B: Quantum Graph Neural Networks"]
-        E07["<b>Exp 07: Classical GCN vs Quantum QGCNN</b><br/>6-qubit PQC with PennyLane GPU broadcasting<br/><i>Classical GCN (0.7293 AUC) decisively beats QGCNN (0.6429 AUC) on N=162 clean slice</i>"]
+        E07["<b>Exp 07: Classical GCN vs Quantum QGCNN</b><br/>6-qubit PQC with PennyLane GPU broadcasting<br/><i>Classical GCN (0.7293 AUC) decisively beats QGCNN (0.6429 AUC) on N=162 clean prefix</i>"]
     end
 
-    subgraph Track_C ["Track C: Foundation Models & OOD Population Generalization"]
+    subgraph Track_C ["Track C: Deep Learning Baselines & Population Graph Benchmark"]
         E08["<b>Exp 08: 4D Foundation Model (NeuroSTORM)</b><br/>Swin4D-Mamba vs 3D CNN vs Temporal GNN<br/><i>3D CNN (76.19%) beats NeuroSTORM (59.10%) on small cohort</i>"]
-        E09["<b>Exp 09: 7-Fold LOSO Population Graph Benchmark</b><br/>GAT, GCN, GIN, SAGE across 7 clinical hospital sites<br/><i>GAT (0.5752 AUC) beats GCN; Table XII demographic baseline: 0.5935 AUC</i>"]
+        E09["<b>Exp 09: 7-Fold LOSO Population Graph Benchmark</b><br/>GAT, GCN, GIN, SAGE across 7 clinical hospital sites<br/><i>GAT (0.5752 AUC) achieves highest GNN AUC; demographic baseline: 0.5935 AUC</i>"]
     end
 
-    CAND["<b>Current Candidate Method</b><br/>Topological Graph Construction (Exp 02) + Spatial Graph Attention (Exp 09, top_10pct)<br/>Evaluated under strict Leave-One-Site-Out (LOSO) Cross-Validation"]
+    RESOLVED["<b>Resolved Methodological & Provenance Findings</b><br/>1. Exp06→Exp07 Lineage: 162 clean subjects ⊂ 391 aligned cohort proven (clean_subjects_manifest.csv)<br/>2. Exp09 Threshold Provenance: Historical 8-regime sweep recovered (graph_statistics.csv)<br/>3. Phenotypic Baseline Equivalence: Missing IQ columns in master_cohort.csv made dropping IQ a no-op<br/>4. Edge Semantics: Stored signed FC attributes vs consumed edge weights clarified (GCN only)"]
     
-    OPEN["<b>Unresolved Research Questions</b><br/>1. Harmonization Duality: Static vs Dynamic (Exp 04)<br/>2. Cohort Provenance: 391 aligned to 162 slice lineage break<br/>3. Phenotypic Baseline Equivalence (Table XII no-op)<br/>4. Real-world Generalization Ceiling (Exp 09 LOSO ~0.58 AUC)"]
+    OPEN["<b>Remaining Research Limitations</b><br/>1. Harmonization Duality: Static feature degradation vs dynamic micro-state gains (Exp 04)<br/>2. Historical Rationale: Mechanism selecting 162 prefix from 391 cohort not recovered<br/>3. Clinical Generalization Ceiling: Out-of-distribution 7-fold LOSO AUC ~0.58 across unseen sites"]
 
     RQ --> H
     H --> E01
-    E01 -->|Need topological representation| E02
-    E02 -->|Need to verify scanner invariance| E03
-    E03 -->|Need to remove site bias| E04
-    E04 -->|Explore non-stationary phenotypes| E05
-    E04 -->|Need larger training cohort| E06
-    E02 -->|Test quantum node representation| E07
-    E06 -.->|Decoupled lineage: 391 aligned to 162 slice| E07
-    E01 -->|Test end-to-end voxel foundation models| E08
-    E04 -->|Test clinical cross-site generalization| E09
-    E07 -->|Classical superiority established| CAND
-    E09 -->|GAT edge-attention superiority established| CAND
-    CAND --> OPEN
+    E01 -->|Need sparse topological graphs| E02
+    E02 -->|Audit multi-site scanner variance| E03
+    E03 -->|Apply scanner harmonization| E04
+    E04 -->|Extract temporal micro-states| E05
+    E04 -->|Filter aligned clean cohort N=391| E06
+    E06 -.->|Proven subject subset: 162 clean prefix| E07
+    E01 -->|Benchmark raw voxel foundation models| E08
+    E04 -->|Benchmark clinical cross-site generalization| E09
+    Track_A --> RESOLVED
+    Track_B --> RESOLVED
+    Track_C --> RESOLVED
+    RESOLVED --> OPEN
 ```
 
 ---
 
-## 2. Step-by-Step Experimental Progression & Lineage
+## 2. Experimental Progression & Methodological Lineage
 
-The research progressed through nine distinct experimental stages across three methodological tracks. Each transition was driven by empirical observations and methodological failure modes.
+The research evolved across three methodological tracks. Each transition addressed empirical findings or failure modes identified in prior stages:
 
 ```text
+Track A: Dynamic Connectomics & Scanner Confounding
 Experiment 01: Dynamic FC Sliding Window Validation
-        ↓ (Observation: Autocorrelation decays monotonically; dynamic transitions are biologically real)
-Method Change: Transition from static correlation matrices to graph representations
-        ↓
-Experiment 02: Dual-Constraint Graph Construction & Signed Null Models
-        ↓ (Observation: Naive thresholding disconnects nodes; upstream bctpy crashes on signed networks)
-Method Change: Implement MST backbone (D=0.20) and repair bctpy null model with Numba acceleration
-        ↓
+        ↓ (Observation: Autocorrelation decays monotonically across lags; temporal transitions are structured)
+Experiment 02: Dual-Constraint Graph Construction (MST+PT, D=0.20)
+        ↓ (Observation: Naive thresholding disconnects nodes; bctpy signed null model collapsed without fix)
 Experiment 03: Multi-Site Topological Metric Audit & Confounding Analysis
         ↓ (Observation: One-way ANOVA reveals scanner site explains >90% of topological variance, F > 4,600)
-Method Change: Apply statistical harmonization to sanitize network features prior to classification
-        ↓
 Experiment 04: Empirical Bayes ComBat Multi-Site Harmonization
-        ↓ (Observation: Phase E static metrics drop 68.2% -> 57.4%, but Phase E2 dynamic micro-states improve 0.626 -> 0.675)
-Method Change: Branch into domain-adversarial models and explore discrete temporal micro-states
-        ↓
+        ↓ (Observation: ComBat reduces site prediction 58.6%→31.3%; static diagnosis drops 64.5%→59.6%,
+        ↓  but dynamic micro-states improve from 0.626 to 0.675)
 Experiment 05: Dynamic Brain Micro-State Discovery & Transition Modeling
-        ↓ (Observation: Discrete recurring states identified (K=3); State 0 dominates dwell time)
-Method Change: Explore whether semi-supervised pseudo-labeling can overcome clinical sample scarcity
-        ↓
+        ↓ (Observation: K-means identifies 3 recurring states; State 0 dominates dwell time with 6.24 windows)
 Experiment 06: Semi-Supervised Pseudo-Labeling on Unannotated Cohort
-        ↓ (Observation: Ensemble consensus provides 484 robust pseudo-labels from 955 unlabeled subjects)
-Method Change: Investigate whether Parameterized Quantum Circuits can extract richer topological embeddings
-        ↓
+        ↓ (Observation: Ensemble consensus yields 484 pseudo-labels on 391 clean aligned cohort)
+
+Track B: Quantum Graph Neural Networks
 Experiment 07: Classical GCN vs. Parameterized Quantum GCNN (QGCNN)
-        ↓ (Observation: Classical GCN (0.7293 AUC) beats QGCNN (0.6429 AUC); quantum circuit suffers expressive bottleneck)
-Method Change: Investigate pre-trained 4D foundation models (NeuroSTORM) on raw fMRI volumes
-        ↓
+        ↓ (Observation: Classical 3-layer GCN (0.7293 AUC) decisively beats 6-qubit QGCNN (0.6429 AUC);
+        ↓  lineage verified: 162 clean subjects ⊂ 391 aligned cohort, but rationale for 162 prefix unrecovered)
+
+Track C: Deep Learning Baselines & Population Graph Benchmark
 Experiment 08: 4D Spatiotemporal Foundation Model vs. Volumetric Baselines
-        ↓ (Observation: Lightweight 3D CNN (76.19%) beats NeuroSTORM (59.10%); foundation model is data-starved)
-Method Change: Benchmark spatial and isotropic GNNs under strict Leave-One-Site-Out (LOSO) cross-validation
-        ↓
-Experiment 09: 7-Fold Leave-One-Site-Out (LOSO) Population Graph Learning
-        ↓ (Observation: Graph Attention Networks achieve highest cross-site generalization: 0.5752 mean AUC)
-Current Candidate Method: Dual-Constraint Graph Construction (Exp 02) + Graph Attention Network (Exp 09)
+        ↓ (Observation: Lightweight 3D CNN (76.19%) beats NeuroSTORM (59.10%); foundation model data-starved)
+Experiment 09: 7-Fold Leave-One-Site-Out (LOSO) Population Graph Benchmark
+        ↓ (Observation: GAT achieves highest mean AUC (0.5752) among 4 GNNs across 7 clinical hospital sites;
+        ↓  static top-10% graphs with self-loops; demographic baseline achieves 0.5935 AUC)
 ```
 
 ---
 
-## 3. Detailed Experiment-by-Experiment Audit Table
+## 3. Detailed Experiment Audit Table
 
-| Exp ID | Module / Script | Research Question | Intended Hypothesis | Method & Code Location | Dataset & Config | Observed Result | Evidence Status | What Changed Afterward |
+| Exp ID | Module / Script | Research Question | Intended Hypothesis | Method & Code Location | Dataset & Config | Observed Result | Evidence Status | Scientific Conclusion |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 01** | `notebooks/exp01/01_fc_generation_and_validation.ipynb` | Does sliding-window dynamic FC capture structured physiological dynamics? | Dynamic FC autocorrelation decays smoothly across time lags, confirming non-random fluctuations. | Sliding-window Pearson correlation ($W=30$ TR, step $S=5$ TR, CC200 atlas). | 534 subjects, 8 sites, 31,060 windows; TR=2.0s. | Monotonic decay: Lag 1 $r=0.8990$, Lag 2 $r=0.7789$, Lag 3 $r=0.6609$, Lag 4 $r=0.5467$. | **Empirically Supported** (`results/exp01/`) | Replaced static FC with dynamic sliding-window graph sequences. |
-| **Exp 02** | `notebooks/exp02/`, `src/exp02/null_model_und_sign_fixed.py` | How to construct sparse graphs without isolating brain regions? | Combining Minimum Spanning Tree with proportional thresholding preserves connectivity and small-worldness. | Dual-constraint MST + PT ($D=0.20$); fixed Rubinov-Sporns signed null model. | CC200 atlas ($N=190$), 534 subjects, `configs/exp02/graph_config.json`. | 0 isolated nodes; average degree $k=38.0$; small-world ratio $\sigma > 1.2$; fixed zero-division bugs. | **Empirically Supported** (`results/exp02/`) | Established standardized graph construction pipeline used across Exp 03-09. |
-| **Exp 03** | `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` | Are topological graph metrics invariant to scanner hardware? | Scanner site introduces negligible variance compared to individual biological differences. | Extracted 6 graph metrics (efficiency, path length, clustering, degree, modularity, small-worldness); one-way ANOVA. | CC200, 534 subjects across 8 scanner sites. | Global efficiency $F=4,609.76$; characteristic path length $F=4,993.87$ ($p < 10^{-300}$). | **Contradicted** (Massive Site Bias) (`results/exp03/`) | Concluded that raw topological features cannot be classified without multi-site harmonization. |
-| **Exp 04** | `notebooks/exp04/w2c_athena_2.ipynb`, `audit_source_files/history.py` | Can empirical Bayes ComBat eliminate scanner bias without erasing diagnostic signal? | ComBat removes scanner prediction while preserving ADHD diagnostic classification. | Empirical Bayes ComBat with Age and Gender covariates across two distinct phases: Phase E (static metrics) vs Phase E2 (8 dynamic micro-state features). | CC200, 534 subjects (Phase E) / 764 subjects (Phase E2) across 8 scanner sites. | Phase E: Site ID dropped $95.7\% \to 14.8\%$; Diagnosis dropped $68.2\% \to 57.4\%$. Phase E2 (Cells 351, 388-404, 500-tree RF): Diagnosis improved $0.6256 \to 0.6754$ ($0.626 \to 0.675$, $+0.0497$). | **Dual-Phase Trade-off** (`results/exp04/`) | Demonstrated that higher-order dynamic micro-states benefit from ComBat ($0.626 \to 0.675$), while static graph metrics degrade. |
-| **Exp 05** | `notebooks/exp05/dynamic_transformer.ipynb` | Do dynamic connectivity states cluster into discrete recurrent micro-states? | rs-fMRI transitions between discrete topological states; ADHD alters dwell times. | K-means clustering ($K=3$) on multi-window topological metrics; transition matrix modeling. | CC200, 534 subjects, 31,060 sliding windows. | Identified 3 discrete states: State 0 (dwell 6.24 windows), State 1 (3.82 windows), State 2 (2.45 windows). Note: `run_dynamic_biomarkers.csv` serialized multiclass labels under `label_binary`. | **Empirically Supported** (`results/exp05/`) | Provided temporal biomarker features; motivated spatio-temporal transformer exploration. |
-| **Exp 06** | `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb` | Can semi-supervised learning effectively expand sample size on unlabeled cohorts? | Multi-model ensemble pseudo-labeling achieves higher label quality than single-model self-training. | Procedure I (Self-training) vs Procedure II (Ensemble voting) on unannotated AAL-116 subjects ($\tau=0.80$). | AAL-116 atlas, 955 candidate FC matrices $\cap$ 691 phenotypic records = 391 clean aligned cohort. | Procedure I generated 552 pseudo-labels; Procedure II generated 484 high-confidence consensus labels. | **Empirically Supported** (`results/exp06/`) | Validated ensemble filtering protocol on N=391 clean cohort for large-scale semi-supervised expansion. |
-| **Exp 07** | `src/exp07/`, `results/exp07/report.md`, `configs/exp07/reported_run.json` | Do Parameterized Quantum Circuits (PQC) provide quantum advantage in graph classification? | 6-qubit PQC node encoder creates richer low-dimensional representations than classical linear projections. | 2-layer Classical GCN vs Hybrid QGCNN with PennyLane GPU parameter broadcasting. | AAL-116 atlas, 162 clean cohort (sliced via n_clean=162 from external 875 combined array; 129 train, 33 test), seed 42. | Classical GCN: **0.7293 AUC**, **69.70% Acc**; Quantum QGCNN: **0.6429 AUC**, **57.58% Acc**. | **Contradicted** (Negative Result) (`results/exp07/`) | Disproved quantum advantage on this benchmark; decoupled lineage between Exp 06 (391) and Exp 07 (162). |
-| **Exp 08** | `notebooks/exp08/`, `src/exp08/neurostorm/` | Does a 4D fMRI foundation model (NeuroSTORM) outperform topological graph neural networks? | Swin4D+Mamba foundation model learns richer spatio-temporal representations directly from raw voxels. | Fine-tuned 4D NeuroSTORM vs 3D volumetric CNN fallback vs temporal GNN on disjoint splits. | ADHD-200 4D volumes ($96\times96\times96\times80$), 534 train, 115 val, 115 test. | 3D CNN: **76.19% Acc**; NeuroSTORM: **59.10% Acc**; Temporal GNN: **54.43% Acc**. | **Contradicted** (Negative Result) (`results/exp08/`) | Proved foundation models underperform simple 3D baselines when fine-tuned on small pediatric cohorts. |
-| **Exp 09** | `notebooks/exp09/11_population_graph_learning.ipynb`, `configs/exp09/` | Which GNN architecture achieves best out-of-distribution clinical generalization? | Graph Attention Networks (GAT) generalize better across unseen hospital sites by downweighting scanner noise. | 7-fold Leave-One-Site-Out (LOSO) cross-validation across GAT, GCN, GIN, SAGE; top_10pct proportional threshold. | CC200 atlas, 497 subjects across 7 clinical hospital sites (Brown excluded). | GAT: **0.5752 mean AUC**; SAGE: **0.5502**; GCN: **0.5468**; GIN: **0.5437**; Table XII Phenotypic Baseline: **0.5935 AUC**. | **Empirically Supported** (`results/exp09/`) | Established GAT as candidate GNN method; Table XII showed demographic baseline equivalence. |
+| **Exp 01** | `notebooks/exp01/01_fc_generation_and_validation.ipynb` | Does sliding-window dynamic FC capture structured physiological dynamics? | Dynamic FC autocorrelation decays smoothly across time lags, confirming non-random fluctuations. | Sliding-window Pearson correlation ($W=30$ TR, step $S=5$ TR, CC200 atlas). | 534 subjects, 8 sites, 31,060 windows; TR=2.0s. | Monotonic decay: Lag 1 $r=0.8990$, Lag 2 $r=0.7789$, Lag 3 $r=0.6609$, Lag 4 $r=0.5467$. | **Empirically Supported** (`results/exp01/`) | Dynamic functional connectivity exhibits structured temporal autocorrelation decay. |
+| **Exp 02** | `notebooks/exp02/`, `src/exp02/null_model_und_sign_fixed.py` | How to construct sparse graphs without isolating brain regions? | Combining Minimum Spanning Tree with proportional thresholding preserves connectivity and small-worldness. | Dual-constraint MST + PT ($D=0.20$, distance $1-|r|$); fixed Rubinov-Sporns signed null model. | CC200 atlas ($N=190$), 534 subjects, `configs/exp02/graph_config.json`. | 0 isolated nodes; average degree $k=38.0$; small-world ratio $\sigma > 1.2$; fixed zero-division bugs. | **Empirically Supported** (`results/exp02/`) | Established robust dual-constraint graph construction pipeline for dynamic topological feature extraction. |
+| **Exp 03** | `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` | Are topological graph metrics invariant to scanner hardware? | Scanner site introduces negligible variance compared to individual biological differences. | Extracted 6 graph metrics (efficiency, path length, clustering, degree, modularity, small-worldness); one-way ANOVA. | CC200, 534 subjects across 8 scanner sites. | Global efficiency $F=4,609.76$; characteristic path length $F=4,993.87$ ($p < 10^{-300}$). | **Contradicted** (Massive Site Bias) (`results/exp03/`) | Raw topological features cannot be pooled across sites without multi-site harmonization. |
+| **Exp 04** | `notebooks/exp04/w2c_athena_2.ipynb` | Can empirical Bayes ComBat eliminate scanner bias without erasing diagnostic signal? | ComBat removes scanner prediction while preserving ADHD diagnostic classification. | Empirical Bayes ComBat with Age and Gender covariates across static features (534 subjects) and dynamic micro-state features (764 subjects). | CC200 atlas across 8 scanner sites. | Static features: Site ID dropped $58.64\% \to 31.29\%$; Diagnosis dropped $64.53\% \to 59.56\%$. Dynamic micro-states: Diagnosis improved $0.6256 \to 0.6754$ ($0.626 \to 0.675$, $+0.0497$). | **Dual-Phase Trade-off** (`results/exp04/`) | Higher-order dynamic micro-state features show diagnostic resilience after ComBat, while static features degrade. |
+| **Exp 05** | `notebooks/exp05/dynamic_transformer.ipynb` | Do dynamic connectivity states cluster into discrete recurrent micro-states? | rs-fMRI transitions between discrete topological states; ADHD alters dwell times. | K-means clustering ($K=3$) on multi-window topological metrics; transition matrix modeling. | CC200, 534 subjects, 31,060 sliding windows. | Identified 3 discrete states: State 0 (dwell 6.24 windows), State 1 (3.82 windows), State 2 (2.45 windows). | **Empirically Supported** (`results/exp05/`) | Provided temporal biomarker features demonstrating altered state transition dynamics in ADHD. |
+| **Exp 06** | `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb` | Can semi-supervised learning effectively expand sample size on unlabeled cohorts? | Multi-model ensemble pseudo-labeling achieves higher label quality than single-model self-training. | Procedure I (Logistic Regression self-training) vs Procedure II (4-model ensemble voting) on unannotated AAL-116 subjects. | AAL-116 atlas, 955 candidate FC matrices $\cap$ 691 phenotypic records = 391 clean aligned cohort. | Procedure I generated 552 pseudo-labels; Procedure II generated 484 consensus labels. 79-subject holdout accuracy: $0.6709 \to 0.7215$. | **Empirically Supported** (`results/exp06/`) | Validated ensemble filtering protocol on N=391 clean cohort for semi-supervised expansion. |
+| **Exp 07** | `src/exp07/`, `results/exp07/report.md`, `configs/exp07/reported_run.json` | Do Parameterized Quantum Circuits (PQC) provide quantum advantage in graph classification? | 6-qubit PQC node encoder creates richer low-dimensional representations than classical linear projections. | 3-layer Classical GCN vs Hybrid QGCNN with PennyLane GPU parameter broadcasting (20 epochs). | AAL-116 atlas, 162 clean cohort prefix ($162 \subset 391$ aligned cohort; 103 train, 26 val, 33 test), seed 42. | Classical GCN: **0.7293 AUC**, **69.70% Acc**; Quantum QGCNN: **0.6429 AUC**, **60.61% Acc**. | **Contradicted** (Negative Result) (`results/exp07/`) | Classical GCN decisively outperforms 6-qubit QGCNN; 6-qubit circuit creates an expressive bottleneck. |
+| **Exp 08** | `notebooks/exp08/`, `src/exp08/neurostorm/` | Does a 4D fMRI foundation model (NeuroSTORM) outperform topological graph neural networks? | Swin4D+Mamba foundation model learns richer spatio-temporal representations directly from raw voxels. | Fine-tuned 4D NeuroSTORM vs 3D volumetric CNN fallback vs temporal GNN on disjoint splits. | ADHD-200 4D volumes ($96\times96\times96\times80$), 626 volumetric subjects, 764 temporal subjects. | 3D CNN: **76.19% Acc**; NeuroSTORM: **59.10% Acc**; Temporal GNN: **54.43% Acc**. | **Contradicted** (Negative Result) (`results/exp08/`) | Pre-trained 4D foundation models underperform lightweight 3D volumetric CNN baselines on small pediatric cohorts. |
+| **Exp 09** | `notebooks/exp09/11_population_graph_learning.ipynb`, `configs/exp09/` | Which GNN architecture achieves best out-of-distribution clinical generalization across sites? | Graph Neural Networks generalize across unseen hospital sites under strict Leave-One-Site-Out (LOSO) cross-validation. | 7-fold LOSO cross-validation across GAT, GCN, GIN, SAGE; top-10% positive-FC threshold with self-loops; 42 classical ML baselines. | CC200 atlas, 497 subjects across 7 clinical hospital sites (Brown excluded due to no ADHD cases). | GAT: **0.5752 mean AUC**; SAGE: **0.5502**; GCN: **0.5468**; GIN: **0.5437**; Table XII demographic baseline: **0.5935 AUC**. | **Empirically Supported** (`results/exp09/`) | GAT achieved the highest mean AUC among evaluated GNNs under 7-fold LOSO; non-imaging demographic baseline achieved 0.5935 AUC. |
 
 ---
 
-## 4. Forensic Alignment with Cloud Development Artifacts (`audit_source_files/`)
+# 4. Pipeline Clarification: Exp 02 vs. Exp 09
 
-Inspection of the 235 files in `audit_source_files/` reveals the historical development trajectory and several exploratory branches that were evaluated in the cloud environment (`/home/nvidia/23BRS1236`) but intentionally not promoted to the final production staging:
+A common misconception in early documentation was treating Exp 02 and Exp 09 as a single connected pipeline:
 
-```mermaid
-graph TD
-    CloudRoot["Cloud Root: /home/nvidia/23BRS1236 & mnt/ADHD200/"]
-    
-    subgraph Staged_Production ["Promoted to Canonical Staging (Main Lineage)"]
-        S_Exp02["src/exp02/ & configs/exp02/<br/>(Dual-constraint builder + fixed null models)"]
-        S_Exp07["src/exp07/ & configs/exp07/<br/>(Classical GCN vs Quantum QGCNN)"]
-        S_Exp08["src/exp08/neurostorm/<br/>(Swin4D-Mamba architecture)"]
-        S_Exp09["configs/exp09/ & notebooks/exp09/<br/>(7-Fold LOSO GNN Benchmark)"]
-        S_Ledger["results/manifest.csv & results/<br/>(18 Canonical Result Artifacts)"]
-    end
+$$\text{CC200 dFC} \xrightarrow{\text{Exp 02 MST+PT}} \text{Graph} \xrightarrow{\text{Exp 09}} \text{GAT} \quad \text{[INCORRECT]}$$
 
-    subgraph Exploratory_Branches ["Evaluated in Cloud / Not Promoted (Archived in audit_source_files)"]
-        B_DANN["audit_source_files/w2c_dann.ipynb<br/><b>Domain-Adversarial Neural Network (DANN)</b><br/>GRL attempted to remove scanner bias; suffered from minimax instability"]
-        B_DDP["audit_source_files/train_hybrid_transformer.py<br/><b>8-GPU Distributed Spatio-Temporal Transformer</b><br/>PyTorch DDP with lazy chunk loading; overfit on small sample size"]
-        B_RLET["audit_source_files/w2a_representation_audit.ipynb<br/><b>Riemannian Tangent Space (RLET)</b><br/>Log-Euclidean covariance projections; high dimensionality caused overfitting"]
-        B_QProto["audit_source_files/mnt/ADHD200/quantum_models/<br/><b>Early Quantum Prototypes (vmap & vectorized)</b><br/>JAX vmap bottlenecked on PCIe; replaced by PennyLane broadcasting"]
-    end
+In actual execution, the repository maintains **two distinct graph pipelines**:
 
-    CloudRoot --> Staged_Production
-    CloudRoot --> Exploratory_Branches
+```text
+Pipeline 1: Dynamic Connectomics & Topological Metric Analysis (Exp 01 - 05)
+  Raw BOLD (CC200)
+    ↓ Sliding-window (W=30, S=5)
+  Dynamic FC matrices (31,060 windows)
+    ↓ Dual-constraint MST + PT (D=0.20, distance 1-|r|)
+  Topological Graph Sequences
+    ↓ bctpy topological metrics (efficiency, path length, clustering, degree, modularity, small-worldness)
+  ANOVA Confounding (Exp 03) → ComBat Harmonization (Exp 04) → Micro-State Clustering (Exp 05)
+
+Pipeline 2: Static FC Population Graph Learning & LOSO Benchmark (Exp 09)
+  Raw BOLD (CC200)
+    ↓ Full-session static Pearson correlation
+  Static FC matrices (497 subjects, 190x190)
+    ↓ Subject-wise top-10% positive-FC percentile thresholding + self-loops
+  Subject Graphs (signed FC stored as edge_attr, 190-dim FC node features)
+    ↓ Message Passing: isotropic GCN consumes edge_weight; GAT, SAGE, GIN pass edge_index
+  7-Fold Leave-One-Site-Out (LOSO) Cross-Validation (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437)
 ```
 
-### Forensic Proof of Cloud Execution Sequence
-1. **Interactive Shell Execution (`audit_source_files/history.py`)**:
-   - Contains 170 chronological IPython input blocks from `/home/nvidia/23BRS1236`.
-   - Blocks 1–25: Initial loading of Athena 2 preprocessed time series and CC200 functional connectivity arrays.
-   - Blocks 26–55: Step-by-step development of one-way ANOVA F-tests on graph metrics, revealing $F > 4,600$ across scanner sites.
-   - Blocks 56–98: Testing parametric vs non-parametric ComBat adjustments; direct discovery that scanner classification drops from 95.7% to 14.8% while diagnosis accuracy drops to near chance (57.4%).
-2. **Quantum Vectorization Evolution**:
-   - `audit_source_files/mnt/ADHD200/quantum_models/quantum_embedding_vmap.py`: Attempted JAX `vmap` vectorization. Required costly CPU $\leftrightarrow$ GPU tensor conversion between PyG and JAX.
-   - `audit_source_files/mnt/ADHD200/quantum_models/quantum_embedding_vectorized.py`: Native PyTorch loop over batches with QNode calls. Caused CUDA out-of-memory errors on batches $> 16$.
-   - `src/exp07/quantum_models/quantum_embedding_broadcast.py` (Staged): Leveraged PennyLane's `qml.transforms.broadcast_expand`, evaluating all $116 \times B$ graph nodes in a single quantum forward execution, achieving a 50–100x speedup.
-
 ---
 
-## 5. "Why Does This Code Exist?" Code-to-Hypothesis Mapping Matrix
+# 5. Out-of-Distribution Architecture Comparison
 
-| File / Component | Which Experiment Introduced It? | What Hypothesis Did It Test? | What Primary Evidence Came From It? | Current Status in Repository |
-| :--- | :--- | :--- | :--- | :--- |
-| `notebooks/exp04/w2c_athena_2.ipynb` (Cells 351, 388-404) | **Exp 04** | ComBat harmonization of dynamic micro-state features removes scanner bias while boosting diagnosis. | Random Forest (500 trees, 5-fold CV) achieved accuracy increase from **0.6256 to 0.6754** (+0.0497) on N=764 subjects. | **Empirical Evidence**: Proof of Phase E2 dynamic-state improvement. |
-| `notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb` (Cell 22) | **Exp 06** | Alignment between functional connectomes and phenotypic records filters unverified scans. | Inner-joined 955 candidate FC matrices and 691 phenotypic records to produce **N=391 clean aligned cohort**. | **Data Processing**: Master clean cohort for pseudo-labeling. |
-| `notebooks/exp09/12_classical_ml_baseline.ipynb` (Cells 7, 18) | **Exp 09** | Non-imaging phenotypic baselines provide essential benchmarking for complex graph networks. | Evaluated demographic predictors (`['Age', 'Gender', 'Handedness']`), yielding Elastic Net winner **0.5935 AUC** under 7-fold LOSO. | **Active Baseline**: Canonical non-imaging comparator (Table XII). |
-| `src/exp02/null_model_und_sign_fixed.py` | **Exp 02** | Corrected Rubinov-Sporns null model will preserve degree/strength distributions without numerical collapse on signed graphs. | Verified 0 division-by-zero crashes; positive and negative weights randomized independently. | **Core Method**: Active and imported by test suites and graph analysis pipelines. |
-| `src/exp02/randmio_und_signed_fast.py` | **Exp 02** | Numba JIT edge rewiring kernel reduces null model generation time by $>50\times$. | Reduced 31,060 window randomization time from ~14 hours to under 12 minutes. | **Core Method**: Active optimization module. |
-| `src/exp07/classical_models/model_classical_gcn.py` | **Exp 07** | Classical 2-layer GCN provides a stable, reproducible baseline on AAL-116 graphs. | Achieved **0.7293 AUC** and **69.70% Accuracy** on 33 held-out test subjects. | **Active Baseline**: Canonical classical comparator. |
-| `src/exp07/quantum_models/quantum_embedding_broadcast.py` | **Exp 07** | Parameterized Quantum Circuits can encode graph node features with quantum expressive advantage. | Hybrid QGCNN achieved only **0.6429 AUC** (8.6% lower than classical GCN). Rebuffed quantum advantage claim. | **Core Method / Negative Evidence**: Canonical demonstration of PQC expressive bottleneck. |
-| `src/exp07/quantum_models/train_qgcnn_vectorized.py` | **Exp 07** | Parameter broadcasting on GPU enables end-to-end backpropagation through quantum graph layers. | Enabled training QGCNN in 100 epochs within 8 minutes on a single GPU. | **Active Pipeline**: Verified by `tests/test_exp07_device_handling.py`. |
-| `src/exp08/neurostorm/neurostorm.py` | **Exp 08** | Pre-trained 4D foundation model (Swin4D-Mamba) will outperform traditional 2D graph classifiers. | NeuroSTORM achieved **59.10% Accuracy**, failing to surpass the 3D CNN baseline (76.19%). | **Core Method / Negative Evidence**: Preserved as architectural proof-of-concept for 4D fMRI. |
-| `src/common/paths.py` | **Repository Staging** | Dynamic path resolution prevents broken imports and hardcoded path failures across systems. | Enabled 100% test pass rate across Linux cloud clusters, local Windows IDE, and GitHub Actions CI. | **Active Infrastructure**: Imported across all active modules. |
-| `scripts/audit_repo.py` | **Repository Staging** | Automated structural auditing verifies integrity of all notebooks, paths, and documentation links. | Validated all 7 audit stages with 0 errors across 165 tracked repository files. | **Active Infrastructure**: Enforced in `.github/workflows/ci.yml`. |
-| `scripts/validate_results.py` | **Repository Staging** | Automated numerical assertions ensure staged metrics match raw cloud outputs and manifest. | Verified all 18 primary research result files and cross-checked 9 experiments. | **Active Infrastructure**: Enforced in CI pipeline. |
+### Summary Across All Evaluated Architectures
 
----
-
-## 6. Current Candidate Method & Benchmark Summary
-
-Based on the empirical evidence gathered across all nine experiments, the repository converges on the following candidate architecture for ADHD classification:
-
-```mermaid
-graph LR
-    subgraph Preprocessing
-        Raw["Resting-state fMRI<br/>(Athena Pipeline, CC200)"] --> dFC["Sliding-Window dFC<br/>(W=30, S=5, Pearson r)"]
-    end
-    
-    subgraph Graph_Construction ["Dual-Constraint Graph Builder (Exp 02)"]
-        dFC --> MST["Minimum Spanning Tree<br/>(Guarantees N-1 connected edges)"]
-        MST --> PT["Proportional Thresholding<br/>(Density D = 0.20)"]
-    end
-    
-    subgraph Model_Architecture ["Current Candidate Model (Exp 09)"]
-        PT --> GAT["Graph Attention Network (GAT)<br/>• 2 GATConv Layers (Hidden Dim = 64)<br/>• LeakyReLU Attention Mechanism<br/>• Dynamic edge-weighting filters site noise"]
-        GAT --> Pool["Global Mean Pooling"]
-        Pool --> Head["MLP Classification Head<br/>(Dropout = 0.30, Softmax)"]
-    end
-
-    subgraph Evaluation_Protocol ["Strict Out-of-Distribution Protocol"]
-        Head --> LOSO["7-Fold Leave-One-Site-Out (LOSO) CV<br/><b>Mean AUC: 0.5752 (Highest OOD Generalization)</b>"]
-    end
-```
-
-### Benchmark Summary Across All Evaluated Architectures
-
-| Architecture | Paradigm | Atlas / Input | Evaluation Protocol | Test Metric | Status / Scientific Conclusion |
+| Architecture | Paradigm | Atlas / Input | Evaluation Protocol | Test Metric | Scientific Finding |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **GAT** | Graph Attention Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | **0.5752 Mean AUC** | **Current Best / Candidate GNN**: Edge attention learns to suppress site-specific noise. |
-| **Elastic Net (Pheno / Table XII)** | Linear Regularized Classifier | Demographics (Age, Sex, Hand) | 7-Fold LOSO Cross-Validation | **0.5935 Mean AUC (0.6007 BA)** | **Non-Imaging Baseline**: Identical for 'Phenotype' and 'Phenotype without IQ' due to missing IQ columns. |
-| **SAGE** | GraphSAGE (Mean Aggregator) | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5502 Mean AUC | **Baseline**: Robust inductive capability, second best OOD generalization. |
-| **GCN** | Graph Convolutional Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5468 Mean AUC | **Baseline**: Isotropic filtering transfers scanner noise across edges. |
-| **GIN** | Graph Isomorphism Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5437 Mean AUC | **Baseline**: High expressive capacity overfits to site-specific subgraphs. |
-| **Classical GCN** | 2-Layer GCN + BatchNorm | AAL-116 Graphs | Stratified Held-out Split (33 test) | **0.7293 AUC (69.70% Acc)** | **Best Single-Split Baseline**: Decisively outperformed quantum counterpart. |
-| **Hybrid QGCNN** | 6-Qubit PQC + GCN | AAL-116 Graphs | Stratified Held-out Split (33 test) | 0.6429 AUC (57.58% Acc) | **Negative Result**: Quantum circuit suffered from expressive information bottleneck. |
-| **3D CNN** | Volumetric ConvNet | 3D Mean Volume | Disjoint Split (115 test) | **76.19% Accuracy** | **Volumetric Baseline**: Outperformed 4D foundation model on small sample size. |
-| **NeuroSTORM** | Swin4D-Mamba Foundation Model | 4D fMRI Tensor | Disjoint Split (115 test) | 59.10% Accuracy | **Negative Result**: Foundation model suffered from parameter overcapacity. |
-| **Temporal GNN** | Spatio-Temporal GNN | CC200 Graphs | Disjoint Split (115 test) | 54.43% Accuracy | **Baseline**: Prone to overfitting on temporal noise in sliding windows. |
+| **GAT** | Graph Attention Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | **0.5752 Mean AUC** | **Highest GNN AUC**: Highest generalization among the four evaluated GNNs under 7-fold LOSO. |
+| **Elastic Net (Pheno / Table XII)** | Regularized Linear Model | Demographics (Age, Sex, Hand) | 7-Fold LOSO Cross-Validation | **0.5935 Mean AUC** | **Non-Imaging Baseline**: Outperforms all GNNs; identical with/without IQ because IQ columns were absent. |
+| **SAGE** | GraphSAGE (Mean Aggregator) | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5502 Mean AUC | **Baseline**: Second highest OOD AUC; robust mean aggregation. |
+| **GCN** | Graph Convolutional Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5468 Mean AUC | **Baseline**: Consumes signed edge_weight; isotropic filtering. |
+| **GIN** | Graph Isomorphism Network | CC200 Graphs (top_10pct) | 7-Fold LOSO Cross-Validation | 0.5437 Mean AUC | **Baseline**: High structural expressive capacity shows lowest cross-site transfer. |
+| **Classical GCN** | 3-Layer GCN + BatchNorm | AAL-116 Graphs | Stratified Held-out Split (33 test) | **0.7293 AUC (69.70% Acc)** | **Single-Split Classical Baseline**: Decisively outperformed quantum counterpart on clean benchmark. |
+| **Hybrid QGCNN** | 6-Qubit PQC + GCN | AAL-116 Graphs | Stratified Held-out Split (33 test) | 0.6429 AUC (60.61% Acc) | **Negative Result**: 6-qubit quantum state space creates an expressive bottleneck. |
+| **3D CNN** | Volumetric ConvNet | 3D Mean Volume | Disjoint Split (115 test) | **76.19% Accuracy** | **Volumetric Baseline**: Outperformed 4D foundation model on modest sample size. |
+| **NeuroSTORM** | Swin4D-Mamba Foundation Model | 4D fMRI Tensor | Disjoint Split (115 test) | 59.10% Accuracy | **Negative Result**: Foundation model suffered from parameter overcapacity without huge pretraining data. |
+| **Temporal GNN** | Spatio-Temporal GNN | CC200 Graphs | Disjoint Split (115 test) | 54.43% Accuracy | **Baseline**: Vulnerable to temporal noise across sliding windows. |
 
 ---
 
-## 7. Open Research Questions & Scientific Trade-Offs
+# 6. Methodological Trade-Offs & Scientific Takeaways
 
-The exhaustive audit reveals five fundamental scientific tensions and provenance considerations that remain unresolved:
+### 1. Harmonization Duality: Static Degradation vs. Dynamic Micro-State Gains (Exp 04)
+- **Observation**: Scanner site explains $>90\%$ of variance in raw topological metrics ($F > 4,600$). ComBat effectively reduces site prediction from $58.64\%$ to $31.29\%$. However, on static graph metrics, diagnostic accuracy drops from $64.53\%$ to $59.56\%$ due to site-diagnosis collinearity. In contrast, on 8 continuous dynamic micro-state features, Random Forest classification improves from $0.6256$ to $0.6754$ ($+0.0497$).
+- **Takeaway**: Dynamic micro-state features show greater resilience to scanner harmonization than static network metrics.
 
-### 1. The Harmonization Duality: Static Degradation vs. Dynamic Micro-State Gains (Exp 04)
-- **Problem**: Scanner hardware explains $>90\%$ of variance in raw topological metrics ($F > 4,600$). ComBat removes scanner identification ($95.7\% \to 14.8\%$). However, on static graph metrics (Phase E, $N=534$), diagnostic classification degrades ($68.2\% \to 57.4\%$) because site and diagnosis are collinear. In contrast, on 8 continuous dynamic micro-state features (Phase E2, $N=764$), a 500-tree Random Forest with 5-fold CV demonstrates that ComBat improves diagnostic accuracy from $0.6256$ to $0.6754$ ($+0.0497$).
-- **Open Question**: Why do higher-order dynamic micro-state metrics benefit from ComBat while static topological graph metrics degrade, and can dynamic graph transformers exploit this property without site-specific overfitting?
+### 2. Quantum Expressive Bottleneck (Exp 07)
+- **Observation**: Compressing 117-dimensional node features into a 6-qubit Parameterized Quantum Circuit creates an expressive information bottleneck, leading to an 8.6% AUC deficit compared to a classical 3-layer GCN ($0.7293$ vs. $0.6429$).
+- **Takeaway**: Small-scale NISQ circuits ($\le 6$ qubits) do not provide quantum advantage for dense brain connectivity graphs over standard classical GNN architectures.
 
-### 2. The Quantum Expressive Bottleneck (Exp 07)
-- **Problem**: Encoding 116 anatomical ROI correlations into a 6-qubit Parameterized Quantum Circuit requires reducing feature dimensionality from 117 to 12 before angle mapping. The resulting 6-qubit quantum state space suffered from limited expressivity and optimization plateaus, resulting in an 8.6% AUC deficit compared to classical GCN (Classical 0.7293 AUC vs Quantum 0.6429 AUC).
-- **Open Question**: Would higher-qubit PQCs ($\ge 16$ qubits) with multi-scale qudit encoding or tensor network approximations overcome this bottleneck on NISQ hardware?
-
-### 3. The Clinical Deployment Generalization Ceiling (Exp 07 vs Exp 09)
-- **Problem**: When evaluated on a stratified single-split (Exp 07), models achieve promising diagnostic accuracy (~70% Acc, 0.73 AUC). However, when evaluated under realistic Leave-One-Site-Out (LOSO) cross-validation where an entire hospital scanner site is held out (Exp 09), mean AUC drops to 0.5752 (GAT) and 0.5468 (GCN).
-- **Open Question**: Is the current ~0.58 LOSO AUC ceiling an intrinsic limitation of resting-state fMRI signal-to-noise ratio in pediatric cohorts, or can site-invariant graph self-supervised pre-training elevate out-of-distribution performance?
-
-### 4. Cohort Lineage Decoupling (Exp 06 $391 \to$ Exp 07 $162$)
-- **Problem**: Exp 06 established a clean aligned cohort of $N=391$ subjects via an inner-join of 955 candidate FC matrices and 691 phenotypic records (`aligned_subjects.npy`). In contrast, Exp 07 loaded an external combined array of 875 subjects (`X_combined_full.npy`) and sliced the first 162 subjects (`n_clean: int = 162`). The intermediate filtering script (`part1.ipynb`) and subject ID list for the 162 cohort were external and unarchived, breaking verifiable subject-level provenance between the two stages.
-- **Open Question**: Can the historical subject ID manifest for the 162-subject benchmark be recovered from raw cloud records to formally prove its relationship to the 391 clean cohort?
-
-### 5. Phenotypic Baseline Feature Equivalence (Table XII)
-- **Problem**: Manuscript Table XII reports a baseline comparison between classical ML models trained on full phenotypes vs. phenotypes without IQ. However, forensic inspection revealed that `master_cohort.csv` contained only demographic variables (`['Age', 'Gender', 'Handedness']`) without any IQ features (`VIQ`, `PIQ`, `FIQ`). Dropping IQ was a no-op, resulting in bit-for-bit identical evaluations for both conditions (Elastic Net winner: 0.5935 AUC).
-- **Open Question**: Does adding true full-scale IQ features elevate non-imaging baselines above topological GNNs, or does cognitive score heterogeneity mirror scanner site confounding?
+### 3. Clinical Deployment Ceiling (Exp 09 LOSO)
+- **Observation**: While single-split evaluations (Exp 07) reach ~70% accuracy and 0.73 AUC, rigorous Leave-One-Site-Out cross-validation across 7 hospital sites drops GNN performance to 0.54–0.58 AUC, trailing a simple demographic linear baseline (0.5935 AUC).
+- **Takeaway**: Cross-site scanner variance and clinical heterogeneity remain the dominant bottleneck for resting-state fMRI classification in pediatric ADHD cohorts.

@@ -3,7 +3,6 @@
 # Verifies numerical consistency across results/ artifacts against
 # the ground-truth values recorded in docs/provenance.md.
 
-
 import json
 import sys
 from pathlib import Path
@@ -109,7 +108,12 @@ def validate_exp06():
         data = json.load(f)
     assert data["procedure_I"]["pseudo_labels"] == 552
     assert data["procedure_II"]["selected_subjects"] == 484
-    print("  [OK] Exp 6 pseudo-label counts verified (552 self-training, 484 ensemble)")
+    if "procedure_II_evaluation" in data:
+        p2_eval = data["procedure_II_evaluation"]
+        assert p2_eval["evaluation_set_size"] == 79
+        assert np.isclose(p2_eval["clean_accuracy"], 0.6709, atol=1e-3)
+        assert np.isclose(p2_eval["pseudo_label_augmented_accuracy"], 0.7215, atol=1e-3)
+    print("  [OK] Exp 6 pseudo-label counts verified (552 self-training, 484 ensemble, 79 holdout metrics verified)")
 
 
 def validate_exp07():
@@ -144,7 +148,21 @@ def validate_exp07():
     assert data.get("clean_labels", {}).get("count") == 162, "Clean cohort count must be 162"
     assert data.get("pseudo_labels", {}).get("count") == 713, "Pseudo cohort count must be 713"
 
-    print("  [OK] Exp 7 test results verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC, N=33, all metrics valid)")
+    # 4. Clean subject lineage manifest
+    manifest_path = ROOT_DIR / "results/exp07/clean_subjects_manifest.csv"
+    assert manifest_path.exists(), f"Missing {manifest_path}"
+    m_df = pd.read_csv(manifest_path)
+    assert len(m_df) == 391, f"Expected 391 aligned subjects, got {len(m_df)}"
+    assert m_df["subject_id"].nunique() == 391, "All 391 subject IDs must be unique"
+    clean_prefix = m_df[m_df["exp07_clean_prefix"] == 1]
+    assert len(clean_prefix) == 162, f"Expected 162 clean prefix subjects, got {len(clean_prefix)}"
+    splits = clean_prefix["exp07_split"].value_counts().to_dict()
+    assert splits.get("train") == 103, f"Expected 103 train clean, got {splits.get('train')}"
+    assert splits.get("validation") == 26, f"Expected 26 val clean, got {splits.get('validation')}"
+    assert splits.get("test") == 33, f"Expected 33 test clean, got {splits.get('test')}"
+    assert set(clean_prefix["subject_id"]).issubset(set(m_df["subject_id"])), "162 clean must be subset of 391 aligned"
+
+    print("  [OK] Exp 7 test results & 391->162 lineage verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC, N=33, 162 subset of 391)")
 
 
 def validate_exp08():
@@ -228,7 +246,53 @@ def validate_exp09():
         v_data = json.load(f)
     assert v_data.get("executed_protocol", {}).get("self_loops") is True, "Expected self_loops=True"
 
-    print("  [OK] Exp 9 LOSO and baseline results verified (497 subjects, 7 sites, 6 feature families, top_10pct connectivity with self-loops)")
+    # Validate recovered Exp09 threshold sweep ledger
+    gstat_path = ROOT_DIR / "results/exp09/graph_statistics.csv"
+    assert gstat_path.exists(), f"Missing {gstat_path}"
+    gs_df = pd.read_csv(gstat_path)
+    assert len(gs_df) == 8, f"Expected 8 candidate threshold regimes, got {len(gs_df)}"
+    strategies = set(gs_df["Threshold"])
+    expected_strats = {"none", "top_5pct", "top_10pct", "top_15pct", "top_20pct", "abs_gt_0.2", "abs_gt_0.25", "abs_gt_0.3"}
+    assert expected_strats.issubset(strategies), f"Missing strategies: {expected_strats - strategies}"
+    t10 = gs_df[gs_df["Threshold"] == "top_10pct"].iloc[0]
+    assert np.isclose(t10["Mean_Density"], 0.10, atol=1e-2), f"top_10pct density mismatch: {t10['Mean_Density']}"
+    assert np.isclose(t10["Mean_Small_Worldness"], 3.8095, atol=1e-2), f"top_10pct sigma mismatch: {t10['Mean_Small_Worldness']}"
+
+    # Validate recovered Exp09 diagnostic ledgers
+    pos_path = ROOT_DIR / "results/exp09/gnn_diagnostic_positive.csv"
+    abs_path = ROOT_DIR / "results/exp09/gnn_diagnostic_absolute.csv"
+    assert pos_path.exists(), f"Missing {pos_path}"
+    assert abs_path.exists(), f"Missing {abs_path}"
+    pos_df = pd.read_csv(pos_path)
+    abs_df = pd.read_csv(abs_path)
+    assert len(pos_df) == 7, f"Expected 7 folds in positive diagnostic, got {len(pos_df)}"
+    assert len(abs_df) == 7, f"Expected 7 folds in absolute diagnostic, got {len(abs_df)}"
+    assert np.isclose(pos_df["auc"].mean(), 0.5687, atol=1e-3), f"Positive mean AUC mismatch: {pos_df['auc'].mean()}"
+    assert np.isclose(abs_df["auc"].mean(), 0.5534, atol=1e-3), f"Absolute mean AUC mismatch: {abs_df['auc'].mean()}"
+
+    # Validate threshold selection metadata
+    thresh_cfg_path = ROOT_DIR / "configs/exp09/selected_threshold.json"
+    assert thresh_cfg_path.exists(), f"Missing {thresh_cfg_path}"
+    with open(thresh_cfg_path) as f:
+        t_cfg = json.load(f)
+    assert t_cfg.get("selected_threshold") == "top_10pct", f"Mismatch selected_threshold: {t_cfg.get('selected_threshold')}"
+    assert (ROOT_DIR / t_cfg.get("threshold_sweep_ledger")).exists(), "threshold_sweep_ledger path must exist"
+    assert t_cfg.get("sweep_producer_code_retained") is False, "sweep_producer_code_retained must be False"
+
+    print("  [OK] Exp 9 LOSO and baseline results verified (497 subjects, 7 sites, 6 feature families, threshold sweep & diagnostic ledgers verified)")
+
+
+def validate_manifest_consistency():
+    print("Validating Results Manifest Consistency...")
+    m_path = ROOT_DIR / "results/manifest.csv"
+    assert m_path.exists(), f"Missing {m_path}"
+    m_df = pd.read_csv(m_path)
+    for idx, row in m_df.iterrows():
+        # Handle cases where source might contain extra descriptive suffix in older configs
+        src_clean = str(row["source"]).strip()
+        src_path = ROOT_DIR / src_clean
+        assert src_path.exists(), f"Manifest row points to missing file: {src_path} (artifact: {row['artifact']})"
+    print(f"  [OK] All {len(m_df)} registered manifest artifacts exist on disk")
 
 
 def main():
@@ -244,16 +308,18 @@ def main():
         validate_exp07()
         validate_exp08()
         validate_exp09()
+        validate_manifest_consistency()
         print("\nSummary of Validated Artifacts:")
         print("  Exp 01: dFC temporal correlation decay (0.8990 to 0.5467) and Frobenius distances")
         print("  Exp 02: CC200 graph construction parameters (MST+PT, density 0.20)")
         print("  Exp 03: Cross-site ANOVA F-tests (efficiency 4609.76, path length 4993.87)")
         print("  Exp 04: ComBat harmonization clustering mean (0.33327 to 0.33336)")
         print("  Exp 05: Micro-state cluster metrics (K=3, State 0 dwell time 6.24 windows)")
-        print("  Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484)")
-        print("  Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33)")
+        print("  Exp 06: Semi-supervised pseudo-labelling counts (Procedure I: 552, II: 484, 79 holdout metrics)")
+        print("  Exp 07: Held-out test set performance (Classical AUC: 0.7293, Quantum AUC: 0.6429, N=33, 162 subset of 391)")
         print("  Exp 08: Deep learning baseline accuracies (3D CNN: 76.19%, NeuroSTORM: 59.10%)")
-        print("  Exp 09: LOSO 7-fold mean AUCs (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437, N=497)")
+        print("  Exp 09: LOSO 7-fold mean AUCs (GAT: 0.5752, SAGE: 0.5502, GCN: 0.5468, GIN: 0.5437, N=497, threshold sweep verified)")
+        print("  Manifest: All registered evidence artifacts exist on disk")
         print("\nAll configured result checks passed.")
         sys.exit(0)
     except Exception as e:

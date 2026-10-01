@@ -37,6 +37,12 @@
     "pseudo_label_augmented_validation_accuracy": 0.7215,
     "provenance": "Stored execution output in part1.ipynb"
   },
+  "procedure_II_evaluation": {
+    "evaluation_set_size": 79,
+    "clean_accuracy": 0.6709,
+    "pseudo_label_augmented_accuracy": 0.7215,
+    "evaluation_set_note": "These metrics come from the separate 79-subject holdout evaluation and are not the 59-subject validation/test partitions listed in the clean cohort definition."
+  },
   "independent_supervised_benchmarks": {
     "hard_voting_test_accuracy": 0.7119,
     "soft_voting_test_accuracy": 0.678,

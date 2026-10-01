@@ -17,7 +17,7 @@ The following experiments can be executed using the code in this repository once
   - Exp 04: ComBat scanner harmonization and classification trade-offs
   - Exp 05: Data-driven dynamic connectivity states and Markov transitions
 - **Track C (Population Graph Learning & Generalization)**:
-  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks (evaluates 7 classifier types across 6 tabular feature families).
+  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks (evaluates 7 classifier types across 6 tabular feature families via `12_classical_ml_baseline.ipynb`).
 
 ### Category B: Requires Reconstruction of Excluded Intermediates
 The following experiments can be reproduced after reconstructing intermediate data structures from raw or preprocessed scans:
@@ -25,11 +25,11 @@ The following experiments can be reproduced after reconstructing intermediate da
   - Exp 06: Semi-supervised pseudo-labeling (Procedure I & II) generates intermediate pseudo-label assignments from AAL-116 correlation arrays.
   - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$, $>120\text{ GB}$, 626 scans), which are excluded from the repository.
 - **Track C (GNN Population Graph Learning)**:
-  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning across GNN architectures (`notebooks/exp09/11_population_graph_learning.ipynb`). While final evaluation outputs and `w2_pareto_front.csv` are retained in `results/exp09/`, executing the notebook requires intermediate feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) and upstream Workflow 2A representation audit ledgers (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) which are not bundled in the public repository tree.
+  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning across GNN architectures (`notebooks/exp09/11_population_graph_learning.ipynb`). Executing the notebook end-to-end from scratch requires intermediate feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) and upstream Workflow 2A representation audit ledgers (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) which are not bundled in the public repository tree. Final evaluation metrics are preserved in `results/exp09/w2b_loso_results.csv`, and representation-level comparisons are documented in `w2_pareto_front.csv` (which is a retained evaluation output, not an execution dependency).
 
 ### Category C: Archived / Not Currently Rerunnable from Repository
 - **Exp 07 (Classical GCN vs Quantum QGCNN)**:
-  Experiment 07 is archived rather than currently rerunnable from the public repository because the historical combined input arrays and trained checkpoints are not redistributed. The source code, historical configuration, and verified evaluation results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are retained in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained checkpoints are absent, so end-to-end reruns are currently unavailable without external restoration of those artifacts. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`.
+  Experiment 07 is archived rather than currently rerunnable from the public repository because the historical combined input arrays and trained checkpoints are not redistributed. The source code, historical configuration, and verified evaluation results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are retained in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained checkpoints are absent, so end-to-end reruns are currently unavailable without external restoration of those artifacts. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`. The subject-level lineage mapping ($162 \subset 391$) is documented in `results/exp07/clean_subjects_manifest.csv`.
 
 ---
 
@@ -152,15 +152,16 @@ Execute the canonical notebooks in sequence (paths verified against the reposito
 
 ## 4. Methodological & Preprocessing Notes
 
-1. **Exp 09 Graph Representation & Feature Selection**:
-   - GNN models operate on the full 190-node connectome thresholded at the 90th percentile of positive correlations (`top_10pct` density, mean 3,782 directed edges) with self-loops and signed edge weights. No ROI feature selection is applied to the graph inputs.
+1. **Exp 09 Graph Representation & Historical Threshold Evidence**:
+   - GNN models operate on the full 190-node connectome thresholded at the 90th percentile of positive correlations (`top_10pct` density, mean 3,782 directed edges) with self-loops and stored signed FC correlation attributes. During message passing, only isotropic GCN consumes edge weights, while GAT, SAGE, and GIN pass unweighted connectivity.
+   - For threshold selection, the repository distinguishes **historical evidence** from an **executable producer pipeline**. The historical 8-regime sweep ledger (`results/exp09/graph_statistics.csv`) and diagnostic evaluation ledgers (`gnn_diagnostic_positive.csv`, `gnn_diagnostic_absolute.csv`) are retained as empirical records; the original producer script and exact historical selection rule were not preserved in the surviving tree.
    - For classical machine learning baselines (`12_classical_ml_baseline.ipynb`), feature selection (`SelectKBest(f_classif)`) is strictly nested within each training fold, ensuring held-out scanner sites remain completely unobserved during feature ranking.
-   - Node representation format selection (`connectivity` vs `identity` vs `strength`) was compared in an exploratory, non-nested LOSO workflow in Workflow 2A. This selection occurred prior to final GNN hyperparameter training, confirming `connectivity` (unreduced 190-dim correlation rows) as optimal; this exploratory comparison should not be interpreted as an unbiased nested LOSO performance estimate.
+   - `w2_pareto_front.csv` is an evaluation output documenting a multi-objective Pareto comparison across feature representation families (ComBat FC vs Raw FC vs GraphPheno) against site prediction balanced accuracy. It is not an input required to run GNN models.
 
 2. **External Data Prerequisites**:
    - **Volumetric 4D Scans (Exp 08)**: Raw 4D BOLD fMRI volumes (`>120 GB`) and converted MNI `.npy` arrays (`>30 GB`) exceed repository storage quotas and must be retrieved from institutional ADHD-200 mirrors.
    - **Combined Pseudo-Label Arrays (Exp 07)**: The 875-subject correlation array (`X_combined_full.npy`, 162 clean + 713 pseudo) is preserved externally. The complete cohort composition, split rules, and test evaluation metrics on the 33 held-out subjects are documented in `results/exp07/pseudolabel_provenance.json` and `results/exp07/checkpoint_analysis.json`.
-   - **Workflow 2A Representation Audit Artifacts (Exp 09a)**: Intermediate sweep files (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) used during exploratory representation selection are unbundled from the repository. The canonical Pareto trade-off summary is retained in `results/exp09/w2_pareto_front.csv`, and final LOSO evaluation metrics are retained in `results/exp09/w2b_loso_results.csv` and `architecture_summary.csv`.
+   - **Workflow 2A Representation Audit Artifacts (Exp 09a)**: Intermediate sweep files (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) used during exploratory representation selection are unbundled from the repository. The final LOSO evaluation metrics are retained in `results/exp09/w2b_loso_results.csv` and `architecture_summary.csv`.
 
 ---
 
@@ -178,4 +179,3 @@ python scripts/validate_results.py
 # 3. Run automated unit test suite
 pytest tests/
 ```
-

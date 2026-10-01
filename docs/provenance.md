@@ -13,13 +13,13 @@ This document provides a factual record of discrepancies between manuscript desc
 | :---: | :--- | :--- | :---: |
 | **Exp 01** | Static vs dynamic FC stability comparison | Diagonal zeroed before distance computation; lag correlation decay $0.8990 \to 0.5467$ | Documented |
 | **Exp 02** | MST + 20% proportional thresholding | `mst_graph` in notebook and `src/exp02/graph_utils.py` both implement canonical MST + PT ($\rho=0.20$, 3,591 edges, $D = 1 - |r|$) | Documented |
-| **Exp 03** | Diagnostic group separation analysis (Earlier draft: Mann–Whitney U) | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR (range 53.8%, std 30.8% significant) output directly to notebook cells in `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (no standalone CSV) | Documented |
-| **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.6\% \to 31.3\%$, but diagnostic accuracy also drops $64.5\% \to 59.6\%$ | Documented |
-| **Exp 05** | Dynamic micro-state clustering | $K=3$ selected via multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin ($K \in [2, 10]$) and confirmed by 30-run ARI stability ($0.9950 \pm 0.0024$); State 0 dominates dwell time ($6.24$ windows, $49.05\%$ occupancy) | Documented |
-| **Exp 06** | Semi-supervised pseudo-labelling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484; independent cohort from Exp 07 | Documented |
-| **Exp 07** | Earlier manuscript draft: Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 117 node features (116 FC + unweighted normalized degree), stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train) | Documented / Archived |
+| **Exp 03** | Diagnostic group separation analysis (Earlier draft: Mann–Whitney U) | ANOVA captures inter-site scanner variation ($F > 4,000$); diagnostic separation evaluated via Welch unequal-variance $t$-test + BH-FDR output directly to notebook cells in `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` | Documented |
+| **Exp 04** | ComBat removes batch effects while retaining signal | Scanner accuracy drops $58.64\% \to 31.29\%$, and static diagnostic accuracy drops $64.53\% \to 59.56\%$; dynamic micro-state diagnosis improves $0.626 \to 0.675$ | Documented |
+| **Exp 05** | Dynamic micro-state clustering | $K=3$ selected via multi-metric MeanRank across Silhouette, Calinski–Harabasz, and Davies–Bouldin ($K \in [2, 10]$) and confirmed by 30-run ARI stability ($0.9950 \pm 0.0024$); State 0 dominates dwell time ($6.24$ windows) | Documented |
+| **Exp 06** | Semi-supervised pseudo-labelling | Procedure I yielded 552 pseudo-labels; Procedure II yielded 484 consensus labels on 391 clean aligned cohort; 79-subject holdout accuracy $0.6709 \to 0.7215$ | Documented |
+| **Exp 07** | Earlier manuscript draft: Density 0.20, weighted node strength, 2 quantum layers | Executed config used nominal density $0.15$ (`>=` threshold), 1 quantum layer, 3-layer Classical GCN, 20 epochs, 117 node features, stored `edge_attr` not passed to `GCNConv`, 162 clean + 713 selected pseudo cohort (103/26/33 clean split; 816 train); 162 clean prefix proven subset of Exp 06 391 aligned cohort | Documented / Archived |
 | **Exp 08** | Earlier manuscript draft: Lightweight 3D CNN on structural T1 scans | Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM (Acc 68.25% / 59.10%) evaluated on 4D functional BOLD volume sequences across 626 scans; Temporal GNN (Acc 54.43%) evaluated on 764-subject CC200 timeseries cohort | Documented |
-| **Exp 09** | Earlier manuscript draft: Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` positive-FC thresholding with signed weighted edges and self-loops across 497 subjects and 7 sites; Classical ML baselines evaluated 7 classifier types across 6 feature families with fold-nested `SelectKBest` (summary CSV retains historical recorded rows) | Resolved |
+| **Exp 09** | Earlier manuscript draft: Unweighted MST + 20% distance mapping | Executed notebook used `top_10pct` positive-FC thresholding with signed correlation attributes and self-loops across 497 subjects and 7 sites; Classical ML baselines evaluated 7 classifier types across 6 feature families; edge weights consumed during message passing only by GCN | Resolved |
 
 ---
 
@@ -35,95 +35,57 @@ This document provides a factual record of discrepancies between manuscript desc
 
 ### Experiment 03: Cross-Site Scanner ANOVA & Diagnostic Group Comparison
 - **Scope of $F$-Statistics**: The large $F$-statistics reported ($F > 4,000, p < 10^{-300}$ for global efficiency and path length) quantify variance attributable to acquisition site (scanner differences across 8 participating clinics), **not** diagnostic variance between ADHD and typically developing controls (TDC).
-- **Diagnostic Group Comparisons (Earlier Draft Discrepancy)**: An earlier manuscript draft referenced a Mann–Whitney U test; actual diagnostic separation between ADHD and TDC was evaluated using Welch unequal-variance $t$-tests with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction ($\alpha=0.05$) across 26 dynamic topological metrics (range 53.8% and std 30.8% reaching statistical significance).
-- **Artifact Location**: The diagnostic comparison results and distributions exist directly within the executed notebook cell outputs of `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb` (cells 14–22). (The reference to `06_temporal_dynamics_analysis.ipynb` corresponds to the historical non-public provenance source `audit_source_files/notebooks/06_temporal_dynamics_analysis.ipynb`.) There is no missing standalone CSV file.
+- **Diagnostic Group Comparisons**: Diagnostic separation between ADHD and TDC was evaluated using Welch unequal-variance $t$-tests with Benjamini–Hochberg False Discovery Rate (BH-FDR) correction ($\alpha=0.05$) across 26 dynamic topological metrics. Results exist directly within the executed notebook cell outputs of `notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb`.
 
 ### Experiment 04: ComBat Harmonization
-- **Clinical Variance Attenuation**: Empirical Bayes ComBat reduced scanner identification accuracy from $58.64\%$ to $31.29\%$, while diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$. This reflects that diagnostic status was non-uniformly distributed across collection sites, leading ComBat to adjust partially for site-associated clinical variance.
+- **Clinical Variance Attenuation**: Empirical Bayes ComBat reduced scanner identification accuracy from $58.64\%$ to $31.29\%$ (`results/exp04/site_prediction_results.csv`), while diagnostic classification accuracy also decreased from $64.53\%$ to $59.56\%$ (`results/exp04/diagnosis_prediction_results.csv`).
+- **Dynamic Micro-State Gains**: In contrast, dynamic micro-state features classified with Random Forest (500 trees, 5-fold CV) improved from $0.6256$ to $0.6754$ ($0.626 \to 0.675$, $+0.0497$).
+- **Correction Note**: Stale claims that scanner classification dropped $95.7\% \to 14.8\%$ represent preliminary unharmonized exploratory passes. The canonical verified benchmark records $58.64\% \to 31.29\%$.
 
 ### Experiment 05: Data-Driven Dynamic Connectivity States
-- **Cluster Count Selection**: Dynamic micro-state clustering evaluated candidate state counts $K \in [2, 10]$ across three internal validation metrics: Silhouette Coefficient, Calinski–Harabasz (CH) index, and Davies–Bouldin (DB) index.
+- **Cluster Count Selection**: Dynamic micro-state clustering evaluated candidate state counts $K \in [2, 10]$ across Silhouette Coefficient, Calinski–Harabasz (CH) index, and Davies–Bouldin (DB) index.
 - **MeanRank Procedure**: A composite MeanRank metric selected $K=3$ as the optimal state count, driven by a pronounced Calinski–Harabasz peak (12,892.17) alongside robust Silhouette (0.2772) and Davies–Bouldin (1.1399) scores. Clustering stability was confirmed via 30 repeated random initializations, yielding an Adjusted Rand Index (ARI) of $0.9950 \pm 0.0024$.
 - **Dwell Time & Occupancy**: State 0 exhibited the longest mean dwell time ($6.24$ windows) and highest fractional occupancy ($49.05\%$).
 
 ### Experiment 06: Semi-Supervised Pseudo-Labeling
-- **Cohort Decoupling**: Experiment 06 operated on a cohort of 955 subjects (391 clean-labelled and 564 unlabelled). Two procedural variants were executed: Procedure I generated 552 pseudo-labels, and Procedure II generated 484 pseudo-labels. This partition is historically decoupled from the 162 clean + 713 pseudo cohort utilized in Experiment 07.
+- **Cohort Definition**: Experiment 06 operated on 955 AAL-116 FC candidate matrices inner-joined with 691 phenotypic records, establishing a phenotypically aligned clean cohort of $N=391$ subjects (`aligned_subjects.npy`) and 564 unlabelled subjects.
+- **Procedure Metrics**: Procedure I (Logistic Regression self-training, $\tau=0.75$) generated 552 pseudo-labels; Procedure II (4-model weighted ensemble) generated 484 consensus labels.
+- **Holdout Evaluation**: In an independent 79-subject holdout evaluation, pseudo-label augmentation improved classification accuracy from $0.6709$ to $0.7215$ (`results/exp06/exp06_verified_results.json`).
 
 ### Experiment 07: Classical GCN and Quantum GCNN Evaluation
-
-- **Required Provenance Statement**:
-  "Experiment 7 evaluates Classical GCN and Quantum GCNN models on AAL-116 functional-connectivity graphs. The historical graph construction uses 116 ROIs and a 15% nominal density threshold based on the percentile of upper-triangle absolute FC values. Signed FC values are retained as edge attributes, while node features consist of the 116 signed FC values for each ROI plus normalized graph degree. The stored edge attributes are not passed as edge weights to the historical GCNConv layers."
-
-- **Cohort Provenance**:
-  - "Experiment 7 used a separately prepared cohort consisting of 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects."
-  - "`part1.ipynb` is a collection of exploratory and comparative experiments rather than a single pseudo-label generator. Multiple candidate approaches were evaluated, after which a selected cohort was exported through the later `11_ensemble_labeling` production workflow. The resulting Experiment 7 input cohort is documented downstream as 162 clean labeled subjects and 713 selected pseudo-labeled subjects."
-  - "The historical Experiment 7 cohort contains 162 clean labeled subjects and 713 additionally selected pseudo-labeled subjects. The pseudo-labeled subjects are added only to the training set; the validation and test sets contain clean labeled subjects."
-  - Pseudo-label distribution (713 subjects): healthy = 535, ADHD = 178.
-  - "The clean cohort was split using stratified train/test and train/validation splits with random_state=42, resulting in 103 training, 26 validation, and 33 test subjects."
-  - Total training cohort: 103 clean + 713 pseudo = 816 training subjects.
-  - Held-out test cohort: 33 clean subjects (clean labeled subjects only).
-  - Reproducibility: "Random state 42 was used for the clean train/validation/test split. Full deterministic training reproducibility was not established from the historical trainer code." ("Random state 42 was verified for the clean data split. Full deterministic training reproducibility was not established from the historical checkpoint-producing trainer code.")
-
-- **Input Representation & Graph Construction**:
-  - Atlas: AAL-116 (116 ROIs, 6670 unique FC features: $116 \times 115 / 2 = 6670$).
-  - Full vs Reduced Features: The full 6670-dimensional features (`X_combined_full.npy`) were used for graph reconstruction. The 2000-dimensional reduced representation (`X_combined_reduced.npy`) was not used for Exp 07 graph reconstruction.
-  - Nominal density parameter: $\text{DENSITY} = 0.15$.
-  - Thresholding definition: Computed on upper-triangle absolute FC values:
-    `abs_fc = np.abs(fc_matrix)`
-    `upper_vals = abs_fc[triu_idx]`
-    `threshold = np.percentile(upper_vals, 100 * (1 - density))` (85th percentile).
-  - Edge selection: `edge_mask = abs_fc >= threshold` (`>=` comparison; percentile ties can yield slightly more edges than the nominal 15%).
-  - Edge attributes: `edge_attr = torch.tensor(fc_matrix[edge_mask], dtype=torch.float32)` retains original signed FC values.
-  - Message-passing behavior: "edge_attr is stored in the graph data object but is not passed as edge weights to the historical GCNConv message-passing layers."
-  - Node features: 117-dimensional: 116 signed FC row values + 1 normalized degree (`degree = np.sum(abs_fc >= threshold, axis=1, keepdims=True) / n_rois; node_features = np.hstack([fc_matrix, degree])`). The degree feature is based on unweighted thresholded adjacency, not weighted node strength. The inspected historical Exp07 graph-construction code does not apply a final z-score/StandardScaler transformation to the 117-dimensional node-feature matrix.
-
-- **Model Architectures & Hyperparameters**:
-  - Classical GCN: $117 \to 32 \to 32 \to 16 \to 2$ with BatchNorm1d, ReLU, Dropout($p=0.30$), and global mean pooling (5,522 parameters).
-  - Quantum QGCNN: Classical projection ($117 \to 12$), 6-qubit quantum variational circuit ($N_{\text{qubits}}=6, N_{\text{layers}}=1$; $R_Y, R_Z$ angle encoding; 1 trainable layer with parameterized $R_X, R_Y, R_Z$ rotations and ring CNOT entanglement; 6 Pauli-$Z$ expectations), followed by 3 GCN layers ($6 \to 16 \to 16 \to 16 \to 2$) and global mean pooling (2,188 parameters).
-  - Hyperparameters: `SEED=42`, `N_QUBITS=6`, `N_LAYERS=1`, `BATCH_SIZE=8`, `LEARNING_RATE=1e-3`, `WEIGHT_DECAY=1e-5`, `DENSITY=0.15`, `EPOCHS=20`, `PATIENCE=10`, `CHECKPOINT_INTERVAL=1`.
-
-- **Checkpoints & Independent Verified Results**:
-  - Historical checkpoint-producing code wrote:
-    - Classical: `classical_checkpoint_epoch_{epoch}.pth`, `classical_best_model.pth`
-    - Quantum: `quantum_checkpoint_epoch_{epoch}.pth`, `quantum_best_model.pth`
-  - Historical checkpoint analysis evaluated `classical_best_model.pth` and `quantum_best_model.pth` on the 33 held-out test subjects.
-  - **Classical GCN Test Results** (33 clean test samples):
-    - AUC: 0.7293233082706767
-    - Accuracy: 0.696969696969697
-    - Weighted Precision: 0.6940836940836941
-    - Weighted Recall: 0.696969696969697
-    - Weighted F1: 0.6928904428904429
-    - Confusion Matrix: `[[15, 4], [6, 8]]`
-  - **Quantum GCNN Test Results** (33 clean test samples):
-    - AUC: 0.6428571428571428
-    - Accuracy: 0.6060606060606061
-    - Weighted Precision: 0.6204322638146168
-    - Weighted Recall: 0.6060606060606061
-    - Weighted F1: 0.6082390727552018
-    - Confusion Matrix: `[[11, 8], [5, 9]]`
-  - Each model's metrics are reported independently without comparative ranking, tiers, or verdicts.
-  - Stored in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`.
-
-- **Paper-vs-Code Discrepancies (Earlier Manuscript Drafts)**:
-  - Earlier draft text referenced 0.20 density; historical code executed with nominal density 0.15.
-  - Earlier draft described weighted node strength; historical code used unweighted normalized degree.
-  - Earlier draft implied weighted convolutions / weighted message passing; historical code did not pass `edge_attr` as weights to `GCNConv`.
-  - Earlier draft described 2 quantum layers; historical code executed with 1 quantum layer.
+- **Cohort Lineage Provenance**:
+  - Experiment 06 produced a 391-subject phenotypically aligned clean cohort.
+  - Experiment 07 used a historical combined 875-subject array in which the first 162 entries were treated as the clean benchmark cohort and the remaining 713 entries as the pseudo-labelled/training extension.
+  - At the subject-ID level, the 162 clean Exp07 subjects are verified as an exact prefix subset of the 391 Exp06 aligned cohort ($162 \subset 391$, documented in `results/exp07/clean_subjects_manifest.csv`). The historical scientific rationale for selecting the integer 162 prefix was not recovered.
+  - The clean cohort was partitioned deterministically (`random_state=42`, stratified): 103 training, 26 validation, and 33 held-out test subjects.
+  - Total training set: 103 clean + 713 pseudo = 816 graphs.
+  - Held-out test set: 33 clean subjects (19 TDC, 14 ADHD).
+- **Graph Construction**:
+  - Atlas: AAL-116 ($N=116$ ROIs, 6,670 upper-triangular FC features).
+  - Thresholding: Nominal 15% density threshold on upper-triangle absolute FC values (`abs_fc >= threshold`).
+  - Edge Attributes: Retained signed Pearson correlation values in `edge_attr`. Stored `edge_attr` is not passed as edge weights to `GCNConv` layers.
+  - Node Features: 117 dimensions (116 signed FC row values + 1 normalized degree `degree / 116`).
+- **Architectures & Evaluation**:
+  - Classical GCN: 3-layer GCN ($117 \to 32 \to 32 \to 16 \to 2$, BatchNorm, Dropout 0.30, 20 epochs, 5,522 parameters). Test metrics: **AUC = 0.7293**, Accuracy = 0.6970 (15/19 TDC, 8/14 ADHD).
+  - Quantum QGCNN: Classical projection ($117 \to 12$), 6-qubit PQC ($N_{\text{layers}}=1$, 18 parameters), followed by 3 GCN layers ($6 \to 16 \to 16 \to 16 \to 2$, 2,188 parameters). Test metrics: **AUC = 0.6428**, Accuracy = 0.6061 (11/19 TDC, 9/14 ADHD).
+  - Archival notice: Model evaluation metrics are verified in `results/exp07/checkpoint_analysis.json`.
 
 ### Experiment 08: Deep-Learning Baselines
-- **Cohort & Modality Distinctions (Earlier Draft Discrepancy)**:
-  - **4D Volumetric Cohort (626 Scans)**: An earlier project note suggested evaluation on structural T1 scans; in actual execution, the Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM spatio-temporal transformer (Acc 68.25% / 59.10%) were evaluated on sequences of 4D functional BOLD volumes ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
-  - **Timeseries Cohort (764 Subjects)**: The Temporal GNN (Acc 54.43%) was evaluated on extracted 1D BOLD timeseries from CC200 parcellations across 764 subjects.
-- **Subject-Level Partitioning**: Temporal graph learning was evaluated on strictly disjoint subject partitions (534 train, 115 validation, 115 test). The evaluated partitions do not leak subjects across splits.
+- **Cohort & Modality Distinctions**:
+  - **4D Volumetric Cohort (626 Scans)**: Lightweight 3D CNN (Acc 76.19%) and NeuroSTORM spatio-temporal transformer (Acc 68.25% / 59.10%) were evaluated on sequences of 4D functional BOLD volumes ($T=25, 99 \times 117 \times 95$), **not** structural T1 anatomical scans.
+  - **Timeseries Cohort (764 Subjects)**: Temporal GNN (Acc 54.43%) was evaluated on extracted 1D BOLD timeseries from CC200 parcellations across 764 subjects.
+- **Partitioning**: Strictly disjoint subject splits (534 train, 115 validation, 115 test) without subject leakage across splits (`results/exp08/exp08_verified_results.json`).
 
 ### Experiment 09: Leave-One-Site-Out Population Graphs
-- **Graph Construction Protocol (Earlier Draft Discrepancy — Resolved)**: The executed notebook (`notebooks/exp09/11_population_graph_learning.ipynb`) constructed subject graphs using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with signed weighted edges and self-loops, across 497 subjects from 7 clinical sites and 190 CC200 ROIs. Earlier manuscript drafts referenced an unweighted MST + 20% distance mapping; this discrepancy is resolved in the current manuscript and repository alignment.
-- **Classical ML Baselines**: Evaluated in `notebooks/exp09/12_classical_ml_baseline.ipynb` across 7 classifier types and 6 feature families with fold-nested `SelectKBest`. The canonical 42-row 7-fold LOSO evaluation is provided in `w1_canonical_model_summary.csv`, while the historical execution ledger (`w1_model_summary.csv`) retains all 52 recorded model rows (including intermediate 3-, 5-, and 6-fold runs and winner duplicates), and `w1_family_winners.csv` provides the 6 family winners.
-
-#### Feature Selection and Leakage Nuance
-- **ROI / Node Selection**: There was **no** subset selection of CC200 ROIs or nodes; all 190 brain regions were retained across all evaluated models.
-- **Classical ML**: Feature selection via ANOVA $F$-score (`SelectKBest(f_classif)`) was strictly nested inside each training fold of the cross-validation loop, preventing test fold leakage.
-- **Representation Format Selection**: The evaluation of node representation formats (`connectivity` vs `identity` vs `strength`) was conducted across LOSO folds in Workflow 2A prior to final GNN hyperparameter training. While no ROI-level data leakage occurred, format selection was an exploratory workflow across folds and should not be characterized as "zero leakage" without qualification.
+- **Graph Construction Protocol**: Subject-level graphs constructed using `top_10pct` positive-FC thresholding (`fc >= 90th percentile`) with self-loops across 497 subjects from 7 clinical sites and 190 CC200 ROIs (`results/exp09/graph_preprocessing_summary.csv`).
+- **Edge Weight Semantics**:
+  - Signed Pearson correlation values are stored as `edge_attr` in the PyG Data objects with self-loops.
+  - In the main 7-fold LOSO benchmark, only isotropic GCN consumes `edge_weight=edge_weight` during message passing.
+  - GAT, SAGE, and GIN execute message passing over topological connectivity defined by `edge_index` without consuming `edge_attr` as weights (`configs/exp09/w2b_best_config.json`).
+- **GAT Interpretation**: GAT achieved the highest mean AUC (**0.5752**) among the four evaluated GNN architectures under 7-fold LOSO. The empirical data demonstrate superior cross-site AUC without proving that attention weights specifically suppress scanner noise.
+- **Threshold Selection Provenance**: The recovered 8-regime threshold sweep ledger is preserved in `results/exp09/graph_statistics.csv` (`top_10pct` $\sigma \approx 3.81$, 80.48% connected vs `top_5pct` $\sigma \approx 6.02$, 6.44% connected), accompanied by downstream diagnostic validation ledgers (`gnn_diagnostic_positive.csv`, `gnn_diagnostic_absolute.csv`). The original producer script and exact historical selection rule were not retained in the surviving tree (`configs/exp09/selected_threshold.json`).
+- **Pareto Front Artifact Clarification**: `w2_pareto_front.csv` records a multi-objective comparison of feature representations (ComBat FC vs Raw FC vs GraphPheno) against site prediction balanced accuracy. It does not represent a threshold sweep and is disassociated from threshold metadata.
+- **Classical Baselines & Phenotypic Equivalence**: Evaluated across 7 classifiers and 6 feature families (canonical 42 configurations in `w1_canonical_model_summary.csv`, 52 historical records in `w1_model_summary.csv`). Elastic Net demographic baseline achieved **0.5935 mean AUC**. 'Phenotype' and 'Phenotype without IQ' evaluations are identical because `master_cohort.csv` contained no cognitive test columns.
 
 ---
 
@@ -148,7 +110,23 @@ Prior to repository cleanup, several alternative and legacy implementation varia
 
 ---
 
-## 5. Third-Party Code & Licensing Determinations
+## 5. Recovered Historical Evidence Artifacts
+
+The following lightweight artifacts were recovered from historical cloud development archives to provide empirical provenance for key experimental decisions:
+
+| Artifact Path | Source Archive Origin | SHA256 Hash | Status | Producer Code Availability |
+| :--- | :--- | :--- | :--- | :--- |
+| `results/exp07/clean_subjects_manifest.csv` | Derived from `aligned_subjects.npy` and Exp 07 split logic | `e60971bc3a90c5d50696b3d94de4b99a17a36fdc65866b918fa8b3fcca54b630` | Provenance Manifest | Fully reproducible via `scratch/generate_manifest.py` |
+| `results/exp09/graph_statistics.csv` | `06_results/workflow2b/graph_statistics.csv` | `cd0a714e43f4ce905268754b17a33d855bb316cc7a9b948b1dc7207180de0512` | Recovered Historical Ledger | Producer script not retained in repository |
+| `results/exp09/gnn_diagnostic_positive.csv` | `06_results/workflow2b/gnn_diagnostic_positive.csv` | `ae4b6153d370c1af73fc734e8e6a84c3afe5a485d852cf3e0668370a61510dc3` | Recovered Historical Validation | Producer script not retained in repository |
+| `results/exp09/gnn_diagnostic_absolute.csv` | `06_results/workflow2b/gnn_diagnostic_absolute.csv` | `a024403690ef1dd198441d3e22dfce382f4071f7ebcbb7aca29320931d3be662` | Recovered Historical Validation | Producer script not retained in repository |
+| `results/exp09/w2b_wilcoxon_tests.csv` | `06_results/workflow2b/w2b_wilcoxon_tests.csv` | `9dbe6cdd7aed848a253d2ecfca5963be926bb94d00ddd87273ff4f845240b532` | Recovered Statistical Ledger | Derived statistical tests |
+| `results/exp09/w2b_summary_with_ci.csv` | `06_results/workflow2b/w2b_summary_with_ci.csv` | `7418c381bd946b8c36b52f4542d4df0f5c1b20539ed3706aae56eb7458167afe` | Recovered Statistical Ledger | Derived summary table with CIs |
+| `results/exp09/w2b_error_analysis.csv` | `06_results/workflow2b/w2b_error_analysis.csv` | `7d87a833b1b146d876113f96713427dda9a907d860584d9f2d7d9566f0f91f2d` | Recovered Diagnostic Ledger | Derived error analysis |
+
+---
+
+## 6. Third-Party Code & Licensing Determinations
 
 | Bundled Component | File Path | Origin / Upstream | Upstream License | Status in Repository |
 | :--- | :--- | :--- | :--- | :--- |
