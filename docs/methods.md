@@ -56,11 +56,11 @@ Quantify temporal autocorrelation decay, stability, and topological variability 
 Athena-preprocessed CC200 ROI time series ($T$ time points, $N=190$ ROIs).
 
 ### FC Estimation
-Sliding-window Pearson correlation matrices computed with a rectangular window of length $W = 30$ TRs and step size $s = 1$ TR:
+Sliding-window Pearson correlation matrices computed with a rectangular window of length $W = 30$ TRs and stride $s = 5$ TRs (83.3% overlap, 25 shared time points):
 $$r_{ij}(t) = \frac{\sum_{\tau=1}^{W} (x_i(t+\tau) - \bar{x}_i)(x_j(t+\tau) - \bar{x}_j)}{\sqrt{\sum_{\tau=1}^{W} (x_i(t+\tau) - \bar{x}_i)^2 \sum_{\tau=1}^{W} (x_j(t+\tau) - \bar{x}_j)^2}}$$
 
 ### Temporal Similarity
-Pearson correlation between vectorised upper-triangle FC matrices at time $t$ and $t + \text{lag}$ ($\text{lag} \in \{1, 2, 3, 4\}$):
+Pearson correlation between vectorised upper-triangle FC matrices at time $t$ and $t + \text{lag}$ ($\text{lag} \in \{1, 2, 3, 4\}$ windows):
 $$\text{Sim}(t, t+\text{lag}) = \text{corr}(\text{vech}(FC_t), \text{vech}(FC_{t+\text{lag}}))$$
 Frobenius norm distance progression:
 $$D_F(t, t+\text{lag}) = \|FC_t - FC_{t+\text{lag}}\|_F$$
@@ -70,7 +70,7 @@ Temporal standard deviation of connectivity strength across sliding windows for 
 
 ### Output Artifacts
 - Primary notebook/source: [`notebooks/exp01/dynamic_fc_temporal_validation.ipynb`](../notebooks/exp01/dynamic_fc_temporal_validation.ipynb)
-- Primary configuration: N/A (Standardized pipeline parameters: $W=30$, step=1)
+- Primary configuration: N/A (Standardized pipeline parameters: $W=30$, stride=5)
 - Primary result artifact: [`results/exp01/temporal_similarity_validation.csv`](../results/exp01/temporal_similarity_validation.csv), [`results/exp01/static_dynamic_fc_comparison.csv`](../results/exp01/static_dynamic_fc_comparison.csv)
 - Reproducibility status: Category A (Rerunnable from raw CC200 time series)
 
@@ -144,17 +144,17 @@ Two-sample Welch's unequal variances $t$-tests comparing TDC vs ADHD cohorts, wi
 ## 8. Experiment 04 — Site Effects and ComBat Harmonization
 
 ### Site-Effect Testing
-One-way analysis of variance (ANOVA) across the 9 acquisition sites testing for scanner-induced variance in topological graph metrics.
+One-way analysis of variance (ANOVA) across the 8 acquisition sites testing for scanner-induced variance in topological graph metrics across the phenotypically complete subset.
 
 ### Predictive Diagnostics
-Support Vector Machine (SVM) and Logistic Regression classifiers trained to predict scanner site label from topological feature vectors to quantify site bias.
+Random Forest classification was used as the site-prediction diagnostic to quantify scanner bias before and after harmonization.
 
 ### ComBat Harmonization
 Empirical Bayes location-and-scale harmonization (Fortin et al., 2018) adjusting for additive and multiplicative site batch effects while preserving biological covariates (age, sex, diagnostic status):
 $$y_{ijg} = \alpha_g + X_{ij}\beta_g + \gamma_{ig} + \delta_{ig}\epsilon_{ijg}$$
 
 ### Descriptive & Predictive Analysis
-Re-evaluation of clustering coefficients, path lengths, site prediction balanced accuracy, and diagnostic classification accuracy before and after harmonization.
+Re-evaluation of clustering coefficients, path lengths, site prediction accuracy (58.64% raw $\to$ 31.29% ComBat), and diagnostic classification before and after harmonization.
 
 ### Output Artifacts
 - Primary notebook/source: [`notebooks/exp04/combat_site_effects_harmonization.ipynb`](../notebooks/exp04/combat_site_effects_harmonization.ipynb)
@@ -170,16 +170,17 @@ Re-evaluation of clustering coefficients, path lengths, site prediction balanced
 Unsupervised discovery of recurring functional connectivity configurations across all sliding-window correlation matrices using $k$-means clustering with correlation distance ($1 - \text{corr}$).
 
 ### K Selection & MeanRank
-Candidate cluster counts $K \in \{2, 3, 4, 5, 6, 7, 8\}$ evaluated using the MeanRank composite criterion aggregating:
+Candidate cluster counts $K \in \{2, 3, \dots, 10\}$ evaluated using the MeanRank composite criterion aggregating three internal cluster validity indices:
 - Silhouette Coefficient
-- Davies-Bouldin Index
 - Calinski-Harabasz Index
-- Dunn Index
+- Davies-Bouldin Index
+
+Selected $K = 3$ based on optimal composite rank (MeanRank = 2.333). Robustness confirmed through 30-run Adjusted Rand Index (ARI) stability analysis (Mean ARI: $0.9950 \pm 0.0024$).
 
 ### Stability & State-Sequence Features
 Cluster centroids identify $K=3$ discrete connectivity micro-states. Each acquisition is mapped to a discrete state sequence from which temporal biomarkers are extracted:
-- Fractional Occupancy (proportion of time spent in state $k$)
-- Mean Dwell Time (consecutive windows spent in state $k$)
+- Fractional Occupancy (proportion of time spent in state $k$: State 0 = 49.05%, State 1 = 27.32%, State 2 = 23.63%)
+- Mean Dwell Time (consecutive windows spent in state $k$: State 0 = 6.24, State 1 = 3.44, State 2 = 2.83 windows)
 - Transition Probability Matrix ($P_{ij}$, probability of switching from state $i$ to state $j$)
 
 ### Output Artifacts
@@ -196,7 +197,7 @@ Cluster centroids identify $K=3$ discrete connectivity micro-states. Each acquis
 Static functional connectivity vectors ($d = 6,670$ upper-triangle edges) on the AAL-116 atlas for 955 subjects: 391 clean-labeled subjects and 564 candidate unlabeled subjects.
 
 ### Procedure I (Self-Training with Thresholding)
-Base Random Forest classifier trained on 391 clean subjects predicts class probabilities on unlabeled data. Samples exceeding a posterior probability confidence threshold of $\tau = 0.75$ are iteratively assigned pseudo-labels, yielding 552 pseudo-labeled samples.
+Base class-weighted Logistic Regression classifier trained on 391 clean subjects predicts class probabilities on unlabeled data. Samples exceeding a posterior probability confidence threshold of $\tau = 0.75$ are iteratively assigned pseudo-labels, yielding 552 pseudo-labeled samples.
 
 ### Procedure II (Multi-Model Ensemble Consensus)
 Consensus voting across an ensemble of 4 heterogeneous classifiers (Random Forest, Extra Trees, Gradient Boosting, SVM). Only samples with unanimous model agreement and mean ensemble confidence $\bar{p} \ge 0.75$ receive pseudo-labels, yielding 484 pseudo-labeled samples.
@@ -233,11 +234,11 @@ Message passing across graph convolution layers is strictly **unweighted**:
 Parameterized quantum circuit implemented via PennyLane:
 - Linear projection from graph pooling layer ($117 \to 12$).
 - Angle embedding onto 6 qubits using $R_y$ rotations.
-- 1 variational layer comprising 6 trainable parameter gates and Entangling CNOT gates (18 variational parameters).
+- 1 variational layer comprising 6 trainable parameter gates and Entangling CNOT gates (2,188 total model parameters).
 - Pauli-$Z$ expectation values measured on each qubit and projected to 2 diagnostic logits.
 
 ### Training & Evaluation Protocol
-Trained with Adam optimizer ($\text{lr}=10^{-3}$, weight decay=$10^{-4}$, batch size=16, 50 epochs) with early stopping on validation loss. Evaluated on the 33 held-out clean test subjects using AUC, Accuracy, Precision, Recall, and F1.
+Trained with Adam optimizer ($\text{lr}=10^{-3}$, weight decay=$10^{-5}$, batch size=8, epochs=20, patience=10) with early stopping based on validation AUC. Evaluated on the 33 held-out clean test subjects using AUC, Accuracy, Precision, Recall, and F1.
 
 ### Output Artifacts
 - Primary notebook/source: [`src/exp07/classical_models/run_gcn_experiment.py`](../src/exp07/classical_models/run_gcn_experiment.py), [`src/exp07/quantum_models/run_qgcnn_experiment.py`](../src/exp07/quantum_models/run_qgcnn_experiment.py)
@@ -284,7 +285,7 @@ Dynamic graph neural network incorporating windowed graph sequence inputs and GR
 The top-10% positive threshold was recovered from an exploratory 8-regime historical sweep (`none`, `top_5pct`, `top_10pct`, `top_15pct`, `top_20pct`, `abs_gt_0.2`, `abs_gt_0.25`, `abs_gt_0.3`) documented in [`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv). The original producer code and formal decision rule were not retained; it is documented as a recovered historical operating point.
 
 ### GNN Architectures
-Four standard geometric deep learning architectures evaluated with identical hyperparameters (hidden dim=64, 2 layers, dropout=0.3, Adam lr=$10^{-3}$, 100 epochs, early stopping patience=15):
+Four standard geometric deep learning architectures evaluated with identical executed hyperparameters (hidden dim=128, 2 layers, dropout=0.5, batch size=64, epochs=200, patience=20, Adam lr=$10^{-3}$, weight decay=$5 \times 10^{-4}$, global mean pooling, GAT heads=4, BatchNorm enabled):
 - Graph Convolutional Network (GCN)
 - Graph Attention Network (GAT, 4 heads)
 - Graph Sample and Aggregate (GraphSAGE, mean aggregation)
@@ -310,4 +311,4 @@ Four standard geometric deep learning architectures evaluated with identical hyp
 - Primary notebook/source: [`notebooks/exp09/loso_gnn_population_graphs.ipynb`](../notebooks/exp09/loso_gnn_population_graphs.ipynb), [`notebooks/exp09/loso_classical_ml_baselines.ipynb`](../notebooks/exp09/loso_classical_ml_baselines.ipynb)
 - Primary configuration: [`configs/exp09/gnn_configuration.json`](../configs/exp09/gnn_configuration.json), [`configs/exp09/graph_threshold_selection.json`](../configs/exp09/graph_threshold_selection.json)
 - Primary result artifact: [`results/exp09/gnn_loso_fold_results.csv`](../results/exp09/gnn_loso_fold_results.csv), [`results/exp09/classical_ml_canonical_results.csv`](../results/exp09/classical_ml_canonical_results.csv), [`results/exp09/gnn_loso_summary_statistics.csv`](../results/exp09/gnn_loso_summary_statistics.csv)
-- Reproducibility status: Category A (Full 7-fold LOSO evaluation tables verified; notebook end-to-end execution requires precomputed representation parquets)
+- Reproducibility status: Category B (Requires excluded intermediates; full 7-fold LOSO evaluation tables verified; notebook end-to-end execution requires precomputed representation parquets)

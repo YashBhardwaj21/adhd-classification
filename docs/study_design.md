@@ -60,8 +60,8 @@ The ADHD-200 Sample comprises heterogeneous resting-state acquisitions across in
 
 ### Track A Cohort (CC200 Atlas, 190 ROIs)
 - **Total Population**: 764 unique subjects across 9 sites (`KKI`, `NYU`, `NeuroIMAGE`, `OHSU`, `Peking_1`, `Peking_2`, `Peking_3`, `Pittsburgh`, `WashU`).
-- **Acquisitions & Windows**: 1,193 imaging runs yielding 31,060 temporal sliding windows ($W=30$ TRs, step=1 TR).
-- **Phenotypic Subset (Exp 03–05)**: 534 subjects with complete phenotypic records (age, sex, diagnostic status) utilized for behavioral associations and ANOVA testing.
+- **Acquisitions & Windows**: 1,193 imaging runs yielding 31,060 temporal sliding windows ($W=30$ TRs, stride=5 TRs, 83.3% overlap).
+- **Phenotypic Analyses (Exp 03–05)**: Dynamic graph-metric and state discovery artifacts cover the full 764 subjects (31,060 windows); downstream clinical and behavioral analyses reference the 534 phenotypically complete subset across 8 sites.
 
 ### Track B Cohort (AAL-116 Atlas, 116 ROIs)
 - **Available Connectivity Population**: 955 subjects with AAL-116 time series.

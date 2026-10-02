@@ -117,27 +117,41 @@ The following artifacts cannot be redistributed or reconstructed from the public
 
 ## 7. Retained Empirical Evidence Ledger
 
-The central cryptographic manifest ([`results/manifest.csv`](../results/manifest.csv)) indexes all retained canonical results:
+The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.csv)) indexes all 31 retained canonical results with exact SHA-256 cryptographic checksums:
 
 | Retained Artifact | Originating Experiment | Dataset / Atlas | Sample Size ($N$) | Evidentiary Status | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `results/exp01/temporal_similarity_validation.csv` | Exp 01 | CC200 | 764 (1,193 runs) | Derived | `d7a48c...` |
-| `results/exp01/static_dynamic_fc_comparison.csv` | Exp 01 | CC200 | 764 (1,193 runs) | Derived | `a1f9e2...` |
-| `results/exp02/graph_metrics_window_level.csv` | Exp 02 | CC200 | 764 (31,060 windows)| Derived | `38b4c1...` |
-| `results/exp02/graph_construction_configuration.csv`| Exp 02 | CC200 | N/A | Derived | `520e18...` |
-| `results/exp03/dynamic_feature_statistics.csv` | Exp 03 | CC200 | 534 | Derived | `6e82a9...` |
-| `results/exp03/site_effect_anova.csv` | Exp 03 | CC200 | 534 | Derived | `b27c3d...` |
-| `results/exp04/combat_harmonization_comparison.csv` | Exp 04 | CC200 | 534 | Derived | `295a0f...` |
-| `results/exp05/dynamic_state_biomarkers.csv` | Exp 05 | CC200 | 534 | Derived | `7c41b8...` |
-| `results/exp06/exp06_verified_results.json` | Exp 06 | AAL-116 | 955 | Verified | `8f3e21...` |
-| `results/exp07/gcn_qgcnn_test_results.json` | Exp 07 | AAL-116 | 33 (Test) | Verified | `1b490f...` |
-| `results/exp07/clean_cohort_lineage.csv` | Exp 07 | AAL-116 | 391 ($162 \subset 391$)| Provenance | `e60971...` |
-| `results/exp08/baseline_model_results.json` | Exp 08 | 4D / CC200 | 626 / 764 | Verified | `4c82d3...` |
-| `results/exp09/gnn_loso_fold_results.csv` | Exp 09 | CC200 | 497 (7 folds) | Derived | `1688b1...` |
-| `results/exp09/classical_ml_canonical_results.csv` | Exp 09 | CC200 | 497 (42 models) | Derived | `4a9f3c...` |
-| `results/exp09/classical_ml_family_summary.csv` | Exp 09 | CC200 | 497 (6 families) | Derived | `e2b804...` |
-| `results/exp09/representation_pareto_analysis.csv` | Exp 09 | CC200 | 497 | Derived | `f9c182...` |
-| `results/exp09/threshold_sweep_graph_statistics.csv`| Exp 09 | CC200 | 497 | Recovered | `0d8e41...` |
+| [`results/exp01/temporal_similarity_validation.csv`](../results/exp01/temporal_similarity_validation.csv) | EXP01 | CC200 | 764 | Derived | `5b626522f34c2a6ec29ed3f98e6a8f1d88cd70f2b013908b5134dcb41bcadf64` |
+| [`results/exp01/static_dynamic_fc_comparison.csv`](../results/exp01/static_dynamic_fc_comparison.csv) | EXP01 | CC200 | 764 | Derived | `505e0ac4c9d100ea104a97caf0f0999a1475bb5c18eae0267ac46c9994f949c5` |
+| [`results/exp02/graph_metrics_window_level.csv`](../results/exp02/graph_metrics_window_level.csv) | EXP02 | CC200 | 764 | Derived | `d03a3ffc5b0a36a1720217678375fab0c35afb8af5960ca2b017196b94bb0275` |
+| [`results/exp02/graph_metrics_subject_level.csv`](../results/exp02/graph_metrics_subject_level.csv) | EXP02 | CC200 | 764 | Derived | `644f63b8614cd01ba3c880466450041b8fe8ac7b5b2c18e96320212627b58da1` |
+| [`results/exp03/dynamic_feature_statistics.csv`](../results/exp03/dynamic_feature_statistics.csv) | EXP03 | CC200 | 764 | Derived | `04d57c17e8618fc832582f3e164df9b4a391e82bf3be89c8d60359efdb91a674` |
+| [`results/exp03/site_effect_anova.csv`](../results/exp03/site_effect_anova.csv) | EXP03 | CC200 | 764 | Derived | `29edeaf561d3643dbec39bccbd5df284d18af6ecec4e22ec41dfe26a1e47ee35` |
+| [`results/exp04/combat_harmonization_comparison.csv`](../results/exp04/combat_harmonization_comparison.csv) | EXP04 | CC200 | 764 | Derived | `18da724e353968e7e9997a8abebf27121143d621a73eaeeae254f5d4e348fa5f` |
+| [`results/exp04/site_prediction_combat_comparison.csv`](../results/exp04/site_prediction_combat_comparison.csv) | EXP04 | CC200 | 764 | Derived | `ceb3024ada226449f7c4b0327b0cd0c36bdee11f9f66de2f6db857511a9da37c` |
+| [`results/exp04/diagnosis_prediction_combat_comparison.csv`](../results/exp04/diagnosis_prediction_combat_comparison.csv) | EXP04 | CC200 | 764 | Derived | `7445f7928ca9855728e9fe0f4cabc89d9c4dce2aa88ffe90989a0537ecc9a002` |
+| [`results/exp05/dynamic_state_biomarkers.csv`](../results/exp05/dynamic_state_biomarkers.csv) | EXP05 | CC200 | 764 | Derived | `3f3523b67a3527b3a0305706e37bb54b727a1bf529930e3cd0bf1f27ebc2c087` |
+| [`results/exp05/dynamic_state_sequences.csv`](../results/exp05/dynamic_state_sequences.csv) | EXP05 | CC200 | 764 | Derived | `973ae8486c92e397ccdc3bd94858f150825d0405f98cfcbc041460beb8f040e8` |
+| [`results/exp06/exp06_verified_results.json`](../results/exp06/exp06_verified_results.json) | EXP06 | AAL-116 | 955 | Reported | `1e35a8d600644d71c0b4ce0ef0a97d498b65bd8b975403ccf7015d98fd5f54ef` |
+| [`results/exp07/gcn_qgcnn_test_results.json`](../results/exp07/gcn_qgcnn_test_results.json) | EXP07 | AAL-116 | 33 | Archived | `a3a9582dd9d8fa6bd607b8ca098a80bef1f2068f2d6ffaee59be49e1dba8997f` |
+| [`results/exp07/experiment_report.md`](../results/exp07/experiment_report.md) | EXP07 | AAL-116 | 33 | Archived | `4f1fa1aaad2d7686045beb7ca15c31aa9793e8af23b0305197dffb65992bb512` |
+| [`results/exp07/pseudolabel_provenance.json`](../results/exp07/pseudolabel_provenance.json) | EXP07 | AAL-116 | 875 | Reported | `dc911f747f4dd498547de3005914439ba1923424f6f144d518d58d9a3640feff` |
+| [`results/exp07/clean_cohort_lineage.csv`](../results/exp07/clean_cohort_lineage.csv) | EXP07 | AAL-116 | 391 | Provenance | `e60971bc3a90c5d50696b3d94de4b99a17a36fdc65866b918fa8b3fcca54b630` |
+| [`results/exp08/baseline_model_results.json`](../results/exp08/baseline_model_results.json) | EXP08 | ADHD-200 (Volumetric) | 626 | Reported | `46c22ef7b319099944f88f9b599c0dcff07757cf5fa67fd72c6bc6e4754b4a2d` |
+| [`results/exp08/baseline_model_results.json`](../results/exp08/baseline_model_results.json) | EXP08 | CC200 (Temporal) | 764 | Reported | `46c22ef7b319099944f88f9b599c0dcff07757cf5fa67fd72c6bc6e4754b4a2d` |
+| [`results/exp09/gnn_loso_fold_results.csv`](../results/exp09/gnn_loso_fold_results.csv) | EXP09 | CC200 | 497 | Derived | `539afa592b37dd42c1651e81bac2d8c17c667a13ff80f4ca3c1f5a34efe3ea0a` |
+| [`results/exp09/classical_ml_canonical_results.csv`](../results/exp09/classical_ml_canonical_results.csv) | EXP09 | CC200 | 497 | Derived | `2db4bfda51d76d7dbfcc6be309930151462c7b0811f30f686c82db4e8b06fddd` |
+| [`results/exp09/classical_ml_historical_results.csv`](../results/exp09/classical_ml_historical_results.csv) | EXP09 | CC200 | 497 | Historical | `eb378818ee737e13e71f6c4b8552f06470ee7c08af88d6eda7d5ca891ea52a38` |
+| [`results/exp09/classical_ml_family_summary.csv`](../results/exp09/classical_ml_family_summary.csv) | EXP09 | CC200 | 497 | Derived | `b0ee621823e1be30b1b68d9999c91aaa300d5c3639da7447a4d04e1673e16b33` |
+| [`results/exp09/representation_pareto_analysis.csv`](../results/exp09/representation_pareto_analysis.csv) | EXP09 | CC200 | 497 | Derived | `048a0ff0e3a8a4040d58bc510608e13f4cc58859f38e567ef37208858e1ac97d` |
+| [`results/exp09/graph_preprocessing_summary.csv`](../results/exp09/graph_preprocessing_summary.csv) | EXP09 | CC200 | 497 | Derived | `2ab69569a22bba5603b0e6d329893ac75f18cd972623bda798d8e22481f9f8ea` |
+| [`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv) | EXP09 | CC200 | 497 | Historical | `cd0a714e43f4ce905268754b17a33d855bb316cc7a9b948b1dc7207180de0512` |
+| [`results/exp09/threshold_positive_fc_diagnostic.csv`](../results/exp09/threshold_positive_fc_diagnostic.csv) | EXP09 | CC200 | 497 | Historical | `ae4b6153d370c1af73fc734e8e6a84c3afe5a485d852cf3e0668370a61510dc3` |
+| [`results/exp09/threshold_absolute_fc_diagnostic.csv`](../results/exp09/threshold_absolute_fc_diagnostic.csv) | EXP09 | CC200 | 497 | Historical | `a024403690ef1dd198441d3e22dfce382f4071f7ebcbb7aca29320931d3be662` |
+| [`results/exp09/gnn_loso_pairwise_tests.csv`](../results/exp09/gnn_loso_pairwise_tests.csv) | EXP09 | CC200 | 497 | Historical | `9dbe6cdd7aed848a253d2ecfca5963be926bb94d00ddd87273ff4f845240b532` |
+| [`results/exp09/gnn_loso_summary_statistics.csv`](../results/exp09/gnn_loso_summary_statistics.csv) | EXP09 | CC200 | 497 | Historical | `7418c381bd946b8c36b52f4542d4df0f5c1b20539ed3706aae56eb7458167afe` |
+| [`results/exp09/gnn_loso_error_analysis.csv`](../results/exp09/gnn_loso_error_analysis.csv) | EXP09 | CC200 | 497 | Historical | `7d87a833b1b146d876113f96713427dda9a907d860584d9f2d7d9566f0f91f2d` |
+| [`results/exp09/exp09_verified_results.json`](../results/exp09/exp09_verified_results.json) | EXP09 | CC200 | 497 | Derived | `04919ab176839105a044ab44da3f46da87fc365fc1f37a49e85f7aa5ee6a0279` |
 
 ---
 

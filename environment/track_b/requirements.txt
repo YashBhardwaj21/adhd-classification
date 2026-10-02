@@ -21,4 +21,5 @@ scipy==1.17.1
 tqdm>=4.65.0
 jupyter>=1.0.0
 einops==0.8.2
-mamba-ssm
+# Note: mamba-ssm is NOT part of this environment.
+# It belongs exclusively to the separate NeuroSTORM Docker environment (PyTorch 2.7.1, CUDA 12.6).

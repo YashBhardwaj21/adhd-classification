@@ -23,12 +23,8 @@ This directory contains evaluation outputs from the 7-fold Leave-One-Site-Out (L
 - **`classical_ml_family_summary.csv`** *(historical: `w1_family_winners.csv`)*: Canonical winner summary across the 6 evaluated feature families.
 - **`representation_pareto_analysis.csv`** *(historical: `w2_pareto_front.csv`)*: Multi-objective Pareto evaluation across feature representations (diagnostic ADHD AUC vs scanner site prediction balanced accuracy). *Note: This artifact evaluates representation types (ComBat FC vs Raw FC vs GraphPheno), not edge thresholding.*
 
-### 4. Forensic Audit Archives (`audit_source_files/exp09/`)
-The raw, uncurated training execution traces and per-fold subject-level prediction dumps are archived under `audit_source_files/exp09/` for provenance verification:
-- `training_curves.csv`: Epoch-level training loss and validation metrics across all folds.
-- `confusion_matrices/`: 28 raw fold-level confusion matrix files across architectures.
-- `predictions/`: 28 raw subject-level posterior probability prediction CSVs across architectures.
-- `architecture_summary.csv`: Intermediate multi-metric rollup.
+### 4. Per-Fold Execution Traces
+The raw, uncurated training execution traces, per-fold confusion matrices, and subject-level prediction dumps were generated during execution but are not included in the public repository (file size and curation constraints). The curated summary artifacts above (`gnn_loso_fold_results.csv`, `gnn_loso_summary_statistics.csv`, `gnn_loso_pairwise_tests.csv`, `gnn_loso_error_analysis.csv`) represent the retained canonical outputs from those runs.
 
 ---
 

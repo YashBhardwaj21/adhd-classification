@@ -4,8 +4,8 @@ Experiment-specific environment metadata is retained where it was recorded by th
 
 Experiment 9 includes:
 
-- `configs/exp09/w2b_environment.json`
-- `configs/exp09/w2b_dataset_manifest.json`
+- `configs/exp09/execution_environment.json`
+- `configs/exp09/dataset_manifest.json`
 
 The experiments use Python scientific, deep-learning, graph-learning, neuroimaging, and quantum-computing packages.
 

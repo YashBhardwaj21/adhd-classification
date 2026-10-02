@@ -15,7 +15,7 @@ Experiments whose source code, configurations, and verification routines are ful
 - **Experiment 03**: Dynamic graph metric extraction and cross-site ANOVA testing.
 - **Experiment 04**: ComBat harmonization and topology preservation evaluation.
 - **Experiment 05**: Unsupervised dynamic micro-state clustering and biomarker extraction.
-- **Experiment 09**: Leave-One-Site-Out (LOSO) cross-validation and baseline model evaluation. *(Note: Full evaluation tables are retained in `results/exp09/`; executing the notebook from scratch requires intermediate feature parquets).*
+- **Experiment 09**: Leave-One-Site-Out (LOSO) cross-validation and baseline model evaluation (**Category B**: full evaluation tables are retained in `results/exp09/`; executing the notebook from scratch requires intermediate feature parquets not distributed in the public repository).
 
 ### Category B — Requires Excluded Intermediates
 Experiments whose complete source code is preserved in the repository, but whose execution requires large intermediate arrays, raw 4D functional NIfTI volumes, or pretrained checkpoints that exceed Git quotas:
@@ -32,10 +32,10 @@ Experiments for which exact configurations and verified empirical test metrics a
 
 | Track | Experiments | Python | PyTorch | PyTorch Geometric | PennyLane | Environment File | Target Hardware |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Track A** | Exp 01–05 | 3.10–3.13 | $\ge 2.2.0$ | $\ge 2.5.0$ | N/A | `environment/track_a/environment.yml` | CPU or Single GPU |
-| **Track B** | Exp 06–07 | 3.10–3.12 | 2.5.1 | 2.6.1 | 0.44.1 | `environment/track_b/environment.yml` | NVIDIA GPU (CUDA 12.4) |
-| **Track B** | Exp 08 | 3.10–3.12 | 2.5.1 | 2.6.1 | N/A | `environment/track_b/environment.yml` | NVIDIA GPU (CUDA 12.4) |
-| **Track C** | Exp 09 | 3.10–3.12 | 2.5.1 | 2.6.1 | N/A | `environment/track_c/environment.yml` | NVIDIA GPU (CUDA 12.4) |
+| **Track A** | Exp 01–05 | 3.10–3.13 | $\ge 2.2.0$ | $\ge 2.5.0$ | N/A | `environment/track_a/requirements.txt` | CPU or Single GPU |
+| **Track B** | Exp 06–07 | 3.10–3.12 | 2.5.1+cu121 | 2.6.1 | 0.44.1 | `environment/track_b/requirements.txt` | NVIDIA GPU (CUDA 12.1) |
+| **Track B** | Exp 08 | 3.10–3.12 | 2.7.1+cu126 | N/A | N/A | `environment/track_b/requirements.txt` (NeuroSTORM env separate) | NVIDIA GPU (CUDA 12.6) |
+| **Track C** | Exp 09 | 3.10–3.12 | 2.5.1+cu121 | 2.8.0 | N/A | `environment/track_c/requirements.txt` | NVIDIA GPU (CUDA 12.1) |
 
 ---
 
@@ -45,23 +45,17 @@ Create an isolated conda or virtual environment for each track:
 
 ### Track A (Experiments 01–05)
 ```bash
-conda env create -f environment/track_a/environment.yml
-conda activate adhd200-track-a
-pip install -e .
+pip install -r environment/track_a/requirements.txt
 ```
 
 ### Track B (Experiments 06–07 Core & Exp 08)
 ```bash
-conda env create -f environment/track_b/environment.yml
-conda activate adhd200-track-b
-pip install -e .
+pip install -r environment/track_b/requirements.txt
 ```
 
 ### Track C (Experiment 09)
 ```bash
-conda env create -f environment/track_c/environment.yml
-conda activate adhd200-track-c
-pip install -e .
+pip install -r environment/track_c/requirements.txt
 ```
 
 ---
@@ -135,7 +129,7 @@ The following files are not redistributed in the repository:
 - **`data/raw/`**: Raw 4D fMRI NIfTI files (>120 GB).
 - **`src/exp07/` input arrays**: `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` (875 subjects).
 - **Pretrained Checkpoints**: Checkpoint weights for Classical GCN, QGCNN, and NeuroSTORM.
-- **Exp 09 Intermediates**: `w1_pheno_features.parquet`, `w1_graph_features.parquet`.
+- **Exp 09 Intermediates**: per-subject phenotypic feature parquets and graph feature parquets (historical internal names: `w1_pheno_features.parquet`, `w1_graph_features.parquet`).
 
 ---
 
@@ -159,6 +153,8 @@ pytest tests/ -v
 
 ## 9. Reproducibility Limitations
 
-1. **Hardware-Dependent Quantum Simulation**: PennyLane quantum simulations rely on CPU/GPU state-vector engines (`default.qubit` / `lightning.gpu`) which may exhibit minor numerical drift ($< 10^{-6}$) across different BLAS/LAPACK implementations.
+1. **Hardware-Dependent Quantum Simulation**: PennyLane quantum simulations rely on CPU/GPU state-vector engines (`default.qubit` / `lightning.gpu`). Minor numerical variation across different BLAS/LAPACK implementations is possible; canonical verified metrics are stored in `results/exp07/gcn_qgcnn_test_results.json`.
 2. **Missing Historical Arrays**: Exp 07 cannot be rerun end-to-end without external restoration of the combined 875-subject training arrays.
 3. **Non-Retained Producer Code**: The exploratory 8-regime threshold sweep in Exp 09 survives as a recovered empirical data ledger ([`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv)); the producer code that generated it was not preserved.
+4. **Exp 09 Intermediate Parquets**: The per-subject feature parquets required to execute the LOSO notebook are not distributed in the public repository (Category B). Canonical LOSO results are verified in `results/exp09/gnn_loso_summary_statistics.csv`.
+

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # Results validation script.
 # Verifies numerical consistency across results/ artifacts against
 # the ground-truth values recorded in docs/provenance.md.
@@ -312,12 +312,18 @@ def validate_manifest_consistency():
     m_path = ROOT_DIR / "results/manifest.csv"
     assert m_path.exists(), f"Missing {m_path}"
     m_df = pd.read_csv(m_path)
+    import hashlib
     for idx, row in m_df.iterrows():
-        # Handle cases where source might contain extra descriptive suffix in older configs
         src_clean = str(row["source"]).strip()
         src_path = ROOT_DIR / src_clean
         assert src_path.exists(), f"Manifest row points to missing file: {src_path} (artifact: {row['artifact']})"
-    print(f"  [OK] All {len(m_df)} registered manifest artifacts exist on disk")
+        if "sha256" in row and pd.notna(row["sha256"]):
+            h = hashlib.sha256()
+            with open(src_path, "rb") as f:
+                while chunk := f.read(65536):
+                    h.update(chunk)
+            assert h.hexdigest() == str(row["sha256"]).strip(), f"SHA-256 mismatch for {src_clean}: expected {row['sha256']}, got {h.hexdigest()}"
+    print(f"  [OK] All {len(m_df)} registered manifest artifacts verified with SHA-256 checksums")
 
 
 def main():

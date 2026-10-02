@@ -5,8 +5,18 @@
   "dropout": 0.5,
   "pool": "mean",
   "use_bn": true,
+  "gat_heads": 4,
   "node_features": "connectivity",
   "threshold": "top_10pct",
+  "training": {
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "batch_size": 64,
+    "epochs": 200,
+    "patience": 20,
+    "early_stopping_metric": "validation_auc"
+  },
   "mean_auc": 0.5751908960299881,
   "std_auc": 0.04314677611172698,
   "std_auc_definition": "population standard deviation (ddof=0) across 7 LOSO fold AUCs",

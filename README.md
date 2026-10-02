@@ -3,7 +3,7 @@
 Code, experiment configurations, and lightweight result artifacts for:
 
 > **"ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization"**  
-> *Yash Bhardwaj, Shantanu Khare, Bhavana Deepthi, Shridevi S, and Daehan Won*
+> *Yash Bhardwaj, Bhavana Deepthi, Shantanu Khare, Shridevi S, and Daehan Won*
 
 ---
 
@@ -27,7 +27,7 @@ This study investigates resting-state functional connectomics, machine learning 
 | **02** | MST+PT Graph Construction | CC200 (190 ROIs) | 764 subjects / 31,060 windows | Connectedness & degree-conserving signed null rewiring |
 | **03** | Dynamic Graph Biomarkers | CC200 (190 ROIs) | 534 complete subjects | Welch $t$-tests with BH-FDR correction & cross-site ANOVA |
 | **04** | ComBat Scanner Harmonization | CC200 (190 ROIs) | 534 complete subjects | Site prediction balanced accuracy & topology preservation |
-| **05** | Dynamic State Discovery | CC200 (190 ROIs) | 534 complete subjects | Unsupervised $k$-means clustering ($K=3$) & dwell dynamics |
+| **05** | Dynamic State Discovery | CC200 (190 ROIs) | 764 subjects / 1,193 acquisitions | Unsupervised $k$-means clustering ($K=3$) & dwell dynamics |
 | **06** | Semi-Supervised Pseudo-Labeling | AAL-116 (116 ROIs) | 955 subjects (391 clean) | Self-training ($\tau \ge 0.75$) vs 4-model ensemble consensus |
 | **07** | Classical GCN vs Hybrid QGCNN | AAL-116 (116 ROIs) | 162 clean + 713 pseudo | Matched benchmark on 33 held-out test clean subjects |
 | **08** | Deep Learning Baselines | 4D BOLD / CC200 | 626 / 764 subjects | 3D CNN, NeuroSTORM spatiotemporal transformer, temporal GNN |
@@ -42,7 +42,7 @@ This study investigates resting-state functional connectomics, machine learning 
 | **Exp 01** | Smooth, continuous temporal autocorrelation decay | Lag 1: **$0.8990$** $\to$ Lag 4: **$0.5467$** (`temporal_similarity_validation.csv`) |
 | **Exp 02** | Guaranteed 100% graph connectedness | Density $\rho=0.20$, 3,591 edges (`graph_construction_configuration.csv`) |
 | **Exp 03** | Massive site variation dominates over diagnostic effect | Scanner site effect: **$F > 4600$**, $p < 10^{-15}$ (`site_effect_anova.csv`) |
-| **Exp 04** | ComBat substantially attenuates scanner bias | Site prediction drops from **76.54%** $\to$ **36.21%** (`combat_harmonization_comparison.csv`) |
+| **Exp 04** | ComBat substantially attenuates scanner bias | Site prediction drops from **58.64%** $\to$ **31.29%** (`site_prediction_combat_comparison.csv`) |
 | **Exp 05** | 3 recurring micro-states; State 0 dominates dwell time | State 0 dwell time = **6.24 windows** (`dynamic_state_biomarkers.csv`) |
 | **Exp 06** | Pseudo-label augmentation improves holdout accuracy | Baseline **67.09%** $\to$ Augmented **72.15%** (`exp06_verified_results.json`) |
 | **Exp 07** | Matched GCN outperforms 6-qubit QGCNN on clean test set | Classical GCN: **0.7293 AUC** vs QGCNN: **0.6429 AUC** (`gcn_qgcnn_test_results.json`) |
@@ -54,8 +54,8 @@ This study investigates resting-state functional connectomics, machine learning 
 ## Reproduction & Execution
 
 The repository categorizes execution reproducibility into three tiers:
-- **Category A (Fully Rerunnable)**: Experiments 01, 02, 03, 04, 05, and 09 can be executed from repository code and public connectome inputs.
-- **Category B (Requires Excluded Intermediates)**: Experiments 06 and 08 require unbundled AAL-116 correlation arrays or 4D functional NIfTI volumes.
+- **Category A (Fully Rerunnable)**: Experiments 01, 02, 03, 04, and 05 can be executed from repository code and public connectome inputs.
+- **Category B (Requires Excluded Intermediates)**: Experiments 06, 08, and 09 require unbundled intermediate arrays or 4D functional NIfTI volumes not distributed in the public repository.
 - **Category C (Archived)**: Experiment 07 preserves exact configurations and verified test metrics, while historical training arrays are archived externally.
 
 Detailed conda environments, execution workflows, and verification steps are provided in [`docs/reproduction.md`](docs/reproduction.md).
@@ -138,7 +138,7 @@ If you use this codebase or benchmark results in your research, please cite:
 ```bibtex
 @misc{bhardwaj2026adhd,
   title={ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical--Quantum Graph Learning, and Cross-Site Generalization},
-  author={Bhardwaj, Yash and Khare, Shantanu and Deepthi, Bhavana and S, Shridevi and Won, Daehan},
+  author={Bhardwaj, Yash and Deepthi, Bhavana and Khare, Shantanu and S, Shridevi and Won, Daehan},
   year={2026},
   howpublished={Manuscript in preparation},
   url={https://github.com/YashBhardwaj21/adhd-classification}
