@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # Experiment 7 configuration (Track B: Classical GCN vs Quantum QGCNN).
 # Atlas: AAL-116 parcellation (116 regions of interest).
-# Loads verified historical parameters from configs/exp07/reported_run.json.
+# Loads verified historical parameters from configs/exp07/experiment_configuration.json.
 
 import json
 
@@ -18,7 +18,7 @@ RESULTS_DIR = results_root() / "exp07"
 CHECKPOINTS_DIR = checkpoints_root() / "exp07"
 
 # Load reported run configuration if available
-CONFIG_FILE = project_root() / "configs" / "exp07" / "reported_run.json"
+CONFIG_FILE = project_root() / "configs" / "exp07" / "experiment_configuration.json"
 _reported_config = {}
 if CONFIG_FILE.exists():
     try:
@@ -75,3 +75,4 @@ def print_config():
 
 if __name__ == "__main__":
     print_config()
+

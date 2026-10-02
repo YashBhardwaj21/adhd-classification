@@ -55,7 +55,7 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray, y_prob: np.ndar
     """
     Compute classification metrics with explicit averaging conventions.
 
-    Historical result artifacts (results/exp07/checkpoint_analysis.json) record
+    Historical result artifacts (results/exp07/gcn_qgcnn_test_results.json) record
     weighted precision, recall, and F1. Both weighted and macro values are
     reported here to avoid ambiguity.
     """

@@ -53,7 +53,7 @@ data/processed/
 data/cache/
 data/downloads/
 !data/README.md
-!data/provenance.md
+!data/availability_and_exclusions.md
 
 # Model checkpoints and weights
 checkpoints/

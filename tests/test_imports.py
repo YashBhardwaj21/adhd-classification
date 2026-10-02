@@ -1,4 +1,4 @@
-"""Unit tests asserting that core repository modules can be imported without missing dependencies."""
+﻿"""Unit tests asserting that core repository modules can be imported without missing dependencies."""
 
 import sys
 from pathlib import Path
@@ -67,6 +67,7 @@ def test_import_exp07_graph_and_training_utils():
 def test_import_exp07_classical_models():
     """Verify Classical GCN model imports and instantiates when PyG is present."""
     pytest.importorskip("torch_geometric", reason="PyG required for ClassicalGCN")
-    from exp07.classical_models.model_classical_gcn import ClassicalGCN
+    from exp07.classical_models.gcn_model import ClassicalGCN
     model = ClassicalGCN(input_dim=117, hidden_dim=32)
     assert model is not None
+

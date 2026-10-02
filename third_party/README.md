@@ -16,8 +16,8 @@ This document records third-party packages, algorithms, and bundled code utilize
 
 ## 2. Brain Connectivity Toolbox (BCT) Null Models
 - **Included Files**:
-  - `src/exp02/null_model_und_sign_fixed.py`
-  - `src/exp02/randmio_und_signed_fast.py`
+  - `src/exp02/signed_null_model.py` (historical filename: `null_model_und_sign_fixed.py`)
+  - `src/exp02/signed_edge_rewiring.py` (historical filename: `randmio_und_signed_fast.py`)
 - **Upstream Project**: `bctpy` (Brain Connectivity Toolbox for Python)
 - **Source**: https://github.com/aestrivex/bctpy
 - **License**: GNU General Public License v3.0 or later (GPL-3.0-or-later; see `LICENSES/GPL-3.0-or-later.txt`)

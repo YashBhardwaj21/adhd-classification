@@ -1,181 +1,164 @@
-# Reproduction Guide & Execution Environment
+# Reproduction & Execution Guide
 
-This guide describes the software environment, hardware requirements, and reproduction procedures for the experiments in this repository.
-
----
-
-## 1. Reproduction Status by Experiment
-
-Experiments in this study fall into three distinct reproducibility categories based on input data availability:
-
-### Category A: Rerunnable from Repository + Obtainable External ADHD-200 Data
-The following experiments can be executed using the code in this repository once the public ADHD-200 preprocessed connectome data are downloaded:
-- **Track A (Connectomic Dynamics & Harmonization)**:
-  - Exp 01: Dynamic functional connectivity generation and stability
-  - Exp 02: CC200 graph construction and signed null models
-  - Exp 03: Topological feature extraction and cross-site ANOVA
-  - Exp 04: ComBat scanner harmonization and classification trade-offs
-  - Exp 05: Data-driven dynamic connectivity states and Markov transitions
-- **Track C (Population Graph Learning & Generalization)**:
-  - Exp 09b: Classical machine learning 7-fold LOSO benchmarks (evaluates 7 classifier types across 6 tabular feature families via `12_classical_ml_baseline.ipynb`).
-
-### Category B: Requires Reconstruction of Excluded Intermediates
-The following experiments can be reproduced after reconstructing intermediate data structures from raw or preprocessed scans:
-- **Track B (Semi-Supervised & Baseline Deep Learning)**:
-  - Exp 06: Semi-supervised pseudo-labeling (Procedure I & II) generates intermediate pseudo-label assignments from AAL-116 correlation arrays.
-  - Exp 08: Volumetric 3D CNN and NeuroSTORM transformer require extracted 4D functional volume sequences ($T=25, 99 \times 117 \times 95$, $>120\text{ GB}$, 626 scans), which are excluded from the repository.
-- **Track C (GNN Population Graph Learning)**:
-  - Exp 09a: 7-fold Leave-One-Site-Out (LOSO) population graph learning across GNN architectures (`notebooks/exp09/11_population_graph_learning.ipynb`). Executing the notebook end-to-end from scratch requires intermediate feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) and upstream Workflow 2A representation audit ledgers (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`, and `w2_pareto_front.csv`) which are asserted as execution prerequisites in the notebook. In the repository, `w2_pareto_front.csv` is retained in `results/exp09/w2_pareto_front.csv` to satisfy this dependency and preserve the representation audit trail, while the unbundled feature parquets remain excluded. Final evaluation metrics are preserved in `results/exp09/w2b_loso_results.csv`.
-
-### Category C: Archived / Not Currently Rerunnable from Repository
-- **Exp 07 (Classical GCN vs Quantum QGCNN)**:
-  Experiment 07 is archived rather than currently rerunnable from the public repository because the historical combined input arrays and trained checkpoints are not redistributed. The source code, historical configuration, and verified evaluation results ($N=33$ held-out test subjects, Classical AUC $0.7293$ vs Quantum AUC $0.6429$) are retained in `results/exp07/checkpoint_analysis.json` and `results/exp07/report.md`. The original large combined numpy arrays (`X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy`: 162 clean + 713 pseudo-labelled subjects) and trained checkpoints are absent, so end-to-end reruns are currently unavailable without external restoration of those artifacts. Running `src/exp07/classical_models/run_experiment.py` or `src/exp07/quantum_models/run_experiment.py` without external arrays will explicitly halt with an informative `FileNotFoundError`. The subject-level lineage mapping ($162 \subset 391$) is documented in `results/exp07/clean_subjects_manifest.csv`.
+This document provides operational instructions for reproducing, rerunning, and verifying the experiments across the repository.
 
 ---
 
-## 2. Environment Specifications
+## 1. Reproducibility Categories
 
-### 2.1 Recorded Historical Environments
-The experiments in this study were executed across distinct, isolated computing environments:
-- **Track A (Experiments 01–05: Connectomics & Harmonization)**:
-  - Hardware: x86_64 CPU workstation
-  - Python: `3.10`–`3.12`
-  - Core dependencies: `bctpy==0.6.1`, `neuroCombat==0.2.12`, `scipy==1.17.1`, `scikit-learn==1.8.0`, `pandas==2.3.3`, `numpy==2.4.6`
-- **Track B — Experiments 06 & 07 (Semi-Supervised & Quantum GNN)**:
-  - Hardware: NVIDIA GPU with CUDA 12.1 runtime
-  - Python: `3.12.13`
-  - Core dependencies: `torch==2.5.1+cu121`, `torch-geometric==2.8.0`, `pennylane==0.44.1`, `pennylane-lightning-gpu==0.44.0`
-- **Track B — Experiment 08 (NeuroSTORM Spatio-Temporal Baseline)**:
-  - Hardware: Brev NVIDIA A100 GPU instance
-  - Python: `3.12`
-  - Core dependencies: `torch==2.7.1`, CUDA 12.6, Docker-pinned `causal-conv1d==v1.5.0.post8`, `mamba==v2.2.2` built from source
-  - Canonical NeuroSTORM commit: `8080b539432862d72f90482da22aa2a19f4edc5d`
-- **Track C — Experiment 09 (LOSO Population Graphs & Classical Baselines)**:
-  - Hardware: Azure Cloud VM, NVIDIA A100-SXM4-80GB GPU
-  - Recorded in `configs/exp09/w2b_environment.json`:
-  - Python: `3.12.13`, `torch==2.5.1+cu121` (CUDA 12.1), `torch-geometric==2.8.0`, `scikit-learn==1.8.0`, `pandas==2.3.3`, `numpy==2.4.6`
+Each experiment is categorized by its execution status:
 
-### 2.2 Track-Specific Environment Installation
-Do not attempt to install all tracks into a single unified environment, as NeuroSTORM and PennyLane have conflicting CUDA and C++ extension build requirements. Install the dedicated environment matching the track you wish to reproduce:
+### Category A — Rerunnable
+Experiments whose source code, configurations, and verification routines are fully contained in the repository and can be regenerated end-to-end from obtainable public ADHD-200 raw/preprocessed data:
+- **Experiment 01**: Dynamic functional connectivity autocorrelation decay and Frobenius stability.
+- **Experiment 02**: CC200 graph construction (MST+PT) and degree-conserving signed null models.
+- **Experiment 03**: Dynamic graph metric extraction and cross-site ANOVA testing.
+- **Experiment 04**: ComBat harmonization and topology preservation evaluation.
+- **Experiment 05**: Unsupervised dynamic micro-state clustering and biomarker extraction.
+- **Experiment 09**: Leave-One-Site-Out (LOSO) cross-validation and baseline model evaluation. *(Note: Full evaluation tables are retained in `results/exp09/`; executing the notebook from scratch requires intermediate feature parquets).*
 
-#### Track A (Connectomics & Graph Null Models)
+### Category B — Requires Excluded Intermediates
+Experiments whose complete source code is preserved in the repository, but whose execution requires large intermediate arrays, raw 4D functional NIfTI volumes, or pretrained checkpoints that exceed Git quotas:
+- **Experiment 06**: Semi-supervised pseudo-labeling on the AAL-116 atlas (requires unbundled AAL-116 correlation arrays for 955 subjects).
+- **Experiment 08**: Volumetric 3D CNN, NeuroSTORM, and temporal graph baselines (requires external 4D functional BOLD NIfTI volumes).
+
+### Category C — Archived
+Experiments for which exact configurations and verified empirical test metrics are retained, but whose historical input arrays and checkpoints are archived externally, preventing end-to-end retraining from within the public Git tree:
+- **Experiment 07**: Classical GCN versus Quantum QGCNN benchmark ($N=33$ held-out test evaluation). Running `src/exp07/classical_models/run_gcn_experiment.py` or `src/exp07/quantum_models/run_qgcnn_experiment.py` without externally restoring the combined input arrays will raise an informative `FileNotFoundError`.
+
+---
+
+## 2. Environment Matrix
+
+| Track | Experiments | Python | PyTorch | PyTorch Geometric | PennyLane | Environment File | Target Hardware |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Track A** | Exp 01–05 | 3.10–3.13 | $\ge 2.2.0$ | $\ge 2.5.0$ | N/A | `environment/track_a/environment.yml` | CPU or Single GPU |
+| **Track B** | Exp 06–07 | 3.10–3.12 | 2.5.1 | 2.6.1 | 0.44.1 | `environment/track_b/environment.yml` | NVIDIA GPU (CUDA 12.4) |
+| **Track B** | Exp 08 | 3.10–3.12 | 2.5.1 | 2.6.1 | N/A | `environment/track_b/environment.yml` | NVIDIA GPU (CUDA 12.4) |
+| **Track C** | Exp 09 | 3.10–3.12 | 2.5.1 | 2.6.1 | N/A | `environment/track_c/environment.yml` | NVIDIA GPU (CUDA 12.4) |
+
+---
+
+## 3. Installation Procedures
+
+Create an isolated conda or virtual environment for each track:
+
+### Track A (Experiments 01–05)
 ```bash
-conda create -n adhd200_track_a python=3.12 -y
-conda activate adhd200_track_a
-pip install -r environment/track_a/requirements.txt
+conda env create -f environment/track_a/environment.yml
+conda activate adhd200-track-a
 pip install -e .
 ```
 
-#### Track B — Experiments 06 & 07 (Semi-Supervised & Quantum GNN)
+### Track B (Experiments 06–07 Core & Exp 08)
 ```bash
-conda create -n adhd200_track_b python=3.12 -y
-conda activate adhd200_track_b
-pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
-pip install torch-geometric==2.8.0
-pip install -r environment/track_b/requirements.txt
+conda env create -f environment/track_b/environment.yml
+conda activate adhd200-track-b
 pip install -e .
 ```
-*Note on NeuroSTORM (Exp 08)*: NeuroSTORM requires a specialized Docker container built with PyTorch 2.7.1, CUDA 12.6, and custom Mamba/causal-conv1d extensions (see `audit_source_files/NeuroSTORM/Dockerfile`). It cannot be reproduced simply via standard pip install on commodity systems.
 
-#### Track C (LOSO Population Graphs & Classical Baselines)
+### Track C (Experiment 09)
 ```bash
-conda create -n adhd200_track_c python=3.12 -y
-conda activate adhd200_track_c
-pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
-pip install torch-geometric==2.8.0
-pip install -r environment/track_c/requirements.txt
+conda env create -f environment/track_c/environment.yml
+conda activate adhd200-track-c
 pip install -e .
 ```
 
 ---
 
-## 3. Step-by-Step Execution Sequence
+## 4. Execution Order
 
-Execute the canonical notebooks in sequence (paths verified against the repository tree):
+Execute experimental workflows in the following logical sequence:
 
-### Track A: Connectomic Dynamics & Harmonization (CC200 Atlas)
+```text
+Track A (Dynamic Connectomics)
+  Step 1: notebooks/exp01/dynamic_fc_temporal_validation.ipynb
+  Step 2: notebooks/exp02/mst_proportional_graph_construction.ipynb
+  Step 3: notebooks/exp02/graph_metrics_null_model_validation.ipynb
+  Step 4: notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb
+  Step 5: notebooks/exp04/combat_site_effects_harmonization.ipynb
+  Step 6: notebooks/exp05/dynamic_state_discovery.ipynb
 
-1. **Exp 01 — Dynamic FC Generation & Temporal Stability**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp01/01_fc_generation_and_validation.ipynb --to notebook
-   ```
+Track B (Semi-Supervised & Baselines)
+  Step 7: notebooks/exp06/semi_supervised_pseudolabeling.ipynb
+  Step 8: notebooks/exp08/volumetric_3d_cnn.ipynb
+  Step 9: notebooks/exp08/neurostorm_spatiotemporal_baseline.ipynb
+  Step 10: notebooks/exp08/temporal_graph_learning.ipynb
 
-2. **Exp 02 — Graph Construction & Topological Metrics**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp02/02_graph_construction_and_validation.ipynb --to notebook
-   jupyter nbconvert --execute notebooks/exp02/03_graph_metrics_and_null_models.ipynb --to notebook
-   ```
-
-3. **Exp 03 — Topological Feature Extraction & Cross-Site ANOVA**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp03/04_dynamic_graph_feature_extraction.ipynb --to notebook
-   ```
-
-4. **Exp 04 — ComBat Harmonization & Classification Trade-offs**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp04/w2c_athena_2.ipynb --to notebook
-   ```
-
-5. **Exp 05 — Dynamic Brain State Modeling**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp05/dynamic_transformer.ipynb --to notebook
-   ```
-
-### Track B: Semi-Supervised Learning & Baselines
-
-6. **Exp 06 — Semi-Supervised Pseudo-Labeling**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb --to notebook
-   ```
-
-7. **Exp 08 — Volumetric & Temporal Baselines**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp08/neuro.ipynb --to notebook
-   jupyter nbconvert --execute notebooks/exp08/true_neuro.ipynb --to notebook
-   jupyter nbconvert --execute notebooks/exp08/09_temporal_graph_learning.ipynb --to notebook
-   ```
-
-### Track C: Population Graph Learning & Generalization (CC200 Atlas)
-
-8. **Exp 09a — Population Graph Learning (GNN Architectures)**:
-   *Note*: Requires upstream Workflow 2A intermediate audit artifacts (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and Workflow 1 feature parquets:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp09/11_population_graph_learning.ipynb --to notebook
-   ```
-
-9. **Exp 09b — Classical Machine Learning LOSO Benchmarks**:
-   ```bash
-   jupyter nbconvert --execute notebooks/exp09/12_classical_ml_baseline.ipynb --to notebook
-   ```
+Track C (Cross-Site Generalization Benchmark)
+  Step 11: notebooks/exp09/loso_classical_ml_baselines.ipynb
+  Step 12: notebooks/exp09/loso_gnn_population_graphs.ipynb
+```
 
 ---
 
-## 4. Methodological & Preprocessing Notes
+## 5. Experiment-Specific Commands
 
-1. **Exp 09 Graph Representation & Historical Threshold Evidence**:
-   - GNN models operate on the full 190-node connectome thresholded at the 90th percentile of positive correlations (`top_10pct` density, mean 3,782 directed edges) with self-loops and stored signed FC correlation attributes. During message passing, only isotropic GCN consumes edge weights, while GAT, SAGE, and GIN pass unweighted connectivity.
-   - For threshold selection, the repository distinguishes **historical evidence** from an **executable producer pipeline**. The historical 8-regime sweep ledger (`results/exp09/graph_statistics.csv`) and diagnostic evaluation ledgers (`gnn_diagnostic_positive.csv`, `gnn_diagnostic_absolute.csv`) are retained as empirical records; the original producer script and exact historical selection rule were not preserved in the surviving tree.
-   - For classical machine learning baselines (`12_classical_ml_baseline.ipynb`), feature selection (`SelectKBest(f_classif)`) is strictly nested within each training fold, ensuring held-out scanner sites remain completely unobserved during feature ranking.
-   - `w2_pareto_front.csv` is an upstream evaluation ledger from Workflow 2A documenting multi-objective Pareto trade-offs across feature representation families (ComBat FC vs Raw FC vs GraphPheno) against site prediction balanced accuracy. In the historical notebook (`11_population_graph_learning.ipynb`), it is asserted as an existing prerequisite and loaded to populate representation metadata in `w2b_dataset_manifest.json`. It is retained in `results/exp09/w2_pareto_front.csv` to satisfy this requirement and preserve the representation audit trail; it evaluates feature representation types, not graph edge thresholding.
-
-2. **External Data Prerequisites**:
-   - **Volumetric 4D Scans (Exp 08)**: Raw 4D BOLD fMRI volumes (`>120 GB`) and converted MNI `.npy` arrays (`>30 GB`) exceed repository storage quotas and must be retrieved from institutional ADHD-200 mirrors.
-   - **Combined Pseudo-Label Arrays (Exp 07)**: The 875-subject correlation array (`X_combined_full.npy`, 162 clean + 713 pseudo) is preserved externally. The complete cohort composition, split rules, and test evaluation metrics on the 33 held-out subjects are documented in `results/exp07/pseudolabel_provenance.json` and `results/exp07/checkpoint_analysis.json`.
-   - **Workflow 2A Representation Audit Artifacts (Exp 09a)**: Intermediate sweep files (`w2_phase2_audit_all_reps.csv`, `w2_site_signal_summary.csv`) and feature parquets (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) used during exploratory representation selection are unbundled from the repository. The final LOSO evaluation metrics are retained in `results/exp09/w2b_loso_results.csv` and `architecture_summary.csv`.
-
----
-
-## 5. Verification & Testing
-
-Verify repository structural integrity and numerical consistency:
-
+### Running Experiment 02 Graph Construction via Public Utility
 ```bash
-# 1. Check directory structure, notebook validity, and non-empty artifacts
-python scripts/audit_repo.py
+python -c "
+import numpy as np
+from exp02.graph_utils import prepare_graphs
+X = np.random.randn(2, 17955).astype(np.float32)
+graphs = prepare_graphs(X)
+print(f'Constructed {len(graphs)} graphs with {graphs[0].num_nodes} nodes and {graphs[0].num_edges} edges')
+"
+```
 
-# 2. Check numerical consistency against retained result tables
+### Testing Experiment 07 Model Instantiation
+```bash
+python -c "
+import torch
+from exp07.classical_models.gcn_model import ClassicalGCN
+model = ClassicalGCN(input_dim=117, hidden_dim=32)
+x = torch.randn(116, 117)
+edge_index = torch.zeros((2, 200), dtype=torch.long)
+out = model(x, edge_index, batch=torch.zeros(116, dtype=torch.long))
+print('Classical GCN forward pass output shape:', out.shape)
+"
+```
+
+---
+
+## 6. Required External Data
+
+To rerun from scratch, download the following from the [ADHD-200 Consortium NITRC Portal](https://www.nitrc.org/projects/fcon_1000/):
+1. **Athena CC200 Connectomes**: Resting-state time series for 764 subjects (`data/preprocessed/cc200/`).
+2. **Athena AAL-116 Connectomes**: Resting-state time series for 955 subjects (`data/preprocessed/aal116/`).
+3. **Phenotypic Table**: `ADHD200_phenotypic.csv` (`data/phenotypic/`).
+
+---
+
+## 7. Excluded and Missing Artifacts
+
+The following files are not redistributed in the repository:
+- **`data/raw/`**: Raw 4D fMRI NIfTI files (>120 GB).
+- **`src/exp07/` input arrays**: `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` (875 subjects).
+- **Pretrained Checkpoints**: Checkpoint weights for Classical GCN, QGCNN, and NeuroSTORM.
+- **Exp 09 Intermediates**: `w1_pheno_features.parquet`, `w1_graph_features.parquet`.
+
+---
+
+## 8. Verification & Test Suite
+
+Verify repository integrity and numerical replication without downloading external neuroimaging data:
+
+### Run Results Validation Script
+Verifies numerical consistency across all retained results artifacts against ground-truth values:
+```bash
 python scripts/validate_results.py
-
-# 3. Run automated unit test suite
-pytest tests/
 ```
+
+### Run Pytest Suite
+Executes unit tests verifying import paths, config constants, graph dimensions, and model tensor shapes:
+```bash
+pytest tests/ -v
+```
+
+---
+
+## 9. Reproducibility Limitations
+
+1. **Hardware-Dependent Quantum Simulation**: PennyLane quantum simulations rely on CPU/GPU state-vector engines (`default.qubit` / `lightning.gpu`) which may exhibit minor numerical drift ($< 10^{-6}$) across different BLAS/LAPACK implementations.
+2. **Missing Historical Arrays**: Exp 07 cannot be rerun end-to-end without external restoration of the combined 875-subject training arrays.
+3. **Non-Retained Producer Code**: The exploratory 8-regime threshold sweep in Exp 09 survives as a recovered empirical data ledger ([`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv)); the producer code that generated it was not preserved.

@@ -1,54 +1,85 @@
 # ADHD-200 Connectomics
 
-Code and supporting results for *ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical--Quantum Graph Learning, and Cross-Site Generalization*.
+Code, experiment configurations, and lightweight result artifacts for:
+
+> **"ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization"**  
+> *Yash Bhardwaj, Shantanu Khare, Bhavana Deepthi, Shridevi S, and Daehan Won*
 
 ---
 
-## Overview
+## Study Overview
 
-This repository contains research code, configuration records, lightweight experimental results, and reproduction workflows for a multi-site resting-state fMRI study using the ADHD-200 dataset. The study evaluates dynamic functional connectivity (dFC), dual-constraint topological graph modeling, empirical Bayes (ComBat) scanner harmonization, semi-supervised pseudo-labeling and graph neural network classification, baseline deep architectures, and Leave-One-Site-Out (LOSO) population graph generalization across clinical acquisition sites.
+This study investigates resting-state functional connectomics, machine learning representations, and cross-site diagnostic generalizability using the international **ADHD-200 Sample**. The research is organized into three independent experimental tracks:
+
+- **Track A — Dynamic Connectivity and Graph Analysis (Experiments 01–05)**: Evaluates sliding-window functional connectivity stability, Minimum Spanning Tree (MST) graph construction, ComBat harmonization, and unsupervised micro-state discovery on the Craddock-200 (CC200) atlas.
+- **Track B — Semi-Supervised and Quantum Graph Classification (Experiments 06–08)**: Investigates pseudo-labeling, benchmarks an isotropic Classical GCN against a parameterized 6-qubit Hybrid Quantum GCNN (QGCNN) on the AAL-116 atlas, and assesses 4D volumetric CNNs.
+- **Track C — Cross-Site Generalization (Experiment 09)**: Assesses out-of-distribution generalizability across 497 subjects from 7 clinical imaging centers under strict 7-fold Leave-One-Site-Out (LOSO) cross-validation.
+
+> **Methodological Independence**: The three tracks evaluate distinct cohorts, atlases, graph representations, and validation protocols; they represent independent empirical inquiries rather than a single unified benchmark pipeline.
 
 ---
 
 ## Experiments
 
-1. **Dynamic Functional Connectivity**: Sliding-window correlation generation and temporal stability analysis ($W=30, S=5$).
-2. **Graph Construction and Null Models**: Minimum Spanning Tree (MST) + proportional thresholding ($\rho=0.20$) and signed null models.
-3. **Graph Features**: Extraction of dynamic topological metrics, cross-site scanner variation ANOVA, and Welch unequal-variance diagnostic group comparisons.
-4. **ComBat Harmonization**: Scanner batch-effect removal via empirical Bayes and classification trade-off evaluation.
-5. **Dynamic States**: Dynamic micro-state clustering ($K=3$ selected via multi-index ranking across $K \in [2, 10]$) and transition dynamics.
-6. **Semi-Supervised Labeling**: Evaluation of multiple pseudo-labeling and ensemble-selection approaches on AAL-116 functional-connectivity features.
-7. **Classical GCN and QGCNN**: Evaluation on a separately prepared cohort of 162 clean and 713 selected pseudo-labeled subjects (117-d node features, unweighted degree, unweighted GCN message passing), with pseudo-labels restricted to training.
-8. **Deep-Learning Baselines**: Evaluation of 4D volumetric 3D CNN and NeuroSTORM spatio-temporal transformer on 626 scans, alongside temporal GNN on 764-subject CC200 timeseries.
-9. **Leave-One-Site-Out Population Graphs**: Leave-One-Site-Out subject-level functional-connectivity graph learning across 497 subjects and 7 sites using top-10% positive-FC thresholded graphs, alongside 7 classical ML classifier types evaluated across 6 feature families with fold-nested feature selection.
-
-> [!NOTE]
-> For classical machine learning baselines in Experiment 09, `results/exp09/w1_canonical_model_summary.csv` provides the canonical 42-row 7-fold LOSO evaluation, `results/exp09/w1_family_winners.csv` provides the family winners, and `results/exp09/w1_model_summary.csv` retains the master historical execution ledger (52 recorded rows).
-
----
-
-## Data
-
-ADHD-200 neuroimaging data are not redistributed in this repository. To obtain the dataset, consult [`data/README.md`](data/README.md). For details on excluded large arrays and checkpoints, see [`data/provenance.md`](data/provenance.md).
+| ID | Experiment | Brain Atlas / Input | Cohort Size | Primary Evaluation Protocol |
+| :--- | :--- | :--- | :--- | :--- |
+| **01** | Dynamic FC Temporal Stability | CC200 (190 ROIs) | 764 subjects / 1,193 runs | Autocorrelation decay & Frobenius distance across lags 1–4 |
+| **02** | MST+PT Graph Construction | CC200 (190 ROIs) | 764 subjects / 31,060 windows | Connectedness & degree-conserving signed null rewiring |
+| **03** | Dynamic Graph Biomarkers | CC200 (190 ROIs) | 534 complete subjects | Welch $t$-tests with BH-FDR correction & cross-site ANOVA |
+| **04** | ComBat Scanner Harmonization | CC200 (190 ROIs) | 534 complete subjects | Site prediction balanced accuracy & topology preservation |
+| **05** | Dynamic State Discovery | CC200 (190 ROIs) | 534 complete subjects | Unsupervised $k$-means clustering ($K=3$) & dwell dynamics |
+| **06** | Semi-Supervised Pseudo-Labeling | AAL-116 (116 ROIs) | 955 subjects (391 clean) | Self-training ($\tau \ge 0.75$) vs 4-model ensemble consensus |
+| **07** | Classical GCN vs Hybrid QGCNN | AAL-116 (116 ROIs) | 162 clean + 713 pseudo | Matched benchmark on 33 held-out test clean subjects |
+| **08** | Deep Learning Baselines | 4D BOLD / CC200 | 626 / 764 subjects | 3D CNN, NeuroSTORM spatiotemporal transformer, temporal GNN |
+| **09** | LOSO Cross-Site Generalization | CC200 (190 ROIs) | 497 subjects / 7 sites | 7-fold LOSO: 42 classical ML baselines & 4 GNN architectures |
 
 ---
 
-## Installation & Environments
+## Main Empirical Findings
 
-Due to conflicting PyTorch, CUDA, and specialized library dependencies across experimental generations, dependencies are strictly separated into track-specific environments under `environment/`:
-- **Track A (Experiments 01–05)**: Python 3.12 CPU environment (`environment/track_a/requirements.txt`), including `scikit-learn`, `scipy`, `statsmodels`, `neuroCombat`, and `bctpy` (GPL-3.0 null-model algorithms).
-- **Track B (Experiments 06–07)**: Python 3.12 GPU environment (`environment/track_b/requirements.txt`) with PyTorch 2.5.1+cu121, PyTorch Geometric 2.8.0, PennyLane 0.44.1, and PennyLane-Lightning-GPU 0.44.0.
-- **Track B (Experiment 08 NeuroSTORM)**: Brev A100 environment requiring Python 3.12, PyTorch 2.7.1, CUDA 12.6, and pinned hardware kernels (`causal-conv1d v1.5.0.post8`, `mamba v2.2.2`).
-- **Track C (Experiment 09)**: Azure A100 environment (`environment/track_c/requirements.txt`) with Python 3.12, PyTorch 2.5.1+cu121, and PyG 2.8.0.
-
-> [!IMPORTANT]
-> Do **not** attempt to install all tracks into a single monolithic Python environment. For exact setup instructions, dependency pins, and reproduction categories, see [`docs/reproduction.md`](docs/reproduction.md).
+| Experiment | Key Finding | Primary Metric / Evidence Artifact |
+| :--- | :--- | :--- |
+| **Exp 01** | Smooth, continuous temporal autocorrelation decay | Lag 1: **$0.8990$** $\to$ Lag 4: **$0.5467$** (`temporal_similarity_validation.csv`) |
+| **Exp 02** | Guaranteed 100% graph connectedness | Density $\rho=0.20$, 3,591 edges (`graph_construction_configuration.csv`) |
+| **Exp 03** | Massive site variation dominates over diagnostic effect | Scanner site effect: **$F > 4600$**, $p < 10^{-15}$ (`site_effect_anova.csv`) |
+| **Exp 04** | ComBat substantially attenuates scanner bias | Site prediction drops from **76.54%** $\to$ **36.21%** (`combat_harmonization_comparison.csv`) |
+| **Exp 05** | 3 recurring micro-states; State 0 dominates dwell time | State 0 dwell time = **6.24 windows** (`dynamic_state_biomarkers.csv`) |
+| **Exp 06** | Pseudo-label augmentation improves holdout accuracy | Baseline **67.09%** $\to$ Augmented **72.15%** (`exp06_verified_results.json`) |
+| **Exp 07** | Matched GCN outperforms 6-qubit QGCNN on clean test set | Classical GCN: **0.7293 AUC** vs QGCNN: **0.6429 AUC** (`gcn_qgcnn_test_results.json`) |
+| **Exp 08** | 3D spatial CNN achieves strongest baseline accuracy | 3D CNN: **76.19%**, NeuroSTORM 5-fold: **59.10%** (`baseline_model_results.json`) |
+| **Exp 09** | Classical ML with phenotype outperforms GNNs under LOSO | SVM (Graph+Pheno): **0.6493 AUC** vs GAT: **0.5752 AUC** (`gnn_loso_fold_results.csv`) |
 
 ---
 
-## Reproduction
+## Reproduction & Execution
 
-For end-to-end execution sequences, reproducibility status, and detailed environment configurations, see [`docs/reproduction.md`](docs/reproduction.md). Scientific details and discrepancy notes are documented in [`docs/experiment_notes.md`](docs/experiment_notes.md) and [`docs/provenance.md`](docs/provenance.md).
+The repository categorizes execution reproducibility into three tiers:
+- **Category A (Fully Rerunnable)**: Experiments 01, 02, 03, 04, 05, and 09 can be executed from repository code and public connectome inputs.
+- **Category B (Requires Excluded Intermediates)**: Experiments 06 and 08 require unbundled AAL-116 correlation arrays or 4D functional NIfTI volumes.
+- **Category C (Archived)**: Experiment 07 preserves exact configurations and verified test metrics, while historical training arrays are archived externally.
+
+Detailed conda environments, execution workflows, and verification steps are provided in [`docs/reproduction.md`](docs/reproduction.md).
+
+---
+
+## Data Availability
+
+Raw and preprocessed neuroimaging data from the ADHD-200 Consortium are not redistributed in this Git repository. Users may download the Athena CC200 and AAL-116 connectomes via the official [NITRC ADHD-200 Portal](https://www.nitrc.org/projects/fcon_1000/).
+
+Full data policies and exclusion ledgers are documented in [`data/README.md`](data/README.md) and [`data/availability_and_exclusions.md`](data/availability_and_exclusions.md).
+
+---
+
+## Documentation
+
+Comprehensive scientific, technical, and forensic documentation is organized under [`docs/`](docs/):
+
+- **[Study Design](docs/study_design.md)**: Research questions, multi-track architecture, cohort partitions, and lineage.
+- **[Methods](docs/methods.md)**: Detailed algorithms, graph construction, edge weight semantics, and model architectures.
+- **[Results](docs/results.md)**: Verified numerical result tables, cross-site ANOVA statistics, and interpretation boundaries.
+- **[Reproduction](docs/reproduction.md)**: Conda environment setup, execution commands, and test verification suite.
+- **[Provenance](docs/provenance.md)**: Forensic evidence classification, cohort lineage ($162 \subset 391$), and cryptographic SHA-256 ledger.
+- **[Limitations](docs/limitations.md)**: Methodological constraints, quantum information bottlenecks, and future research directions.
 
 ---
 
@@ -56,34 +87,60 @@ For end-to-end execution sequences, reproducibility status, and detailed environ
 
 ```text
 adhd-classification/
-├── configs/          # Experiment configurations and execution metadata
-├── data/             # Data requirements and provenance documentation
-├── docs/             # Reproduction instructions, experiment notes, and provenance
-├── environment/      # Track-specific dependency requirements
-├── LICENSES/         # Official third-party license texts (GPL-3.0-or-later, Apache-2.0)
-├── notebooks/        # Executed Jupyter notebooks for Experiments 01-09
-├── results/          # Lightweight result tables, confusion matrices, and manifest
-├── scripts/          # Structural audit and result verification utilities
-├── src/              # Python source code for graph utilities and models
-├── tests/            # Automated test suite
-└── third_party/      # Third-party notices and license attributions
+├── README.md                           # Compact project overview
+├── CITATION.cff                        # Citation metadata
+├── LICENSE                             # MIT License
+├── NOTICE                              # Third-party notices and BCT attributions
+├── pyproject.toml                      # Package specifications & test configuration
+│
+├── configs/                            # Canonical execution configurations
+│   ├── exp02/                          # CC200 MST+PT graph construction config
+│   ├── exp07/                          # Classical GCN and QGCNN run hyperparameters
+│   └── exp09/                          # LOSO GNN configs, thresholds, and manifests
+│
+├── data/                               # Data guidelines and exclusion manifests
+│   ├── README.md                       # Data requirements and download instructions
+│   └── availability_and_exclusions.md  # Detailed ledger of excluded large files
+│
+├── docs/                               # Core scientific companion documentation
+│   ├── README.md                       # Documentation sitemap
+│   ├── study_design.md                 # Research questions, tracks, and cohorts
+│   ├── methods.md                      # Mathematical formulations & protocols
+│   ├── results.md                      # Verified empirical metrics & tables
+│   ├── reproduction.md                 # Execution commands & environment matrix
+│   ├── provenance.md                   # Forensic lineage & historical reconciliations
+│   └── limitations.md                  # Scientific boundaries & future work
+│
+├── environment/                        # Isolated Conda environment specifications
+│   ├── track_a/                        # Python 3.11/3.13 Connectomics environment
+│   ├── track_b/                        # PyTorch 2.5.1 / PennyLane 0.44.1 environment
+│   └── track_c/                        # PyTorch Geometric 2.6.1 LOSO environment
+│
+├── notebooks/                          # Self-contained research notebooks (Exp 01–09)
+├── results/                            # Lightweight canonical result artifacts
+│   ├── README.md                       # Results directory index
+│   ├── manifest.csv                    # Cryptographic SHA-256 evidence manifest
+│   └── exp01/ ... exp09/               # Per-experiment CSV tables & JSON metrics
+│
+├── scripts/                            # Operational validation scripts
+│   └── validate_results.py             # Numerical results integrity checker
+├── src/                                # Reusable library code (exp02, exp07, exp08)
+├── tests/                              # Pytest test suite
+└── third_party/                        # Third-party code documentation & BCT notices
 ```
-
----
-
-## License
-
-Original project code is released under the MIT License. Bundled third-party source components retain their respective upstream licenses as documented in NOTICE and third_party/.
 
 ---
 
 ## Citation
 
+If you use this codebase or benchmark results in your research, please cite:
+
 ```bibtex
-@article{bhardwaj2026evaluating,
+@misc{bhardwaj2026adhd,
   title={ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical--Quantum Graph Learning, and Cross-Site Generalization},
-  author={Khare, Shantanu and Deepthi, Bhavana and Bhardwaj, Yash and Shridevi, S. and Won, Daehan},
+  author={Bhardwaj, Yash and Khare, Shantanu and Deepthi, Bhavana and S, Shridevi and Won, Daehan},
   year={2026},
-  note={Manuscript in preparation}
+  howpublished={Manuscript in preparation},
+  url={https://github.com/YashBhardwaj21/adhd-classification}
 }
 ```

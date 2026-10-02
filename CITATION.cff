@@ -16,6 +16,10 @@ keywords:
   - "harmonization"
   - "reproducibility"
 authors:
+  - family-names: "Bhardwaj"
+    given-names: "Yash"
+    affiliation: "Vellore Institute of Technology"
+    country: "IN"
   - family-names: "Khare"
     given-names: "Shantanu"
     affiliation: "Vellore Institute of Technology"
@@ -24,24 +28,20 @@ authors:
     given-names: "Bhavana"
     affiliation: "Vellore Institute of Technology"
     country: "IN"
-  - family-names: "Bhardwaj"
-    given-names: "Yash"
-    affiliation: "Vellore Institute of Technology"
-    country: "IN"
   - family-names: "S"
     given-names: "Shridevi"
   - family-names: "Won"
     given-names: "Daehan"
 preferred-citation:
-  type: article
+  type: generic
   title: "ADHD Classification from Resting-State fMRI: A Multi-Track Study of Dynamic Connectivity, Classical–Quantum Graph Learning, and Cross-Site Generalization"
   authors:
+    - family-names: "Bhardwaj"
+      given-names: "Yash"
     - family-names: "Khare"
       given-names: "Shantanu"
     - family-names: "Deepthi"
       given-names: "Bhavana"
-    - family-names: "Bhardwaj"
-      given-names: "Yash"
     - family-names: "S"
       given-names: "Shridevi"
     - family-names: "Won"
@@ -49,3 +49,4 @@ preferred-citation:
   year: 2026
   status: "in preparation"
   notes: "Manuscript in preparation"
+  url: "https://github.com/YashBhardwaj21/adhd-classification"

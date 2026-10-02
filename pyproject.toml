@@ -11,9 +11,9 @@ requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE", "LICENSES/*.txt"]
 authors = [
+    { name = "Yash Bhardwaj" },
     { name = "Shantanu Khare" },
     { name = "Bhavana Deepthi" },
-    { name = "Yash Bhardwaj" },
     { name = "Shridevi S" },
     { name = "Daehan Won" }
 ]

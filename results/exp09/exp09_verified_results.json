@@ -1,6 +1,6 @@
 {
   "experiment": "Experiment 9 - Independent LOSO Population Graph Learning",
-  "source_notebook": "notebooks/exp09/11_population_graph_learning.ipynb",
+  "source_notebook": "notebooks/exp09/loso_gnn_population_graphs.ipynb",
   "executed_protocol": {
     "subjects": 497,
     "sites": 7,

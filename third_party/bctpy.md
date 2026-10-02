@@ -16,8 +16,8 @@ This document details the provenance, upstream source, attribution, and licensin
 
 The BCT-derived source code bundled in this repository consists of:
 
-1. `src/exp02/null_model_und_sign_fixed.py`
-2. `src/exp02/randmio_und_signed_fast.py`
+1. `src/exp02/signed_null_model.py` (historical filename: `null_model_und_sign_fixed.py`)
+2. `src/exp02/signed_edge_rewiring.py` (historical filename: `randmio_und_signed_fast.py`)
 
 ---
 
@@ -31,13 +31,13 @@ The historical `null_model_und_sign_fixed.py` file carries a Rubinov 2011 attrib
 
 ### Component Details
 
-- **`src/exp02/null_model_und_sign_fixed.py`**:
+- **`src/exp02/signed_null_model.py`** (formerly `null_model_und_sign_fixed.py`):
   - Implements `null_model_und_sign_fixed(W, bin_swaps=5, wei_freq=.1, seed=None)`
   - Imports `BCTParamError` and `get_rng` from `bct.utils.miscellaneous_utilities` (the historical source also imported `randmio_und_signed` from `bct.algorithms.reference`)
   - Explicitly carries Rubinov attribution: `# @due.dcite(BibTeX(RUBINOV2011), description="Undirected signed null model")`
   - Adapted/derived from `bctpy` for weight-conserving signed matrix randomization with fixed positive and negative strength sequences.
 
-- **`src/exp02/randmio_und_signed_fast.py`**:
+- **`src/exp02/signed_edge_rewiring.py`** (formerly `randmio_und_signed_fast.py`):
   - Implements `randmio_und_signed_fast(R, itr, seed=None)`
   - Numba-accelerated reimplementation of the bctpy randmio_und_signed routine used by the historical project.
   - Explicitly documented as a "Drop-in, Numba-accelerated replacement for bctpy's randmio_und_signed()."
@@ -68,4 +68,4 @@ The historical `RUBINOV2011` citation corresponds to:
 
 ## 6. Licensing Notice
 
-The bundled BCT-derived source files (`src/exp02/null_model_und_sign_fixed.py` and `src/exp02/randmio_und_signed_fast.py`) are derived from `bctpy` and are governed by the GNU General Public License v3.0 or later (GPL-3.0-or-later). The full license text is provided in `LICENSES/GPL-3.0-or-later.txt`. They must not be described as MIT-only code. Any distribution or modification of these files must preserve upstream GPL-3.0-or-later notices and Rubinov & Sporns (2011) attributions.
+The bundled BCT-derived source files (`src/exp02/signed_null_model.py` and `src/exp02/signed_edge_rewiring.py`, formerly `null_model_und_sign_fixed.py` and `randmio_und_signed_fast.py`) are derived from `bctpy` and are governed by the GNU General Public License v3.0 or later (GPL-3.0-or-later). The full license text is provided in `LICENSES/GPL-3.0-or-later.txt`. They must not be described as MIT-only code. Any distribution or modification of these files must preserve upstream GPL-3.0-or-later notices and Rubinov & Sporns (2011) attributions.

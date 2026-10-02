@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # Results validation script.
 # Verifies numerical consistency across results/ artifacts against
 # the ground-truth values recorded in docs/provenance.md.
@@ -22,7 +22,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 
 def validate_exp01():
     print("Validating Experiment 1 (Dynamic FC Stability)...")
-    path = ROOT_DIR / "results/exp01/dynamic_temporal_validation.csv"
+    path = ROOT_DIR / "results/exp01/temporal_similarity_validation.csv"
     assert path.exists(), f"Missing {path}"
     df = pd.read_csv(path)
 
@@ -42,7 +42,7 @@ def validate_exp01():
 
 def validate_exp02():
     print("Validating Experiment 2 (Graph Construction)...")
-    strategy_path = ROOT_DIR / "results/exp02/graph_construction_strategy.csv"
+    strategy_path = ROOT_DIR / "results/exp02/graph_construction_configuration.csv"
     assert strategy_path.exists(), f"Missing {strategy_path}"
     df = pd.read_csv(strategy_path)
     assert df.iloc[0]["method"] == "MST+PT", "Strategy must be MST+PT"
@@ -52,7 +52,7 @@ def validate_exp02():
 
 def validate_exp03():
     print("Validating Experiment 3 (Cross-Site ANOVA)...")
-    path = ROOT_DIR / "results/exp03/site_anova.csv"
+    path = ROOT_DIR / "results/exp03/site_effect_anova.csv"
     assert path.exists(), f"Missing {path}"
 
     df = pd.read_csv(path).set_index("feature")
@@ -74,14 +74,14 @@ def validate_exp03():
 
 def validate_exp04():
     print("Validating Experiment 4 (ComBat Harmonization)...")
-    comp_path = ROOT_DIR / "results/exp04/comparison_table.csv"
+    comp_path = ROOT_DIR / "results/exp04/combat_harmonization_comparison.csv"
     assert comp_path.exists(), f"Missing {comp_path}"
     df = pd.read_csv(comp_path).set_index("Metric")
     assert np.isclose(df.loc["clustering", "Raw Mean"], 0.333271, atol=1e-3)
     assert np.isclose(df.loc["clustering", "ComBat Mean"], 0.333361, atol=1e-3)
 
-    site_path = ROOT_DIR / "results/exp04/site_prediction_results.csv"
-    diag_path = ROOT_DIR / "results/exp04/diagnosis_prediction_results.csv"
+    site_path = ROOT_DIR / "results/exp04/site_prediction_combat_comparison.csv"
+    diag_path = ROOT_DIR / "results/exp04/diagnosis_prediction_combat_comparison.csv"
     if site_path.exists() and diag_path.exists():
         site_df = pd.read_csv(site_path)
         diag_df = pd.read_csv(diag_path)
@@ -90,7 +90,7 @@ def validate_exp04():
 
 def validate_exp05():
     print("Validating Experiment 5 (Dynamic Brain States)...")
-    path = ROOT_DIR / "results/exp05/run_dynamic_biomarkers.csv"
+    path = ROOT_DIR / "results/exp05/dynamic_state_biomarkers.csv"
     assert path.exists(), f"Missing {path}"
     df = pd.read_csv(path)
     # Audited dwell times: state0 dwell time is highest (~6.24)
@@ -118,7 +118,7 @@ def validate_exp06():
 
 def validate_exp07():
     print("Validating Experiment 7 (Classical GCN vs Quantum QGCNN)...")
-    path = ROOT_DIR / "results/exp07/checkpoint_analysis.json"
+    path = ROOT_DIR / "results/exp07/gcn_qgcnn_test_results.json"
     assert path.exists(), f"Missing {path}"
     with open(path) as f:
         data = json.load(f)
@@ -149,7 +149,7 @@ def validate_exp07():
     assert data.get("pseudo_labels", {}).get("count") == 713, "Pseudo cohort count must be 713"
 
     # 4. Clean subject lineage manifest
-    manifest_path = ROOT_DIR / "results/exp07/clean_subjects_manifest.csv"
+    manifest_path = ROOT_DIR / "results/exp07/clean_cohort_lineage.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
     m_df = pd.read_csv(manifest_path)
     assert len(m_df) == 391, f"Expected 391 aligned subjects, got {len(m_df)}"
@@ -167,7 +167,7 @@ def validate_exp07():
 
 def validate_exp08():
     print("Validating Experiment 8 (Volumetric & Temporal Baselines)...")
-    path = ROOT_DIR / "results/exp08/exp08_verified_results.json"
+    path = ROOT_DIR / "results/exp08/baseline_model_results.json"
     assert path.exists(), f"Missing {path}"
     with open(path) as f:
         data = json.load(f)
@@ -180,7 +180,7 @@ def validate_exp08():
 
 def validate_exp09():
     print("Validating Experiment 9 (LOSO Population Graphs & Baselines)...")
-    path = ROOT_DIR / "results/exp09/w2b_loso_results.csv"
+    path = ROOT_DIR / "results/exp09/gnn_loso_fold_results.csv"
     assert path.exists(), f"Missing {path}"
     df = pd.read_csv(path)
 
@@ -195,14 +195,14 @@ def validate_exp09():
     assert n_subs == 497, f"Expected 497 total subjects across sites, got {n_subs}"
 
     # Validate Exp09 canonical model summary
-    canon_path = ROOT_DIR / "results/exp09/w1_canonical_model_summary.csv"
+    canon_path = ROOT_DIR / "results/exp09/classical_ml_canonical_results.csv"
     assert canon_path.exists(), f"Missing {canon_path}"
     c_df = pd.read_csv(canon_path)
     assert len(c_df) == 42, f"Expected 42 canonical model rows, got {len(c_df)}"
     assert (c_df["n_folds"] == 7).all(), "All canonical rows must have n_folds=7"
 
     # Validate Exp09 family winners
-    winners_path = ROOT_DIR / "results/exp09/w1_family_winners.csv"
+    winners_path = ROOT_DIR / "results/exp09/classical_ml_family_summary.csv"
     assert winners_path.exists(), f"Missing {winners_path}"
     w_df = pd.read_csv(winners_path).set_index("family")
     expected_families = {
@@ -247,7 +247,7 @@ def validate_exp09():
     assert v_data.get("executed_protocol", {}).get("self_loops") is True, "Expected self_loops=True"
 
     # Validate recovered Exp09 threshold sweep ledger
-    gstat_path = ROOT_DIR / "results/exp09/graph_statistics.csv"
+    gstat_path = ROOT_DIR / "results/exp09/threshold_sweep_graph_statistics.csv"
     assert gstat_path.exists(), f"Missing {gstat_path}"
     gs_df = pd.read_csv(gstat_path)
     assert len(gs_df) == 8, f"Expected 8 candidate threshold regimes, got {len(gs_df)}"
@@ -259,8 +259,8 @@ def validate_exp09():
     assert np.isclose(t10["Mean_Small_Worldness"], 3.8095, atol=1e-2), f"top_10pct sigma mismatch: {t10['Mean_Small_Worldness']}"
 
     # Validate recovered Exp09 diagnostic ledgers
-    pos_path = ROOT_DIR / "results/exp09/gnn_diagnostic_positive.csv"
-    abs_path = ROOT_DIR / "results/exp09/gnn_diagnostic_absolute.csv"
+    pos_path = ROOT_DIR / "results/exp09/threshold_positive_fc_diagnostic.csv"
+    abs_path = ROOT_DIR / "results/exp09/threshold_absolute_fc_diagnostic.csv"
     assert pos_path.exists(), f"Missing {pos_path}"
     assert abs_path.exists(), f"Missing {abs_path}"
     pos_df = pd.read_csv(pos_path)
@@ -271,7 +271,7 @@ def validate_exp09():
     assert np.isclose(abs_df["auc"].mean(), 0.5534, atol=1e-3), f"Absolute mean AUC mismatch: {abs_df['auc'].mean()}"
 
     # Validate threshold selection metadata
-    thresh_cfg_path = ROOT_DIR / "configs/exp09/selected_threshold.json"
+    thresh_cfg_path = ROOT_DIR / "configs/exp09/graph_threshold_selection.json"
     assert thresh_cfg_path.exists(), f"Missing {thresh_cfg_path}"
     with open(thresh_cfg_path) as f:
         t_cfg = json.load(f)
@@ -285,7 +285,7 @@ def validate_exp09():
     assert v_proto.get("gcn_consumes_edge_weight") is True, "gcn_consumes_edge_weight must be True"
     assert v_proto.get("edge_attribute_semantics", {}).get("main_gnn_consumes_edge_weights", {}).get("GAT") is False, "GAT must not consume edge weights"
 
-    best_cfg_path = ROOT_DIR / "configs/exp09/w2b_best_config.json"
+    best_cfg_path = ROOT_DIR / "configs/exp09/gnn_configuration.json"
     assert best_cfg_path.exists(), f"Missing {best_cfg_path}"
     with open(best_cfg_path) as f:
         b_cfg = json.load(f)
@@ -294,7 +294,7 @@ def validate_exp09():
     assert b_cfg.get("edge_attribute_semantics", {}).get("main_gnn_consumes_edge_weights", {}).get("GAT") is False, "GAT must not consume edge weights"
 
     # Validate Exp09 CI calculation method (Student-t with df=6 across 7 LOSO folds)
-    ci_path = ROOT_DIR / "results/exp09/w2b_summary_with_ci.csv"
+    ci_path = ROOT_DIR / "results/exp09/gnn_loso_summary_statistics.csv"
     assert ci_path.exists(), f"Missing {ci_path}"
     ci_df = pd.read_csv(ci_path)
     from scipy import stats
@@ -354,3 +354,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

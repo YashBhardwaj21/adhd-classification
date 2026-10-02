@@ -48,5 +48,5 @@
     "edge_density_threshold": 0.15,
     "message_passing_type": "unweighted_isotropic_gcn"
   },
-  "storage_notice": "Raw combined NumPy array artifacts (X_combined_full.npy [875, 6670], y_combined.npy [875], subjects_combined.npy [875]) exceed repository storage quotas (>50 MB) and are maintained in external institutional storage. Model evaluation metrics on the 33 held-out clean test subjects are archived in results/exp07/checkpoint_analysis.json."
+  "storage_notice": "Raw combined NumPy array artifacts (X_combined_full.npy [875, 6670], y_combined.npy [875], subjects_combined.npy [875]) exceed repository storage quotas (>50 MB) and are maintained in external institutional storage. Model evaluation metrics on the 33 held-out clean test subjects are archived in results/exp07/gcn_qgcnn_test_results.json."
 }

@@ -1,8 +1,8 @@
-"""
+﻿"""
 Unit tests for Experiment 2 (Track A) CC200 graph construction.
 
 Graph construction protocol:
-  - Executed notebook protocol (`notebooks/exp02/02_graph_construction_and_validation.ipynb`):
+  - Executed notebook protocol (`notebooks/exp02/mst_proportional_graph_construction.ipynb`):
     Implements MST + Proportional Thresholding (`mst_graph`, density=0.20, CC200, 3,591 target edges).
   - Public standalone utility (`src/exp02/graph_utils.py`):
     Implements canonical MST + Proportional Thresholding (MST+PT) graph tensor generation.
@@ -83,3 +83,4 @@ def test_exp02_public_utility_mst_pt_edge_count():
     assert undirected_edges == expected_undirected == 3591, (
         f"Undirected edge count {undirected_edges} deviates from expected {expected_undirected}"
     )
+

@@ -1,4 +1,4 @@
-"""Unit tests for Experiment 7 model architectures, tensor shapes, and parameter counts."""
+﻿"""Unit tests for Experiment 7 model architectures, tensor shapes, and parameter counts."""
 
 import sys
 from pathlib import Path
@@ -14,9 +14,9 @@ from torch_geometric.data import Batch, Data
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from exp07.classical_models.model_classical_gcn import ClassicalGCN
-from exp07.quantum_models.quantum_embedding_broadcast import QuantumEmbeddingGPU_Broadcast
-from exp07.quantum_models.train_qgcnn_vectorized import HybridQGCNN_Vectorized
+from exp07.classical_models.gcn_model import ClassicalGCN
+from exp07.quantum_models.qgcnn_quantum_embedding import QuantumEmbeddingGPU_Broadcast
+from exp07.quantum_models.qgcnn_training import HybridQGCNN_Vectorized
 from exp07.utils.config import (
     BATCH_SIZE,
     DENSITY,
@@ -107,3 +107,4 @@ def test_quantum_embedding_module_parameters():
     # Total embedding parameters: 1434
     total_embedding_params = count_parameters(embedding)
     assert total_embedding_params == 1434, f"Embedding params expected 1434, got {total_embedding_params}"
+

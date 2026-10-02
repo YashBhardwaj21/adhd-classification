@@ -48,7 +48,7 @@ def load_data(
             f"  - y_combined.npy (diagnostic labels: 162 clean + 713 pseudo)\n"
             f"  - subjects_combined.npy (subject identifiers)\n\n"
             f"Provenance Status: The original large training arrays are no longer available in this "
-            f"public repository. The reported test results (N=33) are archived in results/exp07/checkpoint_analysis.json. "
+            f"public repository. The reported test results (N=33) are archived in results/exp07/gcn_qgcnn_test_results.json. "
             f"This experiment cannot currently be rerun end-to-end from scratch without external restoration of "
             f"these arrays. See docs/provenance.md and docs/reproduction.md for full details."
         )

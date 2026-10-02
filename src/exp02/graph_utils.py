@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Graph utilities to convert CC200 FC features to PyTorch Geometric graphs.
 # Experiment 02: CC200 Atlas (190 ROIs, density 0.20).
-# For topological analysis, see notebooks/exp02/02_graph_construction_and_validation.ipynb.
+# For topological analysis, see notebooks/exp02/mst_proportional_graph_construction.ipynb.
 
 import numpy as np
 import torch
