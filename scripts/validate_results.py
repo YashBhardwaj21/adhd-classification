@@ -279,7 +279,32 @@ def validate_exp09():
     assert (ROOT_DIR / t_cfg.get("threshold_sweep_ledger")).exists(), "threshold_sweep_ledger path must exist"
     assert t_cfg.get("sweep_producer_code_retained") is False, "sweep_producer_code_retained must be False"
 
-    print("  [OK] Exp 9 LOSO and baseline results verified (497 subjects, 7 sites, 6 feature families, threshold sweep & diagnostic ledgers verified)")
+    # Validate Exp09 edge attribute semantics
+    v_proto = v_data.get("executed_protocol", {})
+    assert v_proto.get("stored_edge_attributes") is True, "stored_edge_attributes must be True"
+    assert v_proto.get("gcn_consumes_edge_weight") is True, "gcn_consumes_edge_weight must be True"
+    assert v_proto.get("edge_attribute_semantics", {}).get("main_gnn_consumes_edge_weights", {}).get("GAT") is False, "GAT must not consume edge weights"
+
+    best_cfg_path = ROOT_DIR / "configs/exp09/w2b_best_config.json"
+    assert best_cfg_path.exists(), f"Missing {best_cfg_path}"
+    with open(best_cfg_path) as f:
+        b_cfg = json.load(f)
+    assert b_cfg.get("edge_attribute_semantics", {}).get("stored_signed_fc") is True, "stored_signed_fc must be True"
+    assert b_cfg.get("edge_attribute_semantics", {}).get("main_gnn_consumes_edge_weights", {}).get("GCN") is True, "GCN must consume edge weights"
+    assert b_cfg.get("edge_attribute_semantics", {}).get("main_gnn_consumes_edge_weights", {}).get("GAT") is False, "GAT must not consume edge weights"
+
+    # Validate Exp09 CI calculation method (Student-t with df=6 across 7 LOSO folds)
+    ci_path = ROOT_DIR / "results/exp09/w2b_summary_with_ci.csv"
+    assert ci_path.exists(), f"Missing {ci_path}"
+    ci_df = pd.read_csv(ci_path)
+    from scipy import stats
+    t_crit_6 = stats.t.ppf(0.975, df=6)
+    for _, row in ci_df.iterrows():
+        margin = t_crit_6 * (row["Std_AUC"] / np.sqrt(7))
+        assert np.isclose(row["CI_Low"], row["Mean_AUC"] - margin, atol=1e-5), f"CI_Low mismatch for {row['Architecture']}"
+        assert np.isclose(row["CI_High"], row["Mean_AUC"] + margin, atol=1e-5), f"CI_High mismatch for {row['Architecture']}"
+
+    print("  [OK] Exp 9 LOSO and baseline results verified (497 subjects, 7 sites, edge semantics, and Student-t CIs verified)")
 
 
 def validate_manifest_consistency():

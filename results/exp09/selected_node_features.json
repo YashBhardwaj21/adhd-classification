@@ -1,6 +1,6 @@
 {
   "selected_node_features": "connectivity",
-  "selection_method": "LeaveOneSiteOut_Mean_AUC",
+  "selection_method": "exploratory 7-site LOSO comparison (non-nested)",
   "evaluated_formats": {
     "identity": 0.535,
     "connectivity": 0.5497,

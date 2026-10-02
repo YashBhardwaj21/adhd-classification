@@ -27,6 +27,6 @@ exp09,graph_statistics.csv,results/exp09/graph_statistics.csv,historical,CC200,4
 exp09,gnn_diagnostic_positive.csv,results/exp09/gnn_diagnostic_positive.csv,historical,CC200,497,42,"Downstream 7-fold LOSO diagnostic evaluation under positive proportional thresholding (Mean AUC 0.5687)"
 exp09,gnn_diagnostic_absolute.csv,results/exp09/gnn_diagnostic_absolute.csv,historical,CC200,497,42,"Downstream 7-fold LOSO diagnostic evaluation under absolute thresholding (Mean AUC 0.5534)"
 exp09,w2b_wilcoxon_tests.csv,results/exp09/w2b_wilcoxon_tests.csv,historical,CC200,497,42,"Pairwise Wilcoxon signed-rank significance tests between evaluated GNN architectures"
-exp09,w2b_summary_with_ci.csv,results/exp09/w2b_summary_with_ci.csv,historical,CC200,497,42,"Architecture performance summary with 95% bootstrap confidence intervals"
+exp09,w2b_summary_with_ci.csv,results/exp09/w2b_summary_with_ci.csv,historical,CC200,497,42,"Architecture performance summary with 95% confidence intervals (Student-t, df=6)"
 exp09,w2b_error_analysis.csv,results/exp09/w2b_error_analysis.csv,historical,CC200,497,42,"LOSO fold-by-fold classification error and confusion analysis"
 exp09,exp09_verified_results.json,results/exp09/exp09_verified_results.json,derived,CC200,497,42,Executed-protocol metadata and aggregate mean AUC values by architecture

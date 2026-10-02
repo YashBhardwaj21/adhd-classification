@@ -1,7 +1,7 @@
 # Research Map: ADHD-200 Functional Connectomics & Deep Learning
 
 **Repository**: `adhd-classification`  
-**Derived From**: Cloud Environments `/lp-dev/23BRS1236` and `/home/nvidia/23BRS1236` (captured in `audit_source_files/`)  
+**Derived From**: Historical cloud GPU cluster environments (captured in `audit_source_files/`)  
 **Scope**: End-to-end research progression, experimental lineage, negative results, and out-of-distribution evaluation.  
 
 ---

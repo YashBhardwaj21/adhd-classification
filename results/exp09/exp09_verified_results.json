@@ -7,7 +7,18 @@
     "nodes": 190,
     "graph_selection": "top_10pct",
     "features": "connectivity features",
-    "edge_weights": true,
+    "stored_edge_attributes": true,
+    "gcn_consumes_edge_weight": true,
+    "edge_attribute_semantics": {
+      "stored_signed_fc": true,
+      "main_gnn_consumes_edge_weights": {
+        "GCN": true,
+        "GAT": false,
+        "SAGE": false,
+        "GIN": false
+      },
+      "note": "Signed Pearson correlation values are stored as edge_attr with self-loops; only GCN consumes edge_weight during message passing, while GAT, SAGE, and GIN pass unweighted edge_index."
+    },
     "self_loops": true,
     "mean_density": 0.10003,
     "adhd_ratio": 0.4346
