@@ -15,12 +15,12 @@ Experiments whose source code, configurations, and verification routines are ful
 - **Experiment 03**: Dynamic graph metric extraction and cross-site ANOVA testing.
 - **Experiment 04**: ComBat harmonization and topology preservation evaluation.
 - **Experiment 05**: Unsupervised dynamic micro-state clustering and biomarker extraction.
-- **Experiment 09**: Leave-One-Site-Out (LOSO) cross-validation and baseline model evaluation (**Category B**: full evaluation tables are retained in `results/exp09/`; executing the notebook from scratch requires intermediate feature parquets not distributed in the public repository).
 
 ### Category B — Requires Excluded Intermediates
 Experiments whose complete source code is preserved in the repository, but whose execution requires large intermediate arrays, raw 4D functional NIfTI volumes, or pretrained checkpoints that exceed Git quotas:
 - **Experiment 06**: Semi-supervised pseudo-labeling on the AAL-116 atlas (requires unbundled AAL-116 correlation arrays for 955 subjects).
 - **Experiment 08**: Volumetric 3D CNN, NeuroSTORM, and temporal graph baselines (requires external 4D functional BOLD NIfTI volumes).
+- **Experiment 09**: Leave-One-Site-Out (LOSO) cross-validation and baseline model evaluation (full evaluation tables are retained in `results/exp09/`; executing the notebook from scratch requires intermediate feature parquets not distributed in the public repository).
 
 ### Category C — Archived
 Experiments for which exact configurations and verified empirical test metrics are retained, but whose historical input arrays and checkpoints are archived externally, preventing end-to-end retraining from within the public Git tree:
@@ -33,7 +33,7 @@ Experiments for which exact configurations and verified empirical test metrics a
 | Track | Experiments | Python | PyTorch | PyTorch Geometric | PennyLane | Environment File | Target Hardware |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Track A** | Exp 01–05 | 3.10–3.13 | $\ge 2.2.0$ | $\ge 2.5.0$ | N/A | `environment/track_a/requirements.txt` | CPU or Single GPU |
-| **Track B** | Exp 06–07 | 3.10–3.12 | 2.5.1+cu121 | 2.6.1 | 0.44.1 | `environment/track_b/requirements.txt` | NVIDIA GPU (CUDA 12.1) |
+| **Track B** | Exp 06–07 | 3.10–3.12 | 2.5.1+cu121 | 2.8.0 | 0.44.1 | `environment/track_b/requirements.txt` | NVIDIA GPU (CUDA 12.1) |
 | **Track B** | Exp 08 | 3.10–3.12 | 2.7.1+cu126 | N/A | N/A | `environment/track_b/requirements.txt` (NeuroSTORM env separate) | NVIDIA GPU (CUDA 12.6) |
 | **Track C** | Exp 09 | 3.10–3.12 | 2.5.1+cu121 | 2.8.0 | N/A | `environment/track_c/requirements.txt` | NVIDIA GPU (CUDA 12.1) |
 

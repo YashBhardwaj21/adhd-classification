@@ -132,7 +132,7 @@ The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.cs
 | [`results/exp04/diagnosis_prediction_combat_comparison.csv`](../results/exp04/diagnosis_prediction_combat_comparison.csv) | EXP04 | CC200 | 764 | Derived | `7445f7928ca9855728e9fe0f4cabc89d9c4dce2aa88ffe90989a0537ecc9a002` |
 | [`results/exp05/dynamic_state_biomarkers.csv`](../results/exp05/dynamic_state_biomarkers.csv) | EXP05 | CC200 | 764 | Derived | `3f3523b67a3527b3a0305706e37bb54b727a1bf529930e3cd0bf1f27ebc2c087` |
 | [`results/exp05/dynamic_state_sequences.csv`](../results/exp05/dynamic_state_sequences.csv) | EXP05 | CC200 | 764 | Derived | `973ae8486c92e397ccdc3bd94858f150825d0405f98cfcbc041460beb8f040e8` |
-| [`results/exp06/exp06_verified_results.json`](../results/exp06/exp06_verified_results.json) | EXP06 | AAL-116 | 955 | Reported | `1e35a8d600644d71c0b4ce0ef0a97d498b65bd8b975403ccf7015d98fd5f54ef` |
+| [`results/exp06/exp06_verified_results.json`](../results/exp06/exp06_verified_results.json) | EXP06 | AAL-116 | 955 | Reported | `df76c6c699f3c4dec6f4571f5b4af1a9b6d980982bf3dc07dd85787404aba31b` |
 | [`results/exp07/gcn_qgcnn_test_results.json`](../results/exp07/gcn_qgcnn_test_results.json) | EXP07 | AAL-116 | 33 | Archived | `a3a9582dd9d8fa6bd607b8ca098a80bef1f2068f2d6ffaee59be49e1dba8997f` |
 | [`results/exp07/experiment_report.md`](../results/exp07/experiment_report.md) | EXP07 | AAL-116 | 33 | Archived | `4f1fa1aaad2d7686045beb7ca15c31aa9793e8af23b0305197dffb65992bb512` |
 | [`results/exp07/pseudolabel_provenance.json`](../results/exp07/pseudolabel_provenance.json) | EXP07 | AAL-116 | 875 | Reported | `dc911f747f4dd498547de3005914439ba1923424f6f144d518d58d9a3640feff` |

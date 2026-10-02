@@ -1,6 +1,6 @@
 {
   "experiment": "Experiment 6 - Semi-Supervised Pseudo-Labeling",
-  "source_notebook": "notebooks/exp06/exp06_semi_supervised_pseudolabeling.ipynb",
+  "source_notebook": "notebooks/exp06/semi_supervised_pseudolabeling.ipynb",
   "cohort": {
     "clean_labeled": 391,
     "train": 273,
@@ -22,7 +22,7 @@
     "pseudo_labels": 552,
     "validation_accuracy": 0.5593,
     "test_accuracy": 0.6441,
-    "provenance": "Stored execution output in part1.ipynb"
+    "provenance": "Execution output from historical development run; pipeline preserved in notebooks/exp06/semi_supervised_pseudolabeling.ipynb"
   },
   "procedure_II": {
     "method": "Weighted four-classifier ensemble",
@@ -35,7 +35,7 @@
     "selected_subjects": 484,
     "clean_validation_accuracy": 0.6709,
     "pseudo_label_augmented_validation_accuracy": 0.7215,
-    "provenance": "Stored execution output in part1.ipynb"
+    "provenance": "Execution output from historical development run; pipeline preserved in notebooks/exp06/semi_supervised_pseudolabeling.ipynb"
   },
   "procedure_II_evaluation": {
     "evaluation_set_size": 79,
@@ -48,5 +48,5 @@
     "soft_voting_test_accuracy": 0.678,
     "test_subjects": 59
   },
-  "important_note": "The repository contains an earlier Random-Forest self-training model at mnt/ADHD200/06_semi_supervised/models/self_training_model.pkl. It is not the Logistic-Regression 552-label model reported as Procedure I in the latest paper draft."
+  "important_note": "An earlier Random-Forest self-training model was created during initial development as an external historical artifact. It is not the Logistic-Regression 552-label model reported as Procedure I in the latest paper draft."
 }

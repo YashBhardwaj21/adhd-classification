@@ -137,6 +137,7 @@ Two-sample Welch's unequal variances $t$-tests comparing TDC vs ADHD cohorts, wi
 - Primary notebook/source: [`notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb`](../notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb)
 - Primary configuration: N/A
 - Primary result artifact: [`results/exp03/dynamic_feature_statistics.csv`](../results/exp03/dynamic_feature_statistics.csv), [`results/exp03/site_effect_anova.csv`](../results/exp03/site_effect_anova.csv)
+- Note on $p$-values: In `site_effect_anova.csv`, $p$-values exceeding floating-point double precision underflow to `0.0`, reflecting extreme statistical significance ($p < 10^{-15}$).
 - Reproducibility status: Category A (Rerunnable from windowed graph metrics)
 
 ---
@@ -184,10 +185,11 @@ Cluster centroids identify $K=3$ discrete connectivity micro-states. Each acquis
 - Transition Probability Matrix ($P_{ij}$, probability of switching from state $i$ to state $j$)
 
 ### Output Artifacts
-- Primary notebook/source: [`notebooks/exp05/dynamic_state_discovery.ipynb`](../notebooks/exp05/dynamic_state_discovery.ipynb)
+- Primary notebook/source: [`notebooks/exp05/dynamic_state_discovery.ipynb`](../notebooks/exp05/dynamic_state_discovery.ipynb) (implements CC200 $K=2\dots 10$ evaluation, 30-run ARI stability, $K=3$ Lloyd clustering, state sequence generation, and dynamic biomarker extraction).
 - Primary configuration: N/A
 - Primary result artifact: [`results/exp05/dynamic_state_biomarkers.csv`](../results/exp05/dynamic_state_biomarkers.csv), [`results/exp05/dynamic_state_transitions.csv`](../results/exp05/dynamic_state_transitions.csv), [`results/exp05/dynamic_state_sequences.csv`](../results/exp05/dynamic_state_sequences.csv)
-- Reproducibility status: Category A (Rerunnable from sliding-window FC matrices)
+- Column terminology note: In `dynamic_state_biomarkers.csv` and `dynamic_state_sequences.csv`, the column labeled `label_binary` historically stores the 4-class diagnosis code ($0=\text{TDC}$, $1=\text{ADHD-Combined}$, $2=\text{ADHD-Hyperactive}$, $3=\text{ADHD-Inattentive}$).
+- Reproducibility status: Category A (Rerunnable from sliding-window FC metrics)
 
 ---
 

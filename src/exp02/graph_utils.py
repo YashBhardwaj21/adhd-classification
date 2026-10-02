@@ -14,7 +14,7 @@ from .config import DENSITY, N_ROIS
 def _build_mst_pt_edge_mask(fc_matrix, n_rois, density):
     """
     Construct MST+PT edge mask.
-    1. Distance metric d_ij = 1 - |r_ij| (Kruskal MST maximizing absolute correlation).
+    1. Distance metric d_ij = 1 - |r_ij|; Kruskal minimizes this distance, equivalently prioritizing large |r_ij|.
     2. Add strongest remaining absolute correlation edges until density target is reached.
     """
     total_possible = n_rois * (n_rois - 1) // 2

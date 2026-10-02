@@ -26,7 +26,7 @@ This study investigates resting-state functional connectomics, machine learning 
 | **01** | Dynamic FC Temporal Stability | CC200 (190 ROIs) | 764 subjects / 1,193 runs | Autocorrelation decay & Frobenius distance across lags 1–4 |
 | **02** | MST+PT Graph Construction | CC200 (190 ROIs) | 764 subjects / 31,060 windows | Connectedness & degree-conserving signed null rewiring |
 | **03** | Dynamic Graph Biomarkers | CC200 (190 ROIs) | 534 complete subjects | Welch $t$-tests with BH-FDR correction & cross-site ANOVA |
-| **04** | ComBat Scanner Harmonization | CC200 (190 ROIs) | 534 complete subjects | Site prediction balanced accuracy & topology preservation |
+| **04** | ComBat Scanner Harmonization | CC200 (190 ROIs) | 534 complete subjects | Site prediction accuracy & topology preservation |
 | **05** | Dynamic State Discovery | CC200 (190 ROIs) | 764 subjects / 1,193 acquisitions | Unsupervised $k$-means clustering ($K=3$) & dwell dynamics |
 | **06** | Semi-Supervised Pseudo-Labeling | AAL-116 (116 ROIs) | 955 subjects (391 clean) | Self-training ($\tau \ge 0.75$) vs 4-model ensemble consensus |
 | **07** | Classical GCN vs Hybrid QGCNN | AAL-116 (116 ROIs) | 162 clean + 713 pseudo | Matched benchmark on 33 held-out test clean subjects |
@@ -45,9 +45,9 @@ This study investigates resting-state functional connectomics, machine learning 
 | **Exp 04** | ComBat substantially attenuates scanner bias | Site prediction drops from **58.64%** $\to$ **31.29%** (`site_prediction_combat_comparison.csv`) |
 | **Exp 05** | 3 recurring micro-states; State 0 dominates dwell time | State 0 dwell time = **6.24 windows** (`dynamic_state_biomarkers.csv`) |
 | **Exp 06** | Pseudo-label augmentation improves holdout accuracy | Baseline **67.09%** $\to$ Augmented **72.15%** (`exp06_verified_results.json`) |
-| **Exp 07** | Matched GCN outperforms 6-qubit QGCNN on clean test set | Classical GCN: **0.7293 AUC** vs QGCNN: **0.6429 AUC** (`gcn_qgcnn_test_results.json`) |
+| **Exp 07** | Matched GCN achieves higher observed AUC than 6-qubit QGCNN | Classical GCN: **0.7293 AUC** vs QGCNN: **0.6429 AUC** (`gcn_qgcnn_test_results.json`) |
 | **Exp 08** | 3D spatial CNN achieves strongest baseline accuracy | 3D CNN: **76.19%**, NeuroSTORM 5-fold: **59.10%** (`baseline_model_results.json`) |
-| **Exp 09** | Classical ML with phenotype outperforms GNNs under LOSO | SVM (Graph+Pheno): **0.6493 AUC** vs GAT: **0.5752 AUC** (`gnn_loso_fold_results.csv`) |
+| **Exp 09** | Classical ML with phenotype achieves higher observed AUC than GNNs under LOSO | SVM (Graph+Pheno): **0.6493 AUC** vs GAT: **0.5752 AUC** (`gnn_loso_fold_results.csv`) |
 
 ---
 

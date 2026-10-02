@@ -1,4 +1,7 @@
-import csv, os, re
+import csv
+import os
+import re
+
 import pytest
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

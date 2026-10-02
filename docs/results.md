@@ -54,7 +54,7 @@ Topological network metrics were extracted across all 31,060 sliding windows and
 | **Normalized Path Length** | $\lambda = L / L_{\text{null}}$ | $1.0185 \pm 0.0103$ | 84.29 | $8.36 \times 10^{-139}$ |
 | **Small-Worldness** | $\sigma = \gamma / \lambda$ | $1.0132 \pm 0.0103$ | 214.91 | $< 10^{-15}$ |
 
-**Key Finding**: Cross-site scanner variation exerted massive statistical influence across all graph-theoretic metrics ($F > 4600$ for global efficiency and path length), dominating any subtle diagnostic group separation.
+**Key Finding**: Cross-site scanner variation exerted massive statistical influence across all graph-theoretic metrics ($F > 4600$ for global efficiency and path length), dominating any subtle diagnostic group separation. (*Note*: In the underlying artifact `results/exp03/site_effect_anova.csv`, $p$-values exceeding double-precision float precision underflow to `0.0`, corresponding to $p < 10^{-15}$).
 
 ---
 
