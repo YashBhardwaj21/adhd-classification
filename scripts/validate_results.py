@@ -319,9 +319,15 @@ def validate_manifest_consistency():
         assert src_path.exists(), f"Manifest row points to missing file: {src_path} (artifact: {row['artifact']})"
         if "sha256" in row and pd.notna(row["sha256"]):
             h = hashlib.sha256()
-            with open(src_path, "rb") as f:
-                while chunk := f.read(65536):
-                    h.update(chunk)
+            # For text files, normalize line endings to LF (\n) to ensure cross-platform reproducibility (Windows CRLF vs Linux LF)
+            if src_clean.endswith((".csv", ".json", ".md", ".txt")):
+                with open(src_path, "r", encoding="utf-8") as f:
+                    content = f.read().replace("\r\n", "\n")
+                h.update(content.encode("utf-8"))
+            else:
+                with open(src_path, "rb") as f:
+                    while chunk := f.read(65536):
+                        h.update(chunk)
             assert h.hexdigest() == str(row["sha256"]).strip(), f"SHA-256 mismatch for {src_clean}: expected {row['sha256']}, got {h.hexdigest()}"
     print(f"  [OK] All {len(m_df)} registered manifest artifacts verified with SHA-256 checksums")
 
