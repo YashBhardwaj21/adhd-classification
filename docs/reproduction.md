@@ -123,17 +123,168 @@ To rerun from scratch, download the following from the [ADHD-200 Consortium NITR
 
 ---
 
-## 7. Excluded and Missing Artifacts
+## 7. Data, Paths, and Non-Distributed Artifacts
 
-The following files are not redistributed in the repository:
-- **`data/raw/`**: Raw 4D fMRI NIfTI files (>120 GB).
-- **`src/exp07/` input arrays**: `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` (875 subjects).
-- **Pretrained Checkpoints**: Checkpoint weights for Classical GCN, QGCNN, and NeuroSTORM.
-- **Exp 09 Intermediates**: per-subject phenotypic feature parquets and graph feature parquets (historical internal names: `w1_pheno_features.parquet`, `w1_graph_features.parquet`).
+### Repository Path Policy
+This repository separates source code, canonical research results, external input data, generated intermediate data, and model checkpoints into four distinct artifact classes:
+
+| Class | Definition | Repository Status | Code Resolution |
+| :--- | :--- | :--- | :--- |
+| **Repository Artifact** | Small, final, or audit-relevant records defining the retained scientific record (`results/`, `configs/`). | Committed to Git | `REPO_ROOT / "results" / ...` |
+| **External Source Data** | Raw and preprocessed neuroimaging scans and phenotypic manifests. | External (Not Committed) | `DATA_ROOT / ...` |
+| **Regenerable Intermediate** | Large generated `.parquet` tables, dynamic `.npy` FC arrays, and workflow stages. | Local / Regenerable | `INTERMEDIATE_ROOT / ...` |
+| **Model Checkpoint** | Pretrained neural foundation models, GNN weights, and classical estimators. | External / Regenerable | `CHECKPOINT_ROOT / ...` |
+
+Paths used by executable code do not depend on machine-specific user accounts, cluster mount paths, or working directories. All code deterministically resolves paths from the repository root through [`src/common/paths.py`](../src/common/paths.py) and supports environment-variable overrides:
+
+```text
+REPO_ROOT/
+├── data/
+│   ├── raw/               # External source scans (NITRC ADHD-200), not committed
+│   ├── external/          # Externally obtained atlas parcellations, not committed
+│   ├── intermediate/      # Regenerable pipeline parquets/arrays (workflow2/v6, v7, v8)
+│   └── checkpoints/       # Pretrained foundation weights (neurostorm_mae.pth)
+├── results/               # Committed canonical scientific results (results/manifest.csv)
+├── configs/               # Committed hyperparameters and pipeline configurations
+├── notebooks/             # Research notebooks (code synchronized; historical outputs preserved)
+├── src/                   # Production modular Python packages
+├── docs/                  # Architectural, methodological, and provenance documentation
+├── scripts/               # Validation and replication test scripts
+└── tests/                 # Unit and repository integrity test suite
+```
+
+### Environment Variable Overrides
+The default paths are designed to execute from a clean repository checkout. Cluster mounts, scratch disks, or HPC storage arrays can be configured using environment variables:
+
+| Environment Variable | Canonical Default | Description |
+| :--- | :--- | :--- |
+| `ADHD200_PROJECT_ROOT` | Repository Root | Root directory containing `pyproject.toml`, `results/`, `notebooks/`. |
+| `ADHD200_DATA_DIR` | `REPO_ROOT / "data"` | Root storage for raw, external, and intermediate imaging data. |
+| `ADHD200_RESULTS_DIR` | `REPO_ROOT / "results"` | Authoritative directory for promoted small scientific result artifacts. |
+| `ADHD200_WORK_DIR` | `DATA_ROOT / "intermediate"` | Scratch directory for regenerable workflow intermediates (`workflow2/v6`, `v7`, `v8`). |
+| `ADHD200_CHECKPOINT_DIR` | `DATA_ROOT / "checkpoints"` | Directory for large pretrained model checkpoints (`.pth`, `.pt`, `.ckpt`). |
+
+### Canonical Repository Artifacts
+Small, final, and audit-verified result files that define the retained research record are stored under `results/` and `configs/`. These files are the authoritative repository artifacts referenced throughout this documentation.
+
+### External Source Data
+The ADHD-200 source dataset and other large neuroimaging inputs are not committed to Git due to size (>120 GB) and licensing constraints. This includes raw 4D fMRI NIfTI files, preprocessed Athena voxel timeseries, and phenotypic source tables. Users must obtain these inputs from the [ADHD-200 NITRC Portal](https://www.nitrc.org/projects/fcon_1000/) and place them under `data/`.
+
+### Generated Intermediate Artifacts
+Pipeline stages generate intermediate artifacts (e.g., sliding-window correlation tensors, topological metric parquets, ComBat-harmonized tables). When rerunning pipelines, intermediate data are placed under `data/intermediate/workflow2/` (`v6`, `v7`, `v8`). A missing intermediate file indicates an unmet pipeline dependency to be regenerated, not a missing repository file.
+
+### Model Checkpoints Policy
+Model checkpoints (`.pt`, `.pth`, `.ckpt`) are managed under three distinct policies:
+1. **Case A (Not Required for Canonical Evaluation)**: Checkpoints created during exploratory runs are discarded once summary metrics are recorded; training code and configuration are preserved.
+2. **Case B (Required for Direct Inference)**: Pretrained foundation models (such as NeuroSTORM MAE, 1.4 GB) have documented download sources from public repositories (HuggingFace Hub / Zenodo) and are mapped to `data/checkpoints/`.
+3. **Case C (Trained Model Producing Committed Results)**: For models evaluated on held-out test sets (e.g., Classical GCN and QGCNN in Exp 07), the authoritative evaluation metrics are committed in `results/exp07/`. The historical training script and config are preserved; exact bitwise reproduction of stochastic gradient descent weights is not guaranteed.
+
+### Three Levels of Reproduction
+This repository explicitly distinguishes three levels of scientific reproduction:
+
+1. **Level 1 — Inspect**: Full audit and verification of scientific code, hyperparameters, methodological documentation, provenance chains, and canonical results directly from a clean Git clone without downloading raw imaging data (`pytest tests/ -v`, `python scripts/validate_results.py`).
+2. **Level 2 — Rerun**: Execution of individual pipeline stages after acquiring external source data or generating intermediate parquets as documented in the artifact registry.
+3. **Level 3 — Historical Exact Reproduction**: Bitwise exact recreation of historical runs requiring identical hardware (NVIDIA GPU clusters), original Python environments, exact historical random seeds, and specific intermediate caches.
+
+### Historical Execution Paths & Output Policy
+Original executed notebook output cells contain historical execution evidence, such as `/home/nvidia/23BRS1236/adhd_data/`, `/mnt/ADHD200/`, `workflow2/v6/`, and `workflow2/v7/`.
+
+> [!IMPORTANT]
+> **Repository Policy on Historical Outputs:**
+> *Never modify historical outputs solely to reflect later renames. Modify executable code and current documentation; preserve historical outputs and explicitly label their provenance.*
 
 ---
 
-## 8. Verification & Test Suite
+## 8. Non-Distributed Artifact Registry
+
+| Artifact | Artifact Type | Status | Produced By | Required By | How Obtained / Regenerated |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ADHD-200 Raw NIfTI** | Raw Imaging Data | External | ADHD-200 Consortium | Exp 08 (Volumetric) | Download from [NITRC Portal](https://www.nitrc.org/projects/fcon_1000/) |
+| **Athena CC200 Timeseries** | Preprocessed Data | External | Athena Pipeline | Exp 01–05, Exp 09 | Download CC200 ROI timeseries from NITRC |
+| **Athena AAL-116 Timeseries** | Preprocessed Data | External | Athena Pipeline | Exp 06, Exp 07 | Download AAL-116 ROI timeseries from NITRC |
+| **`03_fc_matrices/*.npy`** | Intermediate Data | Regenerable | Exp 01 | Exp 02, Exp 09 | Run `notebooks/exp01/dynamic_fc_temporal_validation.ipynb` |
+| **`workflow2/v6/*.parquet`** | Intermediate Data | Regenerable | Exp 03 | Exp 04 | Run `notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb` |
+| **`workflow2/v7/*.parquet`** | Intermediate Data | Regenerable | Exp 04 | Exp 05 | Run `notebooks/exp04/combat_site_effects_harmonization.ipynb` |
+| **`workflow2/v8/*.parquet`** | Intermediate Data | Regenerable | Exp 05 | Downstream Analysis | Run `notebooks/exp05/dynamic_state_discovery.ipynb` |
+| **NeuroSTORM MAE Checkpoint** | Model Weights | External | Foundation Model Pretraining | Exp 08 | Download via HuggingFace Hub / Zenodo to `data/checkpoints/` |
+| **Classical GCN Checkpoint** | Model Weights | Historical / Unavailable | Exp 07 Training | Historical Inference | Retrain using `src/exp07/classical_models/run_gcn_experiment.py` |
+| **QGCNN Quantum Checkpoint** | Model Weights | Historical / Unavailable | Exp 07 Training | Historical Inference | Retrain using `src/exp07/quantum_models/run_qgcnn_experiment.py` |
+
+---
+
+## 9. Canonical Filename & Historical Execution Mapping
+
+The executable code and documentation reference the canonical repository filenames below, while historical outputs retain original execution names:
+
+| Category | Historical Execution Name (in Outputs) | Canonical Repository Name (in Code & Storage) | Verification Status |
+| :--- | :--- | :--- | :--- |
+| **Notebooks** | `01_fc_generation_and_validation.ipynb` | [`notebooks/exp01/dynamic_fc_temporal_validation.ipynb`](../notebooks/exp01/dynamic_fc_temporal_validation.ipynb) | Verified Present |
+| | `02_graph_construction_and_validation.ipynb` | [`notebooks/exp02/mst_proportional_graph_construction.ipynb`](../notebooks/exp02/mst_proportional_graph_construction.ipynb) | Verified Present |
+| | `03_graph_metrics_and_null_models.ipynb` | [`notebooks/exp02/graph_metrics_null_model_validation.ipynb`](../notebooks/exp02/graph_metrics_null_model_validation.ipynb) | Verified Present |
+| | `04_dynamic_graph_feature_extraction.ipynb` | [`notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb`](../notebooks/exp03/dynamic_graph_features_diagnosis_effects.ipynb) | Verified Present |
+| | `(historical w2c_athena_2.ipynb)` | [`notebooks/exp04/combat_site_effects_harmonization.ipynb`](../notebooks/exp04/combat_site_effects_harmonization.ipynb) | Verified Present |
+| | `dynamic_transformer.ipynb` | [`notebooks/exp05/dynamic_state_discovery.ipynb`](../notebooks/exp05/dynamic_state_discovery.ipynb) | Verified Present |
+| | `exp06_semi_supervised_pseudolabeling.ipynb` | [`notebooks/exp06/semi_supervised_pseudolabeling.ipynb`](../notebooks/exp06/semi_supervised_pseudolabeling.ipynb) | Verified Present |
+| | `neuro.ipynb` | [`notebooks/exp08/volumetric_3d_cnn.ipynb`](../notebooks/exp08/volumetric_3d_cnn.ipynb) | Verified Present |
+| | `true_neuro.ipynb` | [`notebooks/exp08/neurostorm_spatiotemporal_baseline.ipynb`](../notebooks/exp08/neurostorm_spatiotemporal_baseline.ipynb) | Verified Present |
+| | `09_temporal_graph_learning.ipynb` | [`notebooks/exp08/temporal_graph_learning.ipynb`](../notebooks/exp08/temporal_graph_learning.ipynb) | Verified Present |
+| | `11_population_graph_learning.ipynb` | [`notebooks/exp09/loso_gnn_population_graphs.ipynb`](../notebooks/exp09/loso_gnn_population_graphs.ipynb) | Verified Present |
+| | `12_classical_ml_baseline.ipynb` | [`notebooks/exp09/loso_classical_ml_baselines.ipynb`](../notebooks/exp09/loso_classical_ml_baselines.ipynb) | Verified Present |
+| **Source Scripts** | `null_model_und_sign_fixed.py` | [`src/exp02/signed_null_model.py`](../src/exp02/signed_null_model.py) | Verified Present |
+| | `randmio_und_signed_fast.py` | [`src/exp02/signed_edge_rewiring.py`](../src/exp02/signed_edge_rewiring.py) | Verified Present |
+| | `model_classical_gcn.py` | [`src/exp07/classical_models/gcn_model.py`](../src/exp07/classical_models/gcn_model.py) | Verified Present |
+| | `train_classical_gcn.py` | [`src/exp07/classical_models/gcn_training.py`](../src/exp07/classical_models/gcn_training.py) | Verified Present |
+| | `run_experiment.py` (GCN) | [`src/exp07/classical_models/run_gcn_experiment.py`](../src/exp07/classical_models/run_gcn_experiment.py) | Verified Present |
+| | `quantum_embedding_broadcast.py` | [`src/exp07/quantum_models/qgcnn_quantum_embedding.py`](../src/exp07/quantum_models/qgcnn_quantum_embedding.py) | Verified Present |
+| | `train_qgcnn_vectorized.py` | [`src/exp07/quantum_models/qgcnn_training.py`](../src/exp07/quantum_models/qgcnn_training.py) | Verified Present |
+| | `run_experiment.py` (QGCNN) | [`src/exp07/quantum_models/run_qgcnn_experiment.py`](../src/exp07/quantum_models/run_qgcnn_experiment.py) | Verified Present |
+| **Exp 01 Artifacts** | `dynamic_temporal_validation.csv` | [`results/exp01/temporal_similarity_validation.csv`](../results/exp01/temporal_similarity_validation.csv) | Verified Present |
+| | `static_vs_dynamic_validation.csv` | [`results/exp01/static_dynamic_fc_comparison.csv`](../results/exp01/static_dynamic_fc_comparison.csv) | Verified Present |
+| **Exp 02 Artifacts** | `graph_construction_strategy.csv` | [`results/exp02/graph_construction_configuration.csv`](../results/exp02/graph_construction_configuration.csv) | Verified Present |
+| | `graph_metrics.csv` | [`results/exp02/graph_metrics_window_level.csv`](../results/exp02/graph_metrics_window_level.csv) | Verified Present |
+| | `acquisition_graph_metrics.csv` | [`results/exp02/graph_metrics_acquisition_level.csv`](../results/exp02/graph_metrics_acquisition_level.csv) | Verified Present |
+| | `subject_graph_metrics.csv` | [`results/exp02/graph_metrics_subject_level.csv`](../results/exp02/graph_metrics_subject_level.csv) | Verified Present |
+| | `site_graph_metrics.csv` | [`results/exp02/graph_metrics_site_level.csv`](../results/exp02/graph_metrics_site_level.csv) | Verified Present |
+| **Exp 03 Artifacts** | `feature_statistics.csv` | [`results/exp03/dynamic_feature_statistics.csv`](../results/exp03/dynamic_feature_statistics.csv) | Verified Present |
+| | `site_anova.csv` | [`results/exp03/site_effect_anova.csv`](../results/exp03/site_effect_anova.csv) | Verified Present |
+| | `subject_graph_features.csv` | [`results/exp03/subject_graph_feature_summary.csv`](../results/exp03/subject_graph_feature_summary.csv) | Verified Present |
+| **Exp 04 Artifacts** | `comparison_table.csv` | [`results/exp04/combat_harmonization_comparison.csv`](../results/exp04/combat_harmonization_comparison.csv) | Verified Present |
+| | `diagnosis_prediction_results.csv` | [`results/exp04/diagnosis_prediction_combat_comparison.csv`](../results/exp04/diagnosis_prediction_combat_comparison.csv) | Verified Present |
+| | `effect_size_before_after.csv` | [`results/exp04/site_effect_sizes_before_after_combat.csv`](../results/exp04/site_effect_sizes_before_after_combat.csv) | Verified Present |
+| | `graph_topology_preservation.csv` | [`results/exp04/graph_topology_preservation_combat.csv`](../results/exp04/graph_topology_preservation_combat.csv) | Verified Present |
+| | `site_prediction_results.csv` | [`results/exp04/site_prediction_combat_comparison.csv`](../results/exp04/site_prediction_combat_comparison.csv) | Verified Present |
+| **Exp 05 Artifacts** | `run_dynamic_biomarkers.csv` | [`results/exp05/dynamic_state_biomarkers.csv`](../results/exp05/dynamic_state_biomarkers.csv) | Verified Present |
+| | `run_state_sequences.csv` | [`results/exp05/dynamic_state_sequences.csv`](../results/exp05/dynamic_state_sequences.csv) | Verified Present |
+| | `run_transition_dynamics.csv` | [`results/exp05/dynamic_state_transitions.csv`](../results/exp05/dynamic_state_transitions.csv) | Verified Present |
+| | `subject_dynamic_dataset.csv` | [`results/exp05/subject_dynamic_features.csv`](../results/exp05/subject_dynamic_features.csv) | Verified Present |
+| | `subject_feature_correlation.csv` | [`results/exp05/subject_feature_correlations.csv`](../results/exp05/subject_feature_correlations.csv) | Verified Present |
+| | `subject_feature_summary.csv` | [`results/exp05/subject_feature_summary.csv`](../results/exp05/subject_feature_summary.csv) | Verified Present |
+| **Exp 07 Artifacts** | `checkpoint_analysis.json` | [`results/exp07/gcn_qgcnn_test_results.json`](../results/exp07/gcn_qgcnn_test_results.json) | Verified Present |
+| | `report.md` | [`results/exp07/experiment_report.md`](../results/exp07/experiment_report.md) | Verified Present |
+| | `clean_subjects_manifest.csv` | [`results/exp07/clean_cohort_lineage.csv`](../results/exp07/clean_cohort_lineage.csv) | Verified Present |
+| | `reported_run.json` | [`configs/exp07/experiment_configuration.json`](../configs/exp07/experiment_configuration.json) | Verified Present |
+| **Exp 08 Artifacts** | `exp08_verified_results.json` | [`results/exp08/baseline_model_results.json`](../results/exp08/baseline_model_results.json) | Verified Present |
+| | `neurostorm_true_results.png` | [`results/exp08/neurostorm_evaluation_summary.png`](../results/exp08/neurostorm_evaluation_summary.png) | Verified Present |
+| **Exp 09 Artifacts** | `(historical w1_canonical_model_summary.csv)` | [`results/exp09/classical_ml_canonical_results.csv`](../results/exp09/classical_ml_canonical_results.csv) | Verified Present |
+| | `(historical w1_family_winners.csv)` | [`results/exp09/classical_ml_family_summary.csv`](../results/exp09/classical_ml_family_summary.csv) | Verified Present |
+| | `(historical w1_model_summary.csv)` | [`results/exp09/classical_ml_historical_results.csv`](../results/exp09/classical_ml_historical_results.csv) | Verified Present |
+| | `(historical w2_pareto_front.csv)` | [`results/exp09/representation_pareto_analysis.csv`](../results/exp09/representation_pareto_analysis.csv) | Verified Present |
+| | `(historical w2b_error_analysis.csv)` | [`results/exp09/gnn_loso_error_analysis.csv`](../results/exp09/gnn_loso_error_analysis.csv) | Verified Present |
+| | `(historical w2b_loso_results.csv)` | [`results/exp09/gnn_loso_fold_results.csv`](../results/exp09/gnn_loso_fold_results.csv) | Verified Present |
+| | `(historical w2b_summary_with_ci.csv)` | [`results/exp09/gnn_loso_summary_statistics.csv`](../results/exp09/gnn_loso_summary_statistics.csv) | Verified Present |
+| | `(historical w2b_wilcoxon_tests.csv)` | [`results/exp09/gnn_loso_pairwise_tests.csv`](../results/exp09/gnn_loso_pairwise_tests.csv) | Verified Present |
+| | `gnn_diagnostic_positive.csv` | [`results/exp09/threshold_positive_fc_diagnostic.csv`](../results/exp09/threshold_positive_fc_diagnostic.csv) | Verified Present |
+| | `gnn_diagnostic_absolute.csv` | [`results/exp09/threshold_absolute_fc_diagnostic.csv`](../results/exp09/threshold_absolute_fc_diagnostic.csv) | Verified Present |
+| | `graph_statistics.csv` | [`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv) | Verified Present |
+| | `selected_node_features.json` | [`configs/exp09/node_feature_selection.json`](../configs/exp09/node_feature_selection.json) | Verified Present |
+| | `selected_threshold.json` | [`configs/exp09/graph_threshold_selection.json`](../configs/exp09/graph_threshold_selection.json) | Verified Present |
+| | `(historical w2b_best_config.json)` | [`configs/exp09/gnn_configuration.json`](../configs/exp09/gnn_configuration.json) | Verified Present |
+| | `(historical w2b_dataset_manifest.json)` | [`configs/exp09/dataset_manifest.json`](../configs/exp09/dataset_manifest.json) | Verified Present |
+| | `(historical w2b_environment.json)` | [`configs/exp09/execution_environment.json`](../configs/exp09/execution_environment.json) | Verified Present |
+
+---
+
+## 10. Verification & Test Suite
 
 Verify repository integrity and numerical replication without downloading external neuroimaging data:
 
@@ -151,10 +302,9 @@ pytest tests/ -v
 
 ---
 
-## 9. Reproducibility Limitations
+## 11. Reproducibility Limitations
 
 1. **Hardware-Dependent Quantum Simulation**: PennyLane quantum simulations rely on CPU/GPU state-vector engines (`default.qubit` / `lightning.gpu`). Minor numerical variation across different BLAS/LAPACK implementations is possible; canonical verified metrics are stored in `results/exp07/gcn_qgcnn_test_results.json`.
 2. **Missing Historical Arrays**: Exp 07 cannot be rerun end-to-end without external restoration of the combined 875-subject training arrays.
 3. **Non-Retained Producer Code**: The exploratory 8-regime threshold sweep in Exp 09 survives as a recovered empirical data ledger ([`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv)); the producer code that generated it was not preserved.
-4. **Exp 09 Intermediate Parquets**: The per-subject feature parquets required to execute the LOSO notebook are not distributed in the public repository (Category B). Canonical LOSO results are verified in `results/exp09/gnn_loso_summary_statistics.csv`.
-
+4. **Exp 09 Intermediate Parquets**: The per-subject feature parquets required to execute the LOSO notebook are not distributed in the public repository. Canonical LOSO results are verified in `results/exp09/gnn_loso_summary_statistics.csv`.

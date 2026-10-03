@@ -18,7 +18,7 @@ For a detailed ledger of excluded large files, retained lightweight result table
 - **Atlas**: Craddock-200 (CC200) atlas with 190 active cortical/subcortical regions.
 - **Imaging Inputs**: Resting-state BOLD fMRI ROI time series generated via the Athena preprocessing pipeline.
 - **Cohort**: 764 unique subjects across 9 international acquisition centers (1,193 imaging acquisitions, 31,060 sliding temporal windows).
-- **Phenotypic Data**: Demographic manifest (`ADHD200_phenotypic.csv`) with `subject_id`, `diagnosis` (TDC vs ADHD), `site`, `age`, and `gender`. A 534-subject phenotypically complete subset is evaluated for behavioral and diagnosis association tests (Exp 03–05).
+- **Phenotypic Data**: Demographic manifest (`ADHD200_phenotypic.csv` / `master_cohort.csv`) with `subject_id`, `diagnosis` / `DX` (TDC vs ADHD, or binary 0/1), `site`, `age`, and `gender`. A 534-subject phenotypically complete subset is evaluated for behavioral and diagnosis association tests (Exp 03–05).
 
 ### Track B — Semi-Supervised and Quantum Graph Classification (Experiments 06–08)
 - **Atlases & Modalities**:
@@ -42,16 +42,19 @@ When placing external data into `data/`, adhere to the following directory layou
 
 ```text
 data/
-├── raw/
-│   └── adhd200/                     # Raw 4D fMRI NIfTI files (*.nii, *.nii.gz)
-├── preprocessed/
-│   ├── cc200/                       # CC200 ROI time series (*.npy, shape: [T, 190])
-│   ├── aal116/                      # AAL-116 ROI time series (*.npy, shape: [T, 116])
-│   └── static_fc/                   # Static FC correlation matrices (*.npy, shape: [N_ROI, N_ROI])
+├── raw/                             # Raw 4D fMRI NIfTI files (*.nii, *.nii.gz)
+├── external/                        # Preprocessed ROI time series (*.npy) & atlas files
+├── intermediate/                    # Regenerable pipeline parquets (workflow2/v6, v7, v8)
+├── checkpoints/                     # Model weights (*.pth, *.pt, *.ckpt)
 └── phenotypic/
     └── master_cohort.csv            # Clean phenotypic table with columns:
-                                     # [subject_id, site, diagnosis, age, gender, handedness]
+                                     # [subject_id, site, diagnosis (or DX), age, gender, handedness]
 ```
+
+> [!NOTE]
+> Data paths visible in executed notebook output cells (e.g., `/mnt/ADHD200`, `/home/nvidia/23BRS1236/adhd_data/`) reflect the original research environment and differ from this repository's portable layout. See [`docs/reproduction.md`](../docs/reproduction.md#7-data-paths-and-non-distributed-artifacts) for the full mapping.
+
+
 
 ---
 

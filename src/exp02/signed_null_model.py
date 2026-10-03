@@ -5,10 +5,22 @@
 # See third_party/bctpy.md for provenance and licensing details.
 # @due.dcite(BibTeX(RUBINOV2011), description="Undirected signed null model")
 import numpy as np
-from bct.utils.miscellaneous_utilities import (
-    BCTParamError,
-    get_rng,
-)
+
+try:
+    from bct.utils.miscellaneous_utilities import (
+        BCTParamError,
+        get_rng,
+    )
+except ImportError:
+    class BCTParamError(ValueError):
+        pass
+
+    def get_rng(seed=None):
+        if seed is None or isinstance(seed, (int, np.integer)):
+            return np.random.RandomState(seed)
+        elif isinstance(seed, np.random.RandomState):
+            return seed
+        raise BCTParamError("Seed must be integer or RandomState")
 
 
 def null_model_und_sign_fixed(W, bin_swaps=5, wei_freq=.1, seed=None):

@@ -12,8 +12,8 @@ license = "MIT"
 license-files = ["LICENSE", "LICENSES/*.txt"]
 authors = [
     { name = "Yash Bhardwaj" },
-    { name = "Shantanu Khare" },
     { name = "Bhavana Deepthi" },
+    { name = "Shantanu Khare" },
     { name = "Shridevi S" },
     { name = "Daehan Won" }
 ]
@@ -69,6 +69,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 

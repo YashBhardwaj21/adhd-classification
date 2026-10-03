@@ -27,7 +27,7 @@ Due to file size quotas, institutional data governance, and long-term storage li
 | **T1-Weighted Structural MRI Scans** | Track B (`exp08`) | ~ 40 GB | High-resolution anatomical scans; not required for functional connectome pipelines. |
 | **Exp 07 Combined Training Arrays** | `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` | > 50 MB | Historical combined training arrays (162 clean + 713 pseudo-labeled); archived externally. |
 | **Pretrained Deep Learning Checkpoints** | Exp 07 (`*.pth`), Exp 08 NeuroSTORM (`*.ckpt`) | ~ 2.5 GB | Binary checkpoint weights; full numerical test evaluations are preserved in results. |
-| **Intermediate Feature Parquets** | Exp 09 (`w1_pheno_features.parquet`, `w1_graph_features.parquet`) | ~ 150 MB | Intermediate extracted feature tables; upstream representation ledgers are retained in `results/exp09/`. |
+| **Intermediate Feature Parquets** | Exp 09 (historical internal names: `w1_pheno_features.parquet`, `w1_graph_features.parquet`) | ~ 150 MB | Intermediate extracted feature tables; upstream representation ledgers are retained in `results/exp09/`. |
 
 ---
 

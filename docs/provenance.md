@@ -117,21 +117,31 @@ The following artifacts cannot be redistributed or reconstructed from the public
 
 ## 7. Retained Empirical Evidence Ledger
 
-The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.csv)) indexes all 31 retained canonical results with exact SHA-256 cryptographic checksums:
+The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.csv)) indexes all 42 retained canonical results with exact SHA-256 cryptographic checksums:
 
 | Retained Artifact | Originating Experiment | Dataset / Atlas | Sample Size ($N$) | Evidentiary Status | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | [`results/exp01/temporal_similarity_validation.csv`](../results/exp01/temporal_similarity_validation.csv) | EXP01 | CC200 | 764 | Derived | `5b626522f34c2a6ec29ed3f98e6a8f1d88cd70f2b013908b5134dcb41bcadf64` |
 | [`results/exp01/static_dynamic_fc_comparison.csv`](../results/exp01/static_dynamic_fc_comparison.csv) | EXP01 | CC200 | 764 | Derived | `505e0ac4c9d100ea104a97caf0f0999a1475bb5c18eae0267ac46c9994f949c5` |
+| [`results/exp02/graph_construction_configuration.csv`](../results/exp02/graph_construction_configuration.csv) | EXP02 | CC200 | 764 | Derived | `a1b4a16f94414246c7203060e88bb26500db97d1b59a32a21c394d5eed7c9ed7` |
 | [`results/exp02/graph_metrics_window_level.csv`](../results/exp02/graph_metrics_window_level.csv) | EXP02 | CC200 | 764 | Derived | `d03a3ffc5b0a36a1720217678375fab0c35afb8af5960ca2b017196b94bb0275` |
 | [`results/exp02/graph_metrics_subject_level.csv`](../results/exp02/graph_metrics_subject_level.csv) | EXP02 | CC200 | 764 | Derived | `644f63b8614cd01ba3c880466450041b8fe8ac7b5b2c18e96320212627b58da1` |
+| [`results/exp02/graph_metrics_acquisition_level.csv`](../results/exp02/graph_metrics_acquisition_level.csv) | EXP02 | CC200 | 764 | Derived | `f30ae93f113f927a3a832a7dad524547f5389345ba7a49a3d8abc8d41c54daa2` |
+| [`results/exp02/graph_metrics_site_level.csv`](../results/exp02/graph_metrics_site_level.csv) | EXP02 | CC200 | 764 | Derived | `2dd2efac3b09bc2508682e3ee8eea8ac35232325f255435a41e9732474ef2519` |
 | [`results/exp03/dynamic_feature_statistics.csv`](../results/exp03/dynamic_feature_statistics.csv) | EXP03 | CC200 | 764 | Derived | `04d57c17e8618fc832582f3e164df9b4a391e82bf3be89c8d60359efdb91a674` |
 | [`results/exp03/site_effect_anova.csv`](../results/exp03/site_effect_anova.csv) | EXP03 | CC200 | 764 | Derived | `29edeaf561d3643dbec39bccbd5df284d18af6ecec4e22ec41dfe26a1e47ee35` |
+| [`results/exp03/subject_graph_feature_summary.csv`](../results/exp03/subject_graph_feature_summary.csv) | EXP03 | CC200 | 764 | Derived | `4ac20be39118594bbdaf4d6f388ca0589b83839ca6b6f258c2f6b0cdc7d6f375` |
 | [`results/exp04/combat_harmonization_comparison.csv`](../results/exp04/combat_harmonization_comparison.csv) | EXP04 | CC200 | 764 | Derived | `18da724e353968e7e9997a8abebf27121143d621a73eaeeae254f5d4e348fa5f` |
 | [`results/exp04/site_prediction_combat_comparison.csv`](../results/exp04/site_prediction_combat_comparison.csv) | EXP04 | CC200 | 764 | Derived | `ceb3024ada226449f7c4b0327b0cd0c36bdee11f9f66de2f6db857511a9da37c` |
 | [`results/exp04/diagnosis_prediction_combat_comparison.csv`](../results/exp04/diagnosis_prediction_combat_comparison.csv) | EXP04 | CC200 | 764 | Derived | `7445f7928ca9855728e9fe0f4cabc89d9c4dce2aa88ffe90989a0537ecc9a002` |
+| [`results/exp04/graph_topology_preservation_combat.csv`](../results/exp04/graph_topology_preservation_combat.csv) | EXP04 | CC200 | 764 | Derived | `5b32bcd607227dbc774a6a171bd9fc3571ef1158601c99720dbafc8b4445ca5a` |
+| [`results/exp04/site_effect_sizes_before_after_combat.csv`](../results/exp04/site_effect_sizes_before_after_combat.csv) | EXP04 | CC200 | 764 | Derived | `d16b69d4f975fb5ca652450d6495e8b1e42d69d22100ae73b2a1f9b3b5fcf30d` |
 | [`results/exp05/dynamic_state_biomarkers.csv`](../results/exp05/dynamic_state_biomarkers.csv) | EXP05 | CC200 | 764 | Derived | `3f3523b67a3527b3a0305706e37bb54b727a1bf529930e3cd0bf1f27ebc2c087` |
 | [`results/exp05/dynamic_state_sequences.csv`](../results/exp05/dynamic_state_sequences.csv) | EXP05 | CC200 | 764 | Derived | `973ae8486c92e397ccdc3bd94858f150825d0405f98cfcbc041460beb8f040e8` |
+| [`results/exp05/dynamic_state_transitions.csv`](../results/exp05/dynamic_state_transitions.csv) | EXP05 | CC200 | 764 | Derived | `6404d322b0435f8c338f178f50e03818189d57f887e3fb0fce990995e28b72f4` |
+| [`results/exp05/subject_dynamic_features.csv`](../results/exp05/subject_dynamic_features.csv) | EXP05 | CC200 | 764 | Derived | `356bf71bf4c37e1a38b4b7cde68d0fe8ff768e64f2213aeda579637b07689a4c` |
+| [`results/exp05/subject_feature_correlations.csv`](../results/exp05/subject_feature_correlations.csv) | EXP05 | CC200 | 764 | Derived | `2aa57fa8692e17b1d9cb5a27eef6804116a80a823de1ea3280b4f22c7e5f92a5` |
+| [`results/exp05/subject_feature_summary.csv`](../results/exp05/subject_feature_summary.csv) | EXP05 | CC200 | 764 | Derived | `2cb3187e0b4aa7d157e46f95c6c251a5ed4945bf3b5cdcc51490ffdf2739a120` |
 | [`results/exp06/exp06_verified_results.json`](../results/exp06/exp06_verified_results.json) | EXP06 | AAL-116 | 955 | Reported | `df76c6c699f3c4dec6f4571f5b4af1a9b6d980982bf3dc07dd85787404aba31b` |
 | [`results/exp07/gcn_qgcnn_test_results.json`](../results/exp07/gcn_qgcnn_test_results.json) | EXP07 | AAL-116 | 33 | Archived | `a3a9582dd9d8fa6bd607b8ca098a80bef1f2068f2d6ffaee59be49e1dba8997f` |
 | [`results/exp07/experiment_report.md`](../results/exp07/experiment_report.md) | EXP07 | AAL-116 | 33 | Archived | `4f1fa1aaad2d7686045beb7ca15c31aa9793e8af23b0305197dffb65992bb512` |
@@ -139,6 +149,7 @@ The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.cs
 | [`results/exp07/clean_cohort_lineage.csv`](../results/exp07/clean_cohort_lineage.csv) | EXP07 | AAL-116 | 391 | Provenance | `e60971bc3a90c5d50696b3d94de4b99a17a36fdc65866b918fa8b3fcca54b630` |
 | [`results/exp08/baseline_model_results.json`](../results/exp08/baseline_model_results.json) | EXP08 | ADHD-200 (Volumetric) | 626 | Reported | `46c22ef7b319099944f88f9b599c0dcff07757cf5fa67fd72c6bc6e4754b4a2d` |
 | [`results/exp08/baseline_model_results.json`](../results/exp08/baseline_model_results.json) | EXP08 | CC200 (Temporal) | 764 | Reported | `46c22ef7b319099944f88f9b599c0dcff07757cf5fa67fd72c6bc6e4754b4a2d` |
+| [`results/exp08/neurostorm_evaluation_summary.png`](../results/exp08/neurostorm_evaluation_summary.png) | EXP08 | ADHD-200 (Volumetric) | 626 | Reported | `057f889e43df1a482aff215d17ab3706dfc316406550ed2393be3d9e272be522` |
 | [`results/exp09/gnn_loso_fold_results.csv`](../results/exp09/gnn_loso_fold_results.csv) | EXP09 | CC200 | 497 | Derived | `539afa592b37dd42c1651e81bac2d8c17c667a13ff80f4ca3c1f5a34efe3ea0a` |
 | [`results/exp09/classical_ml_canonical_results.csv`](../results/exp09/classical_ml_canonical_results.csv) | EXP09 | CC200 | 497 | Derived | `2db4bfda51d76d7dbfcc6be309930151462c7b0811f30f686c82db4e8b06fddd` |
 | [`results/exp09/classical_ml_historical_results.csv`](../results/exp09/classical_ml_historical_results.csv) | EXP09 | CC200 | 497 | Historical | `eb378818ee737e13e71f6c4b8552f06470ee7c08af88d6eda7d5ca891ea52a38` |
@@ -159,4 +170,4 @@ The canonical artifact manifest ([`results/manifest.csv`](../results/manifest.cs
 
 1. **Selection of 162 Exp 07 Subjects**: While mathematically verified as a strict prefix of the 391 aligned Exp 06 cohort, the scientific decision rule used to select the integer 162 was not recovered.
 2. **Threshold Optimization Rule**: The selection of `top_10pct` in Exp 09 survives as an empirical data point supported by diagnostic sweeps, but the algorithmic optimization script is not retained.
-3. **Hardware Platform for Initial Checkpoints**: Exact physical GPU hardware and low-level driver versions utilized during the initial training of the Exp 07 classical/quantum checkpoints were not recorded.
+3. **Hardware Platform for Initial Checkpoints**: The exact GPU hardware and driver versions used during the initial training of Exp 07 classical/quantum checkpoints were not formally recorded. Output paths in Exp 09 notebook cells indicate execution on a cloud instance (`/mnt/ADHD200`, `/home/nvidia/`), but specific hardware specifications are unknown.

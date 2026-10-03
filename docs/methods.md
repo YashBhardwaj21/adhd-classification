@@ -299,8 +299,8 @@ Four standard geometric deep learning architectures evaluated with identical exe
 2. `FC_Phenotype` ($d=17,958$)
 3. `Graph_only` ($d=16$)
 4. `Graph_Phenotype` ($d=19$)
-5. `Phenotype_only` ($d=3$)
-6. `Phenotype_NoIQ` ($d=3$)
+5. `Phenotype_only` ($d=3$: Age, Gender, Handedness)
+6. `Phenotype_NoIQ` ($d=3$: identical to `Phenotype_only` as IQ measures were excluded from `master_cohort.csv` due to severe cross-site missingness >35%)
 
 ### Nested Feature Selection & Statistical Analysis
 - Feature selection (ANOVA $F$-percentile ranking) is strictly **nested** inside each training fold for classical models.

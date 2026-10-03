@@ -116,7 +116,7 @@ adhd-classification/
 │   ├── track_b/                        # PyTorch 2.5.1 / PennyLane 0.44.1 environment
 │   └── track_c/                        # PyTorch Geometric 2.6.1 LOSO environment
 │
-├── notebooks/                          # Self-contained research notebooks (Exp 01–09)
+├── notebooks/                          # Self-contained research notebooks & index (Exp 01–09)
 ├── results/                            # Lightweight canonical result artifacts
 │   ├── README.md                       # Results directory index
 │   ├── manifest.csv                    # Cryptographic SHA-256 evidence manifest
@@ -124,7 +124,7 @@ adhd-classification/
 │
 ├── scripts/                            # Operational validation scripts
 │   └── validate_results.py             # Numerical results integrity checker
-├── src/                                # Reusable library code (exp02, exp07, exp08)
+├── src/                                # Reusable library code (common, exp02, exp07, exp08)
 ├── tests/                              # Pytest test suite
 └── third_party/                        # Third-party code documentation & BCT notices
 ```

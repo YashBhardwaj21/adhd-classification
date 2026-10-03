@@ -3,17 +3,27 @@ Tests for common.paths module: path resolution, environment variable overrides, 
 """
 
 import shutil
+import sys
 from pathlib import Path
 
 import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "src"))
 
 from common.paths import (
     artifacts_root,
     checkpoints_root,
     data_root,
+    find_repo_root,
+    intermediate_root,
     project_root,
     results_root,
+    v6_root,
+    v7_root,
+    v8_root,
     validate_input_path,
+    workflow2_root,
 )
 
 
@@ -34,6 +44,7 @@ def test_project_root():
     assert isinstance(root, Path)
     assert (root / "pyproject.toml").exists()
     assert (root / "src").exists()
+    assert find_repo_root() == root
 
 
 def test_default_paths():
@@ -41,7 +52,12 @@ def test_default_paths():
     assert data_root() == root / "data"
     assert results_root() == root / "results"
     assert artifacts_root() == root / "artifacts"
-    assert checkpoints_root() == root / "artifacts" / "checkpoints"
+    assert checkpoints_root() == root / "data" / "checkpoints"
+    assert intermediate_root() == root / "data" / "intermediate"
+    assert workflow2_root() == root / "data" / "intermediate" / "workflow2"
+    assert v6_root() == root / "data" / "intermediate" / "workflow2" / "v6"
+    assert v7_root() == root / "data" / "intermediate" / "workflow2" / "v7"
+    assert v8_root() == root / "data" / "intermediate" / "workflow2" / "v8"
 
 
 def test_env_var_override_data_root(monkeypatch, local_tmp_dir):
@@ -56,6 +72,15 @@ def test_env_var_override_results_root(monkeypatch, local_tmp_dir):
     custom_results.mkdir()
     monkeypatch.setenv("ADHD200_RESULTS_DIR", str(custom_results))
     assert results_root() == custom_results
+
+
+def test_env_var_override_intermediate_root(monkeypatch, local_tmp_dir):
+    custom_work = local_tmp_dir / "custom_work"
+    custom_work.mkdir()
+    monkeypatch.setenv("ADHD200_WORK_DIR", str(custom_work))
+    assert intermediate_root() == custom_work
+    assert workflow2_root() == custom_work / "workflow2"
+    assert v6_root() == custom_work / "workflow2" / "v6"
 
 
 def test_validate_input_path_success(local_tmp_dir):

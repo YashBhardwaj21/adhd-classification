@@ -1,4 +1,4 @@
-﻿"""Unit tests asserting that core repository modules can be imported without missing dependencies."""
+"""Unit tests asserting that core repository modules can be imported without missing dependencies."""
 
 import sys
 from pathlib import Path
@@ -15,16 +15,28 @@ def test_import_common_paths():
         artifacts_root,
         checkpoints_root,
         data_root,
+        find_repo_root,
+        intermediate_root,
         project_root,
         results_root,
+        v6_root,
+        v7_root,
+        v8_root,
         validate_input_path,
+        workflow2_root,
     )
     assert callable(project_root)
     assert callable(data_root)
     assert callable(results_root)
     assert callable(checkpoints_root)
     assert callable(artifacts_root)
+    assert callable(intermediate_root)
+    assert callable(workflow2_root)
+    assert callable(v6_root)
+    assert callable(v7_root)
+    assert callable(v8_root)
     assert callable(validate_input_path)
+    assert callable(find_repo_root)
 
 
 def test_import_exp02_config():
@@ -32,6 +44,15 @@ def test_import_exp02_config():
     from exp02.config import DENSITY, N_ROIS
     assert N_ROIS == 190
     assert DENSITY == 0.20
+
+
+def test_import_exp02_signed_null_models():
+    """Verify Experiment 2 signed null model and rewiring modules import cleanly."""
+    pytest.importorskip("numba", reason="numba required for signed_edge_rewiring")
+    from exp02.signed_edge_rewiring import randmio_und_signed_fast
+    from exp02.signed_null_model import null_model_und_sign_fixed
+    assert callable(randmio_und_signed_fast)
+    assert callable(null_model_und_sign_fixed)
 
 
 def test_import_exp02_graph_utils():
