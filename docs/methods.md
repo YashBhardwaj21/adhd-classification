@@ -180,7 +180,7 @@ Selected $K = 3$ based on optimal composite rank (MeanRank = 2.333). Robustness 
 
 ### Stability & State-Sequence Features
 Cluster centroids identify $K=3$ discrete connectivity micro-states. Each acquisition is mapped to a discrete state sequence from which temporal biomarkers are extracted:
-- Fractional Occupancy (proportion of time spent in state $k$: State 0 = 49.05%, State 1 = 27.32%, State 2 = 23.63%)
+- Fractional Occupancy (proportion of time spent in state $k$: State 0 = 48.16%, State 1 = 27.27%, State 2 = 24.57%)
 - Mean Dwell Time (consecutive windows spent in state $k$: State 0 = 6.24, State 1 = 3.44, State 2 = 2.83 windows)
 - Transition Probability Matrix ($P_{ij}$, probability of switching from state $i$ to state $j$)
 
@@ -202,7 +202,7 @@ Static functional connectivity vectors ($d = 6,670$ upper-triangle edges) on the
 Base class-weighted Logistic Regression classifier trained on 391 clean subjects predicts class probabilities on unlabeled data. Samples exceeding a posterior probability confidence threshold of $\tau = 0.75$ are iteratively assigned pseudo-labels, yielding 552 pseudo-labeled samples.
 
 ### Procedure II (Multi-Model Ensemble Consensus)
-Consensus voting across an ensemble of 4 heterogeneous classifiers (Random Forest, Extra Trees, Gradient Boosting, SVM). Only samples with unanimous model agreement and mean ensemble confidence $\bar{p} \ge 0.75$ receive pseudo-labels, yielding 484 pseudo-labeled samples.
+Consensus voting across an ensemble of 4 heterogeneous classifiers (Random Forest, Gradient Boosting, Logistic Regression, Calibrated SVM). Only samples with unanimous model agreement and mean ensemble confidence $\bar{p} \ge 0.75$ receive pseudo-labels, yielding 484 pseudo-labeled samples.
 
 ### Holdout Evaluation
 Evaluation on an independent 79-subject holdout partition comparing clean-only training (67.09% accuracy) against pseudo-label augmented training (72.15% accuracy).

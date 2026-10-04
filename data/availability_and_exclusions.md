@@ -44,7 +44,7 @@ All lightweight summary manifests, cross-validation tables, confusion matrices, 
 | **`results/exp03/dynamic_feature_statistics.csv`** | Exp 03 | Dynamic topological feature distributions and diagnostic group statistics. |
 | **`results/exp03/site_effect_anova.csv`** | Exp 03 | One-way ANOVA cross-site effect sizes and $F$-statistics. |
 | **`results/exp04/combat_harmonization_comparison.csv`** | Exp 04 | Pre- and post-ComBat topological preservation and site clustering. |
-| **`results/exp04/site_prediction_combat_comparison.csv`** | Exp 04 | Scanner site prediction balanced accuracy before and after harmonization. |
+| **`results/exp04/site_prediction_combat_comparison.csv`** | Exp 04 | Scanner site prediction accuracy and balanced accuracy before and after harmonization. |
 | **`results/exp04/diagnosis_prediction_combat_comparison.csv`** | Exp 04 | Diagnostic prediction performance before and after harmonization. |
 | **`results/exp05/dynamic_state_biomarkers.csv`** | Exp 05 | Dynamic brain state occupancy and dwell time metrics ($K=3$). |
 | **`results/exp05/dynamic_state_transitions.csv`** | Exp 05 | Transition probability matrices between discrete connectivity micro-states. |
