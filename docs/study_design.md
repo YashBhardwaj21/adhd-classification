@@ -67,7 +67,7 @@ The ADHD-200 Sample comprises heterogeneous resting-state acquisitions across in
 - **Available Connectivity Population**: 955 subjects with AAL-116 time series.
 - **Aligned Clean Cohort (Exp 06)**: 391 subjects with quality-verified phenotypic labels.
 - **Exp 07 Clean Subset**: 162 subjects verified as an exact prefix subset ($162 \subset 391$) of the aligned cohort, partitioned into 103 training, 26 validation, and 33 held-out test subjects (`seed=42`).
-- **Downstream Pseudo-Labels**: 713 selected pseudo-labeled subjects added exclusively to the training partition (816 training subjects, 875 accounted population).
+- **Training Expansion Pool**: 713 subjects (positionally comprising 229 residual clean subjects from the 391 aligned cohort plus 484 genuine pseudo-labeled subjects from Exp 06 Procedure II) added exclusively to the training partition (816 training subjects, 875 accounted population).
 - **Exp 08 Populations**: 626 subjects for 4D volumetric CNNs ($99 \times 117 \times 95 \times 25$ volumes) and 764 subjects for temporal baseline models.
 
 ### Track C Cohort (CC200 Atlas, 190 ROIs)
@@ -119,14 +119,14 @@ Methodological integrity is maintained by enforcing strict partition boundaries 
 In all dynamic sliding-window experiments (Track A), all windows belonging to a given subject are assigned strictly to the same partition. Windows from the same acquisition are never split across train and test sets.
 
 ### Held-Out Test Set Isolation
-In Experiment 07, the 33 clean test subjects ($N=33$) are isolated prior to pseudo-label expansion and hyperparameter selection. Pseudo-labeled subjects ($N=713$) are injected strictly into the training fold. Test data never receive pseudo-labels.
+In Experiment 07, the 33 clean test subjects ($N=33$) are isolated prior to pseudo-label expansion and hyperparameter selection. The 713-subject training expansion pool is injected strictly into the training fold. Test data never receive pseudo-labels.
 
 ### Leave-One-Site-Out (LOSO) Site Exclusion
 In Experiment 09, cross-validation is performed across 7 distinct site folds. In each fold, all subjects from one complete clinical imaging site are held out exclusively for testing, while the remaining 6 sites serve as training data. No subjects or site information from the test site are seen during training.
 
 ### Feature Selection Scope
 - **Classical ML Baselines (Exp 09)**: Feature selection (ANOVA $F$-value percentile ranking) is strictly **nested** inside each LOSO training fold. The test fold is never used to select features.
-- **GNN Representation Selection (Exp 09)**: As explicitly documented in the manuscript, the preliminary selection of node features (raw connectivity vs identity vs degree) was conducted as an **exploratory, non-nested** historical analysis across the full cohort.
+- **GNN Representation Selection (Exp 09)**: The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort (connectivity: AUC = 0.5497 vs. identity: AUC = 0.5350 vs. strength: AUC = 0.5227) and was therefore non-nested relative to the final LOSO evaluation.
 
 ---
 
@@ -143,15 +143,16 @@ ADHD-200 Full Release (N ~ 973)
   │     └── 497 subjects across 7 sites (Exp 09 LOSO Benchmark)
   │
   └── AAL-116 Preprocessed Connectomes (Track B)
-        ├── 955 connectivity-available subjects (Exp 06)
+        ├── 955 connectivity-available subjects (Exp 06: 391 clean + 564 unlabeled)
         │     ├── 391 aligned clean-labeled cohort
-        │     │     └── 162 verified clean prefix subset (Exp 07)
-        │     │           ├── 103 train clean
-        │     │           ├── 26 validation clean
-        │     │           └── 33 held-out test clean
-        │     └── 564 unlabeled subjects (Exp 06 self-training candidate pool)
+        │     │     ├── 162 verified clean prefix subset (Exp 07 clean evaluation)
+        │     │     │     ├── 103 train clean
+        │     │     │     ├── 26 validation clean
+        │     │     │     └── 33 held-out test clean
+        │     │     └── 229 residual clean subjects (shifted to training pool)
+        │     └── 564 unlabeled subjects (Exp 06 Procedure II yields 484 pseudo-labels)
         │
-        └── 713 downstream pseudo-labeled samples (Exp 07 historical training set)
+        └── 713 training expansion pool (229 residual clean + 484 genuine pseudo-labels)
               └── Combined with 103 train clean -> 816 training population (875 accounted)
 ```
 

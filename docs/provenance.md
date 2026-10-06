@@ -28,25 +28,27 @@ The lineage mapping connecting the initial ADHD-200 releases to the evaluated mo
   │
   ├── 391 Aligned Clean Cohort (Exp 06)
   │     │   (Verified phenotypic and imaging quality control)
-  │     │
-  │     └── 162 Verified Exp 07 Clean Subset
-  │           │   (Proven mathematical prefix subset: 162 ⊂ 391)
-  │           ├── 103 Training Clean Subjects
-  │           ├── 26 Validation Clean Subjects
-  │           └── 33 Held-Out Test Clean Subjects
+  │     ├── 162 Clean Prefix Partition (Exp 07 clean evaluation)
+  │     │     ├── 103 Training Clean Subjects
+  │     │     ├── 26 Validation Clean Subjects
+  │     │     └── 33 Held-Out Test Clean Subjects
+  │     └── 229 Residual Clean Subjects (positionally shifted to training pool)
   │
   └── 564 Unlabeled Candidate Subjects
-        │   (Exp 06 candidate self-training pool)
+        │   (Evaluated in Exp 06; Procedure II ensemble accepted 484 pseudo-labels)
         │
-        └── 713 Downstream Pseudo-Labeled Samples (Exp 07)
-              │   (Historical expansion cohort)
+        └── 484 Genuine Pseudo-Labeled Subjects
               │
-              └── Combined with 103 Train Clean
-                    ├── 816 Total Training Graphs
-                    └── 875 Accounted Exp 07 Population (816 train + 26 val + 33 test)
+              └── Combined with 229 residual clean subjects:
+                    └── 713 Training Expansion Pool (229 residual clean + 484 genuine pseudo)
+                          │
+                          └── Combined with 103 Clean Training:
+                                ├── 816 Total Training Graphs (103 clean + 713 expansion pool)
+                                └── 875 Accounted Exp 07 Population (816 train + 26 val + 33 test)
 ```
 
-- **Proof of Subset Membership**: Analysis of subject identifiers confirms that all 162 clean Exp 07 subjects exist within the 391 Exp 06 aligned cohort ([`results/exp07/clean_cohort_lineage.csv`](../results/exp07/clean_cohort_lineage.csv)).
+- **Proof of Subset Membership**: Analysis of subject identifiers confirms that all 162 clean Exp 07 subjects and all 229 residual expansion subjects exist within the 391 Exp 06 aligned cohort ([`results/exp07/clean_cohort_lineage.csv`](../results/exp07/clean_cohort_lineage.csv)).
+- **Historical Positional Slicing**: The 713 subjects allocated to the Experiment 07 training expansion pool comprise 229 residual subjects from the original 391 clean-aligned cohort and 484 genuinely pseudo-labeled subjects from the Exp 06 Procedure II ensemble ($229 + 484 = 713$). Slicing placed indices $0\dots 161$ into the clean benchmark and indices $162\dots 874$ into the training expansion pool.
 - **Historical Uncertainty**: The original rationale for selecting the specific 162-subject prefix rather than all 391 aligned subjects was not recorded in surviving project documentation.
 
 ---
@@ -62,7 +64,7 @@ Experiments 02 and 09 implement distinct graph pipelines that must not be confla
 | **Algorithm** | Kruskal MST + Proportional Thresholding (MST+PT) | Top-10% positive FC percentile thresholding |
 | **Distance Metric** | $d_{ij} = 1 - |r_{ij}|$ | $r_{ij} \ge \text{percentile}(r, 90)$ |
 | **Edge Density** | Exactly $\rho = 0.20$ ($E = 3,591$) | Mean $\rho = 0.10003$ |
-| **Connectedness** | Guaranteed 1 connected component | Variable (average 1.05 components) |
+| **Connectedness** | Guaranteed 1 connected component | Variable at the production top-10% threshold; recovered sweep reports mean 1.314 components and approximately 80.5% connected graphs ([`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv)) |
 | **Edge Attribute Semantics** | Retains signed $r_{ij}$ as `edge_attr` | Retains signed $r_{ij}$ as `edge_attr`; GCN consumes as `edge_weight`; GAT/SAGE/GIN use unweighted `edge_index` |
 
 ---

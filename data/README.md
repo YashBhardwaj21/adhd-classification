@@ -26,7 +26,7 @@ For a detailed ledger of excluded large files, retained lightweight result table
   - 4D functional BOLD NIfTI volumes ($99 \times 117 \times 95 \times T$) for volumetric 3D CNN and NeuroSTORM (Exp 08).
 - **Cohorts**:
   - Exp 06: 955 connectivity-available subjects partitioned into a 391-subject aligned clean cohort and 564 unlabeled subjects.
-  - Exp 07: 162 clean-labeled subjects (proven subset of the 391 aligned cohort) combined with 713 downstream pseudo-labeled samples. *Note: As documented in [`availability_and_exclusions.md`](availability_and_exclusions.md), these large training arrays are archived externally and not tracked in Git.*
+  - Exp 07: 162 clean-labeled subjects (proven prefix subset of the 391 aligned cohort) combined with a 713-subject training expansion pool (positionally comprising 229 residual clean subjects from the 391 cohort plus 484 genuine pseudo-labeled subjects from Exp 06 Procedure II). *Note: As documented in [`availability_and_exclusions.md`](availability_and_exclusions.md), these large training arrays are archived externally and not tracked in Git.*
   - Exp 08: 626 volumetric subjects (4D fMRI) and 764 temporal subjects.
 
 ### Track C — Independent Cross-Site Generalization (Experiment 09)

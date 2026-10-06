@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # Data loader for Experiment 7 (Track B).
 # Loads AAL-116 FC matrices and diagnostic labels across 162 clean
-# (103 train, 26 val, 33 test) and 713 pseudo-labeled subjects.
+# (103 train, 26 val, 33 test) and 713 training expansion pool subjects
+# (positionally comprising 229 residual clean subjects and 484 genuine pseudo-labeled subjects).
 # Note: Original combined arrays are not bundled in the public repository;
 # this loader preserves the historical contract and validates external inputs.
 
@@ -45,7 +46,7 @@ def load_data(
             f"Missing file(s): {', '.join(missing)}\n\n"
             f"Historical execution contract requires:\n"
             f"  - {x_filename} (FC correlation features)\n"
-            f"  - y_combined.npy (diagnostic labels: 162 clean + 713 pseudo)\n"
+            f"  - y_combined.npy (diagnostic labels: 162 clean + 713 expansion pool)\n"
             f"  - subjects_combined.npy (subject identifiers)\n\n"
             f"Provenance Status: The original large training arrays are no longer available in this "
             f"public repository. The reported test results (N=33) are archived in results/exp07/gcn_qgcnn_test_results.json. "
@@ -85,7 +86,8 @@ def split_data(
     """
     Partition dataset according to the historical Experiment 7 protocol:
       - 162 clean subjects: partitioned into train (103), validation (26), test (33)
-      - 713 pseudo-labelled subjects (indices >= 162): allocated strictly to training
+      - 713 expansion pool subjects (indices >= 162; positionally comprising 229 residual
+        clean subjects and 484 genuine pseudo-labeled subjects): allocated strictly to training
 
     Args:
         X: Combined feature array of shape (N, D)

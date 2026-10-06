@@ -48,6 +48,8 @@ Topological network metrics were extracted across all 31,060 sliding windows and
 | **Transitivity** | $T$ | $0.3468 \pm 0.0601$ | 436.92 | $< 10^{-15}$ |
 | **Global Efficiency** | $E_g$ | $0.3929 \pm 0.0157$ | 4,609.76 | $< 10^{-15}$ |
 | **Characteristic Path Length** | $L$ | $2.8327 \pm 0.1004$ | 4,993.87 | $< 10^{-15}$ |
+| **Null Clustering** | $C_{\text{null}}$ | $0.3373 \pm 0.0470$ | 591.99 | $< 10^{-15}$ |
+| **Null Transitivity** | $T_{\text{null}}$ | $0.3471 \pm 0.0618$ | 413.92 | $< 10^{-15}$ |
 | **Null Global Efficiency** | $E_{g,\text{null}}$ | $0.4001 \pm 0.0156$ | 5,523.08 | $< 10^{-15}$ |
 | **Null Characteristic Path** | $L_{\text{null}}$ | $2.7818 \pm 0.1087$ | 3,786.81 | $< 10^{-15}$ |
 | **Normalized Clustering** | $\gamma = C / C_{\text{null}}$ | $1.0318 \pm 0.0048$ | 460.07 | $< 10^{-15}$ |
@@ -114,7 +116,7 @@ Semi-supervised pseudo-labeling was benchmarked on 955 subjects parcellated with
   - Clean-only training baseline accuracy: **67.09%**
   - Pseudo-label augmented training accuracy: **72.15%** ($\Delta = +5.06\%$)
 
-> **Important Cohort Distinction**: The 484 and 552 pseudo-labels generated in Exp 06 are methodological evaluation records on the 391/564 split. They are distinct from the **713 downstream pseudo-labels** historically combined with 103 clean training samples in Exp 07.
+> **Important Cohort Distinction**: The 484 and 552 pseudo-labels generated in Exp 06 are methodological evaluation records on the 391/564 split. In Exp 07, the **713 training expansion samples** historically combined with 103 clean training samples (yielding 816 training graphs) positionally comprise the 229 residual clean subjects from the 391 aligned cohort plus the 484 genuine pseudo-labeled subjects from Procedure II.
 
 ---
 
@@ -152,8 +154,8 @@ Deep learning baselines evaluated on raw 4D functional BOLD volumes and temporal
 
 ## 10. Experiment 09 — Out-of-Distribution LOSO Benchmark
 
-### Preliminary GNN Node Feature Representation Selection
-Historical exploratory comparison across 497 subjects:
+### Preliminary GNN Node Feature Representation Selection (Non-Nested)
+The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort (AUC = 0.5497 vs. identity 0.5350 vs. strength 0.5227) and was therefore non-nested relative to the final LOSO evaluation:
 - Raw Connectivity Features ($d=190$): **0.5497 AUC**
 - Identity Matrix ($d=190$): **0.5350 AUC**
 - Degree Strength ($d=1$): **0.5227 AUC**
@@ -173,12 +175,12 @@ Winning model family per representation:
 
 | Feature Family | Best Model | Input Dimension ($d$) | Mean AUC | 95% CI ($\text{df}=6$) | Balanced Accuracy |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Graph + Phenotype** | Linear SVM | 19 | **0.6493** | $[0.5721, 0.7265]$ | 0.6120 |
-| **FC + Phenotype** | Extra Trees | 17,958 | **0.6328** | $[0.5489, 0.7168]$ | 0.5984 |
-| **FC Only** | Logistic Regression | 17,955 | **0.6141** | $[0.5312, 0.6970]$ | 0.5741 |
-| **Phenotype Only** | ElasticNet | 3 | **0.5935** | $[0.5180, 0.6690]$ | 0.5512 |
-| **Phenotype (No IQ)**| ElasticNet | 3 | **0.5935** | $[0.5180, 0.6690]$ | 0.5512 |
-| **Graph Only** | Random Forest | 16 | **0.5693** | $[0.4912, 0.6473]$ | 0.5380 |
+| **Graph + Phenotype** | SVM | 19 | **0.6493** | $[0.5567, 0.7419]$ | 0.5885 |
+| **FC + Phenotype** | Extra Trees | 17,958 | **0.6328** | $[0.5467, 0.7190]$ | 0.6025 |
+| **FC Only** | Logistic Regression | 17,955 | **0.6141** | $[0.5303, 0.6979]$ | 0.5900 |
+| **Phenotype Only** | Elastic Net | 3 | **0.5935** | $[0.4978, 0.6892]$ | 0.6007 |
+| **Phenotype (No IQ)**| Elastic Net | 3 | **0.5935** | $[0.4978, 0.6892]$ | 0.6007 |
+| **Graph Only** | Random Forest | 16 | **0.5693** | $[0.5198, 0.6188]$ | 0.5466 |
 
 ---
 

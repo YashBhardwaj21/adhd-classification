@@ -29,7 +29,7 @@ This study investigates resting-state functional connectomics, machine learning 
 | **04** | ComBat Scanner Harmonization | CC200 (190 ROIs) | 534 complete subjects | Site prediction accuracy & topology preservation |
 | **05** | Dynamic State Discovery | CC200 (190 ROIs) | 764 subjects / 1,193 acquisitions | Unsupervised $k$-means clustering ($K=3$) & dwell dynamics |
 | **06** | Semi-Supervised Pseudo-Labeling | AAL-116 (116 ROIs) | 955 subjects (391 clean) | Self-training ($\tau \ge 0.75$) vs 4-model ensemble consensus |
-| **07** | Classical GCN vs Hybrid QGCNN | AAL-116 (116 ROIs) | 162 clean + 713 pseudo | Matched benchmark on 33 held-out test clean subjects |
+| **07** | Classical GCN vs Hybrid QGCNN | AAL-116 (116 ROIs) | 162 clean + 713 expansion pool | Matched benchmark on 33 held-out test clean subjects |
 | **08** | Deep Learning Baselines | 4D BOLD / CC200 | 626 / 764 subjects | 3D CNN, NeuroSTORM spatiotemporal transformer, temporal GNN |
 | **09** | LOSO Cross-Site Generalization | CC200 (190 ROIs) | 497 subjects / 7 sites | 7-fold LOSO: 42 classical ML baselines & 4 GNN architectures |
 

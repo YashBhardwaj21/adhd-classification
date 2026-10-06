@@ -25,7 +25,7 @@ Due to file size quotas, institutional data governance, and long-term storage li
 | **Raw 4D BOLD fMRI Scans** | All sites / `data/raw/` | > 120 GB | High-volume raw NIfTI files; subject to external distribution terms. |
 | **Craddock-200 Extracted Time Series** | Track A (`exp01`–`exp05`) | ~ 5 GB | Intermediate ROI time series; regenerated from preprocessed NIfTI files. |
 | **T1-Weighted Structural MRI Scans** | Track B (`exp08`) | ~ 40 GB | High-resolution anatomical scans; not required for functional connectome pipelines. |
-| **Exp 07 Combined Training Arrays** | `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` | > 50 MB | Historical combined training arrays (162 clean + 713 pseudo-labeled); archived externally. |
+| **Exp 07 Combined Training Arrays** | `X_combined_full.npy`, `y_combined.npy`, `subjects_combined.npy` | > 50 MB | Historical combined training arrays (162 clean prefix + 713 training expansion pool consisting of 229 residual clean and 484 genuine pseudo-labeled subjects); archived externally. |
 | **Pretrained Deep Learning Checkpoints** | Exp 07 (`*.pth`), Exp 08 NeuroSTORM (`*.ckpt`) | ~ 2.5 GB | Binary checkpoint weights; full numerical test evaluations are preserved in results. |
 | **Intermediate Feature Parquets** | Exp 09 (historical internal names: `w1_pheno_features.parquet`, `w1_graph_features.parquet`) | ~ 150 MB | Intermediate extracted feature tables; upstream representation ledgers are retained in `results/exp09/`. |
 

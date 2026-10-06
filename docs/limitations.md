@@ -19,7 +19,7 @@ To interface 117-dimensional node features with a 6-qubit quantum circuit, the m
 While the 162 clean Exp 07 subjects are verified as an exact mathematical subset of the 391 aligned Exp 06 cohort ($162 \subset 391$), the historical rationale for filtering the cohort down to 162 subjects was not recovered from project archives.
 
 ### 5. Pseudo-Label Uncertainty & Downstream Protocol
-In Experiment 06, semi-supervised self-training and ensemble consensus generated 552 and 484 pseudo-labels respectively on a 391-subject clean cohort. In Experiment 07, however, 713 pseudo-labels were combined with 103 clean training samples. The exact selection protocol linking Exp 06 candidates to the 713 downstream samples was not preserved.
+In Experiment 06, semi-supervised self-training and ensemble consensus generated 552 and 484 pseudo-labels respectively on a 391-subject clean cohort. In Experiment 07, a 713-subject expansion pool (positionally comprising 229 residual subjects from the original 391 clean cohort and 484 genuinely pseudo-labeled subjects from Procedure II) was combined with 103 clean training samples. Slicing placed indices $0\dots 161$ into the clean benchmark and indices $162\dots 874$ into the training expansion pool.
 
 ### 6. Acquisition-Site Confounding
 Cross-site scanner variations exert massive statistical effects on resting-state connectomes ($F > 4600$, $p < 10^{-15}$). Although ComBat harmonization reduces site prediction accuracy from 58.64% to 31.29% (balanced accuracy: 50.19% to 23.56%), residual site-specific noise and batch differences persist across international imaging centers.
@@ -28,7 +28,7 @@ Cross-site scanner variations exert massive statistical effects on resting-state
 The study spans multiple atlases (CC200 with 190 ROIs, AAL-116 with 116 ROIs, and raw 4D voxel volumes) and distinct graph representations (MST+PT at density 0.20, proportional threshold at density 0.15, and top-10% positive thresholding). The three tracks are methodologically independent and must not be treated as a single unified benchmark.
 
 ### 8. Non-Nested GNN Representation Selection
-In Experiment 09, preliminary node feature representation selection (comparing raw connectivity features, identity matrices, and degree strength) was conducted as an exploratory analysis across the full cohort rather than nested inside the cross-validation folds. In contrast, classical baseline feature selection was strictly nested.
+The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort (connectivity: AUC = 0.5497 vs. identity: AUC = 0.5350 vs. strength: AUC = 0.5227) and was therefore non-nested relative to the final LOSO evaluation. In contrast, classical baseline feature selection was strictly nested inside each training fold.
 
 ### 9. Seven-Fold Statistical Power
 Out-of-distribution evaluation in Experiment 09 relies on 7 site folds corresponding to the 7 available testing centers. With $K=7$ degrees of freedom ($\text{df}=6$), statistical power for detecting subtle differences between GNN architectures (e.g., GCN vs GAT, $p = 0.15625$) is constrained by the small number of clinical sites.

@@ -29,7 +29,7 @@ The study examines strictly defined subsets to address track-specific goals:
 1. **Track A (Exp 01–02)**: 764 subjects across 9 sites (1,193 acquisitions, 31,060 sliding windows).
 2. **Track A Phenotypic Subset (Exp 03–05)**: 534 subjects with complete behavioral, phenotypic, and diagnostic records.
 3. **Track B Exp 06**: 955 connectivity-available subjects (391 aligned clean-labeled subjects + 564 unlabeled candidate subjects).
-4. **Track B Exp 07**: 162 clean-labeled subjects ($162 \subset 391$ aligned cohort) split into 103 train, 26 validation, and 33 held-out test subjects, combined with 713 downstream pseudo-labeled samples added strictly to the training partition (816 training subjects, 875 accounted population).
+4. **Track B Exp 07**: 162 clean-labeled subjects ($162 \subset 391$ aligned cohort) split into 103 train, 26 validation, and 33 held-out test subjects, combined with a 713-subject training expansion pool (consisting of the 229 residual clean subjects from the aligned cohort plus 484 genuine pseudo-labeled subjects from Exp 06 Procedure II) added strictly to the training partition (816 training subjects, 875 accounted population).
 5. **Track B Exp 08**: 626 subjects for 4D volumetric CNNs ($99 \times 117 \times 95 \times 25$ volumes) and 764 subjects for temporal models.
 6. **Track C Exp 09**: 497 subjects across 7 international scanner sites (KKI, NYU, NeuroIMAGE, OHSU, Peking_1, Peking_2, Peking_3) with static CC200 functional connectivity.
 
@@ -111,16 +111,26 @@ Iterative edge swaps ($I = 5 \times E$) implemented via Numba-accelerated edge r
 ## 7. Experiment 03 — Graph-Theoretic Characterization
 
 ### Graph Metrics
-Per-window extraction of global network properties:
-- Characteristic path length ($L$)
-- Clustering coefficient ($C$)
-- Global efficiency ($E_g$)
-- Local efficiency ($E_{loc}$)
-- Modularity ($Q$, Louvain community detection)
-- Small-worldness ($\sigma = \frac{C / C_{null}}{L / L_{null}}$)
+Per-window extraction of 11 canonical graph-theoretic descriptors across all 31,060 sliding windows:
+- **4 Raw Topological Descriptors**:
+  - Clustering coefficient ($C$, `clustering`)
+  - Transitivity ($T$, `transitivity`)
+  - Global efficiency ($E$, `efficiency`)
+  - Characteristic path length ($L$, `path_length`)
+- **4 Null-Model Baseline Means** (averaged over 10 matched signed null graphs per window):
+  - Null clustering ($C_{\text{null}}$, `null_clustering`)
+  - Null transitivity ($T_{\text{null}}$, `null_transitivity`)
+  - Null efficiency ($E_{\text{null}}$, `null_efficiency`)
+  - Null path length ($L_{\text{null}}$, `null_path_length`)
+- **3 Small-World Normalized Ratios**:
+  - Normalized clustering coefficient ($\gamma = C / C_{\text{null}}$)
+  - Normalized characteristic path length ($\lambda = L / L_{\text{null}}$)
+  - Small-worldness index ($\sigma = \gamma / \lambda$)
+
+*(Note: Preliminary exploratory scratch cells evaluated nodal strength and local efficiency, but the production 31,060-window dynamic null-model analysis and retained canonical artifacts `dynamic_feature_statistics.csv` and `site_effect_anova.csv` evaluate exclusively these 11 descriptors).*
 
 ### Null-Normalized Metrics
-Each topological metric is normalized against an ensemble of 100 matched signed null graphs generated via degree-conserving edge rewiring.
+Network normalization was performed against matched signed null graphs generated via degree-conserving edge rewiring.
 
 ### Temporal Descriptors
 For each subject and metric, summary statistics are extracted across sliding windows:
@@ -218,7 +228,7 @@ Evaluation on an independent 79-subject holdout partition comparing clean-only t
 ## 11. Experiment 07 — Classical GCN and QGCNN
 
 ### Cohort Lineage & AAL-116 Representation
-162 clean-labeled subjects (an exact prefix subset $162 \subset 391$ of the aligned cohort) combined with 713 separate downstream pseudo-labeled samples. Split: 103 train clean + 713 pseudo = 816 train; 26 validation clean; 33 held-out test clean (`seed=42`).
+162 clean-labeled subjects (an exact prefix subset $162 \subset 391$ of the aligned cohort) combined with a 713-subject training expansion pool (positionally comprising 229 residual subjects from the 391 aligned cohort and 484 genuinely pseudo-labeled subjects from Exp 06 Procedure II). Split: 103 train clean + 713 expansion pool = 816 train; 26 validation clean; 33 held-out test clean (`seed=42`).
 
 ### Graph Construction & Node Features
 - **Graph Topology**: Sparsified AAL-116 correlation graphs retaining top 15% absolute correlation edges (nominal density 0.15).
@@ -294,7 +304,7 @@ Four standard geometric deep learning architectures evaluated with identical exe
 - Graph Isomorphism Network (GIN, MLP $\epsilon$-learnable)
 
 ### Classical ML Baselines
-42 model configurations evaluating 7 classifiers (Logistic Regression, Ridge, ElasticNet, Linear SVM, RBF SVM, Random Forest, Extra Trees) across 6 feature representations:
+42 model configurations evaluating 7 classifiers (Elastic Net, Extra Trees, LightGBM, Logistic Regression, Random Forest, Support Vector Machine [SVM], XGBoost) across 6 feature representations:
 1. `FC_only` ($d=17,955$)
 2. `FC_Phenotype` ($d=17,958$)
 3. `Graph_only` ($d=16$)
@@ -302,9 +312,9 @@ Four standard geometric deep learning architectures evaluated with identical exe
 5. `Phenotype_only` ($d=3$: Age, Gender, Handedness)
 6. `Phenotype_NoIQ` ($d=3$: identical to `Phenotype_only` as IQ measures were excluded from `master_cohort.csv` due to severe cross-site missingness >35%)
 
-### Nested Feature Selection & Statistical Analysis
+### Feature Selection & Statistical Analysis
 - Feature selection (ANOVA $F$-percentile ranking) is strictly **nested** inside each training fold for classical models.
-- GNN representation selection (raw connectivity vs identity vs degree) was conducted as an **exploratory non-nested** preliminary analysis.
+- The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort (connectivity: AUC = 0.5497 vs. identity: AUC = 0.5350 vs. strength: AUC = 0.5227) and was therefore non-nested relative to the final LOSO evaluation.
 - Confidence intervals are computed using the Student-$t$ distribution with $\text{df} = K - 1 = 6$:
   $$\text{CI}_{95\%} = \bar{x} \pm t_{0.975, 6} \times \frac{s}{\sqrt{7}}$$
 - Pairwise architecture differences are assessed via non-parametric Wilcoxon signed-rank tests across the 7 site folds.

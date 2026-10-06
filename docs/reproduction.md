@@ -308,3 +308,4 @@ pytest tests/ -v
 2. **Missing Historical Arrays**: Exp 07 cannot be rerun end-to-end without external restoration of the combined 875-subject training arrays.
 3. **Non-Retained Producer Code**: The exploratory 8-regime threshold sweep in Exp 09 survives as a recovered empirical data ledger ([`results/exp09/threshold_sweep_graph_statistics.csv`](../results/exp09/threshold_sweep_graph_statistics.csv)); the producer code that generated it was not preserved.
 4. **Exp 09 Intermediate Parquets**: The per-subject feature parquets required to execute the LOSO notebook are not distributed in the public repository. Canonical LOSO results are verified in `results/exp09/gnn_loso_summary_statistics.csv`.
+5. **Non-Nested GNN Node Feature Selection**: The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort and was therefore non-nested relative to the final LOSO evaluation.

@@ -18,10 +18,11 @@ This directory contains evaluation outputs from the 7-fold Leave-One-Site-Out (L
 - **`gnn_loso_error_analysis.csv`** *(historical: `w2b_error_analysis.csv`)*: Detailed fold-level error breakdown and confusion dynamics across sites.
 
 ### 3. Classical Baselines & Representation Analysis
-- **`classical_ml_canonical_results.csv`** *(historical: `w1_canonical_model_summary.csv`)*: Canonical 7-fold LOSO summary containing all 42 evaluated model configurations (7 classifiers across 6 feature families with n_folds=7).
+- **`classical_ml_canonical_results.csv`** *(historical: `w1_canonical_model_summary.csv`)*: Canonical 7-fold LOSO summary containing all 42 evaluated model configurations (7 classifiers: Elastic Net [EN], Extra Trees [ET], LightGBM [LGBM], Logistic Regression [LR], Random Forest [RF], Support Vector Machine [SVM], XGBoost [XGB] across 6 feature families with n_folds=7).
 - **`classical_ml_historical_results.csv`** *(historical: `w1_model_summary.csv`)*: Master historical ledger of all 52 recorded classical baseline runs (including intermediate 3-, 5-, and 6-fold evaluations and winner duplicates).
 - **`classical_ml_family_summary.csv`** *(historical: `w1_family_winners.csv`)*: Canonical winner summary across the 6 evaluated feature families.
 - **`representation_pareto_analysis.csv`** *(historical: `w2_pareto_front.csv`)*: Multi-objective Pareto evaluation across feature representations (diagnostic ADHD AUC vs scanner site prediction balanced accuracy). *Note: This artifact evaluates representation types (ComBat FC vs Raw FC vs GraphPheno), not edge thresholding.*
+- **Node Feature Selection Note**: The connectivity-row representation was selected in a prior exploratory comparison using the seven-site cohort (connectivity: AUC = 0.5497 vs. identity: AUC = 0.5350 vs. strength: AUC = 0.5227; `configs/exp09/node_feature_selection.json`) and was therefore non-nested relative to the final LOSO evaluation.
 
 ### 4. Per-Fold Execution Traces
 The raw, uncurated training execution traces, per-fold confusion matrices, and subject-level prediction dumps were generated during execution but are not included in the public repository (file size and curation constraints). The curated summary artifacts above (`gnn_loso_fold_results.csv`, `gnn_loso_summary_statistics.csv`, `gnn_loso_pairwise_tests.csv`, `gnn_loso_error_analysis.csv`) represent the retained canonical outputs from those runs.
