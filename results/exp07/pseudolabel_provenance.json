@@ -14,9 +14,11 @@
       "adhd": 14
     }
   },
-  "pseudolabel_cohort": {
-    "candidate_pool_size": 713,
-    "accepted_pseudolabels": 713,
+  "training_expansion_pool": {
+    "total_subjects": 713,
+    "originally_clean_aligned_subjects": 229,
+    "genuinely_pseudo_labeled_subjects": 484,
+    "ensemble_assigned_labels": 713,
     "selection_procedure": "4-Model Ensemble Soft Consensus (Procedure II)",
     "ensemble_models": [
       "RandomForestClassifier",
@@ -28,17 +30,26 @@
       "consensus_threshold": 0.67,
       "confidence_threshold": 0.60
     },
-    "accepted_distribution": {
+    "ensemble_assigned_label_distribution": {
       "typically_developing_controls": 535,
       "adhd": 178
     },
     "partition_allocation": "training_only"
-  },
-  "training_partition_total": {
+},
+"training_partition_total": {
     "total_training_graphs": 816,
     "clean_graphs": 103,
-    "pseudolabeled_graphs": 713
-  },
+    "training_expansion_graphs": 713,
+    "originally_clean_within_expansion": 229,
+    "genuinely_pseudo_labeled_within_expansion": 484
+},
+"combined_population_lineage": {
+    "total_subjects": 875,
+    "originally_clean_aligned_subjects": 391,
+    "genuinely_pseudo_labeled_subjects": 484,
+    "exp07_clean_designated_subjects": 162,
+    "exp07_training_expansion_subjects": 713
+},
   "feature_specification": {
     "atlas": "AAL-116",
     "n_rois": 116,

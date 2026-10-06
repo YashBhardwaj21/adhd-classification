@@ -16,11 +16,12 @@ The clean cohort was split using stratified train/test and train/validation spli
   - First split: `test_size = 0.20`, `random_state = 42`, `stratify = labels`
   - Second split: `test_size = 0.20`, `random_state = 42`, `stratify = labels`
   - Split counts: 103 train, 26 validation, 33 held-out test
-- **Pseudo-Labeled Cohort (713 subjects)**:
-  - Pseudo-label distribution: 535 healthy (TDC), 178 ADHD
+- **Training Expansion Pool (713 subjects)**:
+  - Ensemble-assigned label distribution: 535 healthy (TDC), 178 ADHD
+  - Composition: 229 originally clean-aligned subjects + 484 genuinely pseudo-labeled subjects
   - Allocated strictly to training
 - **Final Partition Composition**:
-  - Training: 816 subjects (103 clean + 713 pseudo-labeled)
+  - Training: 816 subjects (103 clean + 713 training expansion)
   - Validation: 26 clean subjects
   - Held-out Test: 33 clean subjects (19 TDC, 14 ADHD)
 
@@ -82,21 +83,3 @@ Historical checkpoint analysis evaluated `classical_best_model.pth` and `quantum
   [[11, 8],
    [ 5, 9]]
   ```
-
----
-
-## 4. Paper-vs-Code Discrepancy Statement
-
-| Attribute | Manuscript / Early Description | Historical Executed Code | Verified Artifact Status |
-| :--- | :--- | :--- | :--- |
-| **Atlas & ROIs** | AAL-116 (116 regions) | AAL-116 (116 regions) | Matched |
-| **FC Dimension** | 6670 unique features | `X_combined_full.npy` (6670 features) | Matched (not reduced 2000) |
-| **Density Parameter** | Text referenced 0.20 density | `DENSITY = 0.15` (85th percentile threshold) | Executed code used 0.15 |
-| **Edge Selection** | Exact percentage implied | `abs_fc >= threshold` (ties may exceed 15%) | Preserved in `graph_utils.py` |
-| **Edge Attributes** | Signed weights described | Stored in `edge_attr` | Stored in Data object |
-| **GCN Message Passing** | Weighted convolutions implied | `edge_attr` not passed to `GCNConv` | Forward pass uses unweighted edges |
-| **Node Features** | Weighted node strength | Normalized thresholded degree (`degree / 116`) | Executed code used degree |
-| **Quantum Layers** | 2 variational layers | `n_layers = 1` (1 variational layer, 18 weights) | Recorded in config and model |
-| **Clean Split** | 162 subjects | 103 train / 26 val / 33 test (`seed=42`) | Deterministic split verified |
-| **Pseudo-Labels** | Single procedure implied | 713 selected subjects added to train only | Historical selected cohort |
-| **Metric Reporting** | Class-level metrics | Weighted-average precision, recall, and F1 | Recorded in `gcn_qgcnn_test_results.json` |

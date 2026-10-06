@@ -297,20 +297,32 @@
       }
     }
   },
-  "pseudo_labels": {
+  "training_expansion": {
     "count": 713,
-    "distribution": {
+    "ensemble_assigned_label_distribution": {
       "healthy": 535,
       "adhd": 178
+    },
+    "composition": {
+      "originally_clean_aligned": 229,
+      "genuinely_pseudo_labeled": 484
     }
-  },
-  "clean_labels": {
+},
+"clean_designated": {
     "count": 162,
     "distribution": {
       "healthy": 93,
       "adhd": 69
     }
-  },
+},
+"cohort_lineage": {
+    "combined_population": 875,
+    "originally_clean_aligned": 391,
+    "genuinely_pseudo_labeled": 484,
+    "exp07_clean_designated": 162,
+    "exp07_training_expansion": 713,
+    "training_total": 816
+},
   "test_samples": 33,
   "info": {
     "n_qubits": 6,

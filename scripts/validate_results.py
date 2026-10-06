@@ -145,9 +145,22 @@ def validate_exp07():
 
     # 3. Cohort metadata
     assert data.get("test_samples") == 33, "Test sample count must be 33"
-    assert data.get("clean_labels", {}).get("count") == 162, "Clean cohort count must be 162"
-    assert data.get("pseudo_labels", {}).get("count") == 713, "Pseudo cohort count must be 713"
 
+    clean_designated = data.get("clean_designated", {})
+    assert clean_designated.get("count") == 162, "Clean designated cohort count must be 162"
+
+    training_expansion = data.get("training_expansion", {})
+    assert training_expansion.get("count") == 713, "Training expansion pool count must be 713"
+
+    composition = training_expansion.get("composition", {})
+    assert composition.get("originally_clean_aligned") == 229, "Expansion pool must contain 229 originally clean-aligned subjects"
+    assert composition.get("genuinely_pseudo_labeled") == 484, "Expansion pool must contain 484 genuinely pseudo-labeled subjects"
+
+    lineage = data.get("cohort_lineage", {})
+    assert lineage.get("combined_population") == 875, "Combined Exp07 population must be 875"
+    assert lineage.get("originally_clean_aligned") == 391, "Originally aligned Exp07 population must be 391"
+    assert lineage.get("genuinely_pseudo_labeled") == 484, "Genuinely pseudo-labeled Exp07 population must be 484"
+    assert lineage.get("training_total") == 816, "Training population must be 816"
     # 4. Clean subject lineage manifest
     manifest_path = ROOT_DIR / "results/exp07/clean_cohort_lineage.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
@@ -162,7 +175,7 @@ def validate_exp07():
     assert splits.get("test") == 33, f"Expected 33 test clean, got {splits.get('test')}"
     assert set(clean_prefix["subject_id"]).issubset(set(m_df["subject_id"])), "162 clean must be subset of 391 aligned"
 
-    print("  [OK] Exp 7 test results & 391->162 lineage verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC, N=33, 162 subset of 391)")
+    print("  [OK] Exp 7 test results & cohort lineage verified (Classical: 0.7293 AUC, Quantum: 0.6429 AUC, N=33, 162 designated clean, 713 training expansion, 391 aligned, 484 genuine pseudo-labeled)")
 
 
 def validate_exp08():
