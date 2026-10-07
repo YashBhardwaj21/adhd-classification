@@ -246,7 +246,7 @@ Message passing across graph convolution layers is strictly **unweighted**:
 Parameterized quantum circuit implemented via PennyLane:
 - Linear projection from graph pooling layer ($117 \to 12$).
 - Angle embedding onto 6 qubits using $R_y$ rotations.
-- 1 variational layer comprising 6 trainable parameter gates and Entangling CNOT gates (2,188 total model parameters).
+- 1 variational layer comprising 6 trainable parameter gates and Entangling CNOT gates (18 total model parameters).
 - Pauli-$Z$ expectation values measured on each qubit and projected to 2 diagnostic logits.
 
 ### Training & Evaluation Protocol
