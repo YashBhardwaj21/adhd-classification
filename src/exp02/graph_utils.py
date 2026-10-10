@@ -121,9 +121,3 @@ def prepare_graphs(X_features, y_labels, n_rois=N_ROIS, density=DENSITY):
         ))
 
     return graphs
-
-
-if __name__ == "__main__":
-    # Test the function
-    print("Testing graph_utils...")
-    print("graph_utils.py loaded successfully")

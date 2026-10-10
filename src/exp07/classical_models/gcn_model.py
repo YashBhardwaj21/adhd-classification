@@ -35,19 +35,16 @@ class ClassicalGCN(nn.Module):
         edge_index = data.edge_index
         batch = data.batch
 
-        # GCN Layer 1
         x = self.gcn1(x, edge_index)
         x = self.bn1(x)
         x = F.relu(x)
         x = self.dropout(x)
 
-        # GCN Layer 2
         x = self.gcn2(x, edge_index)
         x = self.bn2(x)
         x = F.relu(x)
         x = self.dropout(x)
 
-        # GCN Layer 3
         x = self.gcn3(x, edge_index)
         x = F.relu(x)
 

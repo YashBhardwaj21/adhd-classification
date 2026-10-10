@@ -15,8 +15,6 @@ This study investigates resting-state functional connectomics, machine learning 
 - **Track B — Semi-Supervised and Quantum Graph Classification (Experiments 06–08)**: Investigates pseudo-labeling, benchmarks an isotropic Classical GCN against a parameterized 6-qubit Hybrid Quantum GCNN (QGCNN) on the AAL-116 atlas, and assesses 4D volumetric CNNs.
 - **Track C — Cross-Site Generalization (Experiment 09)**: Assesses out-of-distribution generalizability across 497 subjects from 7 clinical imaging centers under strict 7-fold Leave-One-Site-Out (LOSO) cross-validation.
 
-> **Methodological Independence**: The three tracks evaluate distinct cohorts, atlases, graph representations, and validation protocols; they represent independent empirical inquiries rather than a single unified benchmark pipeline.
-
 ---
 
 ## Experiments
@@ -41,8 +39,8 @@ This study investigates resting-state functional connectomics, machine learning 
 | :--- | :--- | :--- |
 | **Exp 01** | Smooth, continuous temporal autocorrelation decay | Lag 1: **$0.8990$** $\to$ Lag 4: **$0.5467$** (`temporal_similarity_validation.csv`) |
 | **Exp 02** | Guaranteed 100% graph connectedness | Density $\rho=0.20$, 3,591 edges (`graph_construction_configuration.csv`) |
-| **Exp 03** | Massive site variation dominates over diagnostic effect | Scanner site effect: **$F > 4600$**, $p < 10^{-15}$ (`site_effect_anova.csv`) |
-| **Exp 04** | ComBat substantially attenuates scanner bias | Site prediction drops from **58.64%** $\to$ **31.29%** (`site_prediction_combat_comparison.csv`) |
+| **Exp 03** | Large acquisition-site effects were observed across graph metrics; diagnostic associations require separate interpretation | Scanner site effect: **$F > 4600$**, $p < 10^{-15}$ (`site_effect_anova.csv`) |
+| **Exp 04** | ComBat substantially reduces site prediction performance | Site prediction drops from **58.64%** $\to$ **31.29%** (`site_prediction_combat_comparison.csv`) |
 | **Exp 05** | 3 recurring micro-states; State 0 dominates dwell time | State 0 dwell time = **6.24 windows** (`dynamic_state_biomarkers.csv`) |
 | **Exp 06** | Pseudo-label augmentation improves holdout accuracy | Baseline **67.09%** $\to$ Augmented **72.15%** (`exp06_verified_results.json`) |
 | **Exp 07** | Matched GCN achieves higher observed AUC than 6-qubit QGCNN | Classical GCN: **0.7293 AUC** vs QGCNN: **0.6429 AUC** (`gcn_qgcnn_test_results.json`) |
@@ -85,49 +83,13 @@ Comprehensive scientific, technical, and forensic documentation is organized und
 
 ## Repository Structure
 
-```text
-adhd-classification/
-├── README.md                           # Compact project overview
-├── CITATION.cff                        # Citation metadata
-├── LICENSE                             # MIT License
-├── NOTICE                              # Third-party notices and BCT attributions
-├── pyproject.toml                      # Package specifications & test configuration
-│
-├── configs/                            # Canonical execution configurations
-│   ├── exp02/                          # CC200 MST+PT graph construction config
-│   ├── exp07/                          # Classical GCN and QGCNN run hyperparameters
-│   └── exp09/                          # LOSO GNN configs, thresholds, and manifests
-│
-├── data/                               # Data guidelines and exclusion manifests
-│   ├── README.md                       # Data requirements and download instructions
-│   └── availability_and_exclusions.md  # Detailed ledger of excluded large files
-│
-├── docs/                               # Core scientific companion documentation
-│   ├── README.md                       # Documentation sitemap
-│   ├── study_design.md                 # Research questions, tracks, and cohorts
-│   ├── methods.md                      # Mathematical formulations & protocols
-│   ├── results.md                      # Verified empirical metrics & tables
-│   ├── reproduction.md                 # Execution commands & environment matrix
-│   ├── provenance.md                   # Forensic lineage & historical reconciliations
-│   └── limitations.md                  # Scientific boundaries & future work
-│
-├── environment/                        # Isolated Conda environment specifications
-│   ├── track_a/                        # Python 3.11/3.13 Connectomics environment
-│   ├── track_b/                        # PyTorch 2.5.1 / PennyLane 0.44.1 environment
-│   └── track_c/                        # PyTorch Geometric 2.6.1 LOSO environment
-│
-├── notebooks/                          # Self-contained research notebooks & index (Exp 01–09)
-├── results/                            # Lightweight canonical result artifacts
-│   ├── README.md                       # Results directory index
-│   ├── manifest.csv                    # Cryptographic SHA-256 evidence manifest
-│   └── exp01/ ... exp09/               # Per-experiment CSV tables & JSON metrics
-│
-├── scripts/                            # Operational validation scripts
-│   └── validate_results.py             # Numerical results integrity checker
-├── src/                                # Reusable library code (common, exp02, exp07, exp08)
-├── tests/                              # Pytest test suite
-└── third_party/                        # Third-party code documentation & BCT notices
-```
+- `configs/`: Experiment configurations
+- `data/`: Data requirements and exclusion records
+- `docs/`: Methods, results, reproduction, provenance, and limitations
+- `notebooks/`: Experiment notebooks
+- `results/`: Retained empirical artifacts
+- `src/`: Reusable implementation code
+- `tests/`: Automated checks
 
 ---
 

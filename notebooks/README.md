@@ -37,6 +37,9 @@ To prevent environment-specific lock-in while preserving original execution evid
 
 ## 3. Historical Compute Environments & Output Provenance
 
+> [!NOTE]
+> **Execution Provenance:** The code in these notebooks has been synchronized with canonical repository filenames. Executed output cells are preserved from the original research investigation and may therefore display historical filenames and machine-specific execution paths. These output cells are retained as immutable execution evidence and are not authoritative for current repository paths. See [`docs/reproduction.md`](../docs/reproduction.md) for complete filename mappings and reproduction details.
+
 The executed cell outputs (dataframes, confusion matrices, loss curves, print statements) are intentionally preserved to serve as an immutable, audited scientific record of the original research runs:
 
 1. **Cloud GPU Cluster (`/mnt/ADHD200`)**:

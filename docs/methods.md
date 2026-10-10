@@ -39,7 +39,7 @@ The study examines strictly defined subsets to address track-specific goals:
 
 Methodological integrity is safeguarded by strict partition protocols:
 - **No Temporal Cross-Contamination**: In Track A sliding-window analyses, all temporal windows from an individual subject are grouped into the same partition.
-- **Isolated Test Cohort**: In Exp 07, the 33-subject test set is held out prior to pseudo-labeling; pseudo-labeled samples are injected solely into the training set.
+- **Experiment 7 Test-Partition Limitation**: The 33-subject test partition is excluded from the pseudo-label candidate pool and direct graph-model training examples. However, the upstream teacher ensemble was fitted on all 391 clean-aligned participants, including participants later assigned to validation and test. Their diagnostic labels therefore influenced pseudo-label generation, so the evaluation is not fully independent of the complete training pipeline.
 - **Strict Site-Level Isolation**: In Exp 09, 7-fold Leave-One-Site-Out (LOSO) ensures that no subjects or scanner-specific parameters from the held-out test site enter training or validation folds.
 
 ---

@@ -118,8 +118,8 @@ Methodological integrity is maintained by enforcing strict partition boundaries 
 ### Subject-Level Splitting
 In all dynamic sliding-window experiments (Track A), all windows belonging to a given subject are assigned strictly to the same partition. Windows from the same acquisition are never split across train and test sets.
 
-### Held-Out Test Set Isolation
-In Experiment 07, the 33 clean test subjects ($N=33$) are isolated prior to pseudo-label expansion and hyperparameter selection. The 713-subject training expansion pool is injected strictly into the training fold. Test data never receive pseudo-labels.
+### Experiment 7 Test-Partition Limitation
+The 33-subject test partition is excluded from the pseudo-label candidate pool and direct graph-model training examples. However, the upstream teacher ensemble was fitted on all 391 clean-aligned participants, including participants later assigned to validation and test. Their diagnostic labels therefore influenced pseudo-label generation, so the evaluation is not fully independent of the complete training pipeline.
 
 ### Leave-One-Site-Out (LOSO) Site Exclusion
 In Experiment 09, cross-validation is performed across 7 distinct site folds. In each fold, all subjects from one complete clinical imaging site are held out exclusively for testing, while the remaining 6 sites serve as training data. No subjects or site information from the test site are seen during training.

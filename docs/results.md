@@ -8,7 +8,7 @@ This document compiles the verified numerical findings, evaluation tables, stati
 
 The empirical findings demonstrate:
 1. Resting-state dynamic functional connectivity exhibits smooth, monotonic temporal autocorrelation decay ($0.8990 \to 0.5467$ across lags 1–4) and continuous Frobenius distance expansion ($32.58 \to 70.61$).
-2. Temporal dispersion in dynamic graph metrics captures significant cross-site scanner variation ($F > 4600$, $p < 10^{-15}$) but does not survive multiple testing correction for diagnostic group separation under full cohort validation.
+2. Diagnosis-related associations were concentrated among temporal-dispersion descriptors rather than temporal means. Results are interpreted separately from the substantial acquisition-site effects observed across graph metrics.
 3. ComBat harmonization substantially suppresses scanner site prediction accuracy from **58.64%** down to **31.29%** (balanced accuracy: 50.19% down to 23.56%) while preserving intrinsic graph metric distributions.
 4. Under matched single-split conditions on 33 held-out test subjects, the isotropic Classical GCN achieved **0.7293 AUC** (69.70% accuracy) compared to **0.6429 AUC** (60.61% accuracy) for the 6-qubit hybrid QGCNN.
 5. Under strict 7-fold Leave-One-Site-Out (LOSO) cross-validation across 497 subjects, graph neural network architectures achieved modest out-of-distribution discrimination (GAT: **0.5752 AUC**, GraphSAGE: **0.5502 AUC**, GCN: **0.5468 AUC**, GIN: **0.5437 AUC**). Classical ML models combining functional connectivity with phenotypic covariates achieved the highest observed generalization (SVM with Graph+Phenotype: **0.6493 AUC**; Extra Trees with FC+Phenotype: **0.6328 AUC**).
