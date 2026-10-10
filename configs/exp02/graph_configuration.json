@@ -1,0 +1,8 @@
+{
+    "builder_version": "MST_PT_v1.0",
+    "graph_method": "MST_PT",
+    "graph_density": 0.2,
+    "target_edges": 3591,
+    "distance_metric": "1-|r|",
+    "n_rois": 190
+}

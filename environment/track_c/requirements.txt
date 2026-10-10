@@ -1,0 +1,17 @@
+# Track C: Leave-One-Site-Out (LOSO) Population Graph Learning
+# Exact pinned versions from configs/exp09/execution_environment.json:
+# Python 3.12.13, PyTorch 2.5.1+cu121 (CUDA 12.1), PyG 2.8.0, NumPy 2.4.6, Pandas 2.3.3, Scikit-Learn 1.8.0
+#
+# IMPORTANT: The requirement line `torch==2.5.1` below installs standard CPU/default wheels from PyPI.
+# It is NOT independently sufficient for reproducing the GPU environment.
+# The documented installation command below is the authoritative CUDA 12.1 installation path:
+#   pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1
+torch-geometric==2.8.0
+numpy==2.4.6
+pandas==2.3.3
+scikit-learn==1.8.0
+scipy==1.17.1
+matplotlib>=3.8.0
+tqdm>=4.65.0
+jupyter>=1.0.0

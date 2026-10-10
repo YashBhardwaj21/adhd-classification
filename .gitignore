@@ -1,0 +1,74 @@
+# Python bytecode and build artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Testing and linting caches (pytest, ruff, coverage)
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+tests/.tmp_test_paths/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Operating system and IDEs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
+.gemini/
+.agents/
+
+# Neuroimaging data and large arrays
+*.nii
+*.nii.gz
+*.npy
+*.npz
+*.parquet
+*.mat
+*.pkl
+*.joblib
+
+# Local data staging
+data/raw/
+data/processed/
+data/cache/
+data/downloads/
+!data/README.md
+!data/availability_and_exclusions.md
+
+# Model checkpoints and weights
+checkpoints/
+artifacts/
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# Temporary, scratch, and logs
+scratch/
+tmp/
+.cache/
+*.log
+
+# Forensic audit mirrors and unpromoted cloud archives
+audit_source_files/
+docs/audit/

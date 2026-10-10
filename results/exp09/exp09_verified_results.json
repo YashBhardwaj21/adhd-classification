@@ -1,0 +1,46 @@
+{
+  "experiment": "Experiment 9 - Independent LOSO Population Graph Learning",
+  "source_notebook": "notebooks/exp09/loso_gnn_population_graphs.ipynb",
+  "executed_protocol": {
+    "subjects": 497,
+    "sites": 7,
+    "nodes": 190,
+    "graph_selection": "top_10pct",
+    "features": "connectivity features",
+    "stored_edge_attributes": true,
+    "gcn_consumes_edge_weight": true,
+    "edge_attribute_semantics": {
+      "stored_signed_fc": true,
+      "main_gnn_consumes_edge_weights": {
+        "GCN": true,
+        "GAT": false,
+        "SAGE": false,
+        "GIN": false
+      },
+      "note": "Signed Pearson correlation values are stored as edge_attr with self-loops; only GCN consumes edge_weight during message passing, while GAT, SAGE, and GIN pass unweighted edge_index."
+    },
+    "self_loops": true,
+    "mean_density": 0.10003,
+    "adhd_ratio": 0.4346
+  },
+  "executed_gnn_results": {
+    "GCN_mean_auc": 0.5468,
+    "GAT_mean_auc": 0.5752,
+    "SAGE_mean_auc": 0.5502,
+    "GIN_mean_auc": 0.5437
+  },
+  "historical_manuscript_discrepancy": {
+    "historical_draft_description": [
+      "MST + 20% graph construction",
+      "inverse-distance mapping d = 1/|r|"
+    ],
+    "executed_configuration": [
+      "top_10pct positive-FC percentile thresholding",
+      "190-dimensional connectivity node features",
+      "signed FC edge attributes with self-loops",
+      "497 subjects across 7 sites"
+    ],
+    "status": "Resolved in the current manuscript; repository artifacts and the current method description are aligned."
+  },
+  "note": "The repository staging preserves the executed artifacts and canonical results; all documentation and configurations reflect the verified execution state."
+}

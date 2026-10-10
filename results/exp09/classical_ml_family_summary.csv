@@ -1,0 +1,7 @@
+family,model,mean_auc,std_auc,ci_lower,ci_upper,mean_ba,std_ba,n_folds,ci_method,n_sites,degrees_of_freedom
+FC_Phenotype,ET,0.632847,0.093154,0.546693,0.719,0.602463,0.065664,7,Student t distribution over LOSO sites,7,6
+FC_only,LR,0.614087,0.090635,0.530264,0.69791,0.590002,0.0763,7,Student t distribution over LOSO sites,7,6
+Graph_Phenotype,SVM,0.649309,0.100147,0.556689,0.74193,0.588477,0.080019,7,Student t distribution over LOSO sites,7,6
+Graph_only,RF,0.56926,0.053529,0.519754,0.618766,0.546631,0.044576,7,Student t distribution over LOSO sites,7,6
+Phenotype_NoIQ,EN,0.593487,0.103454,0.497807,0.689166,0.600693,0.099405,7,Student t distribution over LOSO sites,7,6
+Phenotype_only,EN,0.593487,0.103454,0.497807,0.689166,0.600693,0.099405,7,Student t distribution over LOSO sites,7,6

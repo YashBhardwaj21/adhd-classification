@@ -1,0 +1,25 @@
+# Track B: Experiments 06-07 core environment (Semi-Supervised Learning & Quantum Graph Learning)
+# Historical execution environment:
+# Exp 06-07: Python 3.12, PyTorch 2.5.1+cu121 (CUDA 12.1), PyG 2.8.0, PennyLane 0.44.1, PennyLane-Lightning-GPU 0.44.0
+#
+# IMPORTANT: The requirement line `torch==2.5.1` below installs standard CPU/default wheels from PyPI.
+# It is NOT independently sufficient for reproducing the GPU environment.
+# The documented installation command below is the authoritative CUDA 12.1 installation path:
+#   pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
+#
+# Note: Exp 08 NeuroSTORM foundation model is explicitly a separate, specialized environment
+# (Brev A100, PyTorch 2.7.1, CUDA 12.6, causal-conv1d v1.5.0.post8, mamba v2.2.2 via Dockerfile).
+torch==2.5.1
+torch-geometric==2.8.0
+pennylane==0.44.1
+pennylane-lightning-gpu==0.44.0
+monai==1.5.2
+numpy==2.4.6
+pandas==2.3.3
+scikit-learn==1.8.0
+scipy==1.17.1
+tqdm>=4.65.0
+jupyter>=1.0.0
+einops==0.8.2
+# Note: mamba-ssm is NOT part of this environment.
+# It belongs exclusively to the separate NeuroSTORM Docker environment (PyTorch 2.7.1, CUDA 12.6).

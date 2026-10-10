@@ -1,0 +1,52 @@
+{
+  "experiment": "Experiment 6 - Semi-Supervised Pseudo-Labeling",
+  "source_notebook": "notebooks/exp06/semi_supervised_pseudolabeling.ipynb",
+  "cohort": {
+    "clean_labeled": 391,
+    "train": 273,
+    "validation": 59,
+    "test": 59,
+    "unlabeled": 564
+  },
+  "procedure_I": {
+    "method": "Self-training",
+    "classifier": "class-weighted Logistic Regression",
+    "pipeline": [
+      "SimpleImputer(mean)",
+      "StandardScaler",
+      "LogisticRegression(class_weight='balanced')"
+    ],
+    "threshold": 0.75,
+    "k_best": 10,
+    "max_iter": 10,
+    "pseudo_labels": 552,
+    "validation_accuracy": 0.5593,
+    "test_accuracy": 0.6441,
+    "provenance": "Execution output from historical development run; pipeline preserved in notebooks/exp06/semi_supervised_pseudolabeling.ipynb"
+  },
+  "procedure_II": {
+    "method": "Weighted four-classifier ensemble",
+    "classifiers": [
+      "Random Forest",
+      "Gradient Boosting",
+      "Logistic Regression",
+      "Calibrated SVM"
+    ],
+    "selected_subjects": 484,
+    "clean_validation_accuracy": 0.6709,
+    "pseudo_label_augmented_validation_accuracy": 0.7215,
+    "provenance": "Execution output from historical development run; pipeline preserved in notebooks/exp06/semi_supervised_pseudolabeling.ipynb"
+  },
+  "procedure_II_evaluation": {
+    "evaluation_set_size": 79,
+    "clean_accuracy": 0.6709,
+    "pseudo_label_augmented_accuracy": 0.7215,
+    "evaluation_set_note": "These metrics come from the separate 79-subject holdout evaluation and are not the 59-subject validation/test partitions listed in the clean cohort definition."
+  },
+  "independent_supervised_benchmarks": {
+    "hard_voting_test_accuracy": 0.7119,
+    "soft_voting_test_accuracy": 0.678,
+    "test_subjects": 59
+  },
+  "important_note": "An earlier Random-Forest self-training model was created during initial development as an external historical artifact. It is not the Logistic-Regression 552-label model reported as Procedure I in the latest paper draft."
+}
